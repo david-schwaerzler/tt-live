@@ -18,16 +18,13 @@ import lombok.NoArgsConstructor;
 public class LeagueDto {
 	private long id;
 	private String name;
-	private String region;
-	private String link;
-	private LeagueContest contest;	
+	private LeagueContest contest;
 	
 	public static class LeagueDtoBuilder {
 		public LeagueDtoBuilder bo(League league) {
 			this.id = league.getId();			
 			this.name = league.getName();
-			this.region = league.getRegion();
-			this.link = league.getRegion();
+			this.contest= league.getContest();
 			return this;
 		}
 	}

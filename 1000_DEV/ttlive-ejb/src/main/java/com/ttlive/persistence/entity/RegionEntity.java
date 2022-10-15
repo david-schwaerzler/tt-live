@@ -14,8 +14,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "game_style")
-public class GameStyleEntity {
+@Table(name = "region")
+public class RegionEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
@@ -24,11 +24,8 @@ public class GameStyleEntity {
 	private String name;
 	
 	@Column(name = "description")
-	private String description;	
-	
-	@Column(name = "game_order")
-	private String gameOrder;
-	
-	@OneToMany(mappedBy = "gameStyle")
-	private List<MatchEntity> matches;
+	private String description;
+
+	@OneToMany(mappedBy = "region")
+	private List<LeagueEntity> leagues;
 }

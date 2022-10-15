@@ -28,22 +28,15 @@ public class PlayerEntity {
 	@Column(name = "name")
 	private String name;
 	
-	@Column(name = "is_clicktt")
-	private boolean isClicktt;
+	@ManyToOne
+	@JoinColumn(name = "team_id", referencedColumnName = "id")
+	private TeamEntity team;	
 	
-	@Column(name = "last_fetched")
-	private LocalDateTime lastFetched;
-	
-	@UpdateTimestamp
+	@CreationTimestamp
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 	
-	@CreationTimestamp
+	@UpdateTimestamp
 	@Column(name = "modified_at")
-	private LocalDateTime modifiedAt;	
-	
-	@ManyToOne
-	@JoinColumn(name = "team_id")
-	private TeamEntity team;	
-	
+	private LocalDateTime modifiedAt;
 }

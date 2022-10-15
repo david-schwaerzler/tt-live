@@ -35,7 +35,7 @@ export function HomeView(props: HomeViewProps) {
                         </TableRow>
                         <TableRow>
                             <TableCell>SC Super Manshi - FC Fortran Batchelorarbeit</TableCell>
-                            <TableCell>5:5</TableCell>
+                            <TableCell>7:6</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>

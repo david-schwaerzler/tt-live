@@ -38,7 +38,7 @@
 						<webModule>
 							<groupId>com.my_projects</groupId>
 							<artifactId>ttlive-war</artifactId>
-							<contextRoot>/askMe</contextRoot>
+							<contextRoot>/ttlive</contextRoot>
 						</webModule>
 						<ejbModule>
 							<groupId>com.my_projects</groupId>

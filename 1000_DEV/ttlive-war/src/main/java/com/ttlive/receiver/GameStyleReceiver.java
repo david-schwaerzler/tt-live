@@ -11,26 +11,23 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.ttlive.bo.League;
-import com.ttlive.dto.LeagueDto;
-import com.ttlive.service.LeagueService;
+import com.ttlive.bo.GameStyle;
+import com.ttlive.dto.GameStyleDto;
+import com.ttlive.service.GameStyleService;
 
 @Stateless
-@Path("/league")
-public class LeagueReceiver {
-	
+@Path("/game_style")
+public class GameStyleReceiver {
+
 	@EJB
-	private LeagueService leagueService;
-	
-	
+	private GameStyleService gameStyleService;
+
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response findAll() {
-		LinkedList<League> leagues = leagueService.findAll();
-		return Response.ok(LeagueDto.fromBos(leagues)).build();
+		LinkedList<GameStyle> gameStyles = gameStyleService.findAll();
+		return Response.ok(GameStyleDto.fromBos(gameStyles)).build();
 	}
-	
-	
 }

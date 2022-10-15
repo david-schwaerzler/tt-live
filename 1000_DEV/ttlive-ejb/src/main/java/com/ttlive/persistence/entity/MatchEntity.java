@@ -16,40 +16,58 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "match")
-@Data
 public class MatchEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-		
+
+	@Column(name = "title")
+	private String title;
+	
+	@Column(name = "description")
+	private String description;
+	
 	@Column(name = "home_team_score")
-	private Integer homeTeamScore;
+	private int homeTeamScore;
 	
 	@Column(name = "guest_team_score")
-	private Integer guestTeamScore;
+	private int guestTeamScore;
 	
-	@Column(name = "finished")
-	private boolean finished;
+	@Column(name = "home_players")
+	private String homePlayers;
 	
-	@Column(name = "date")
-	private LocalDateTime date;
+	@Column(name = "guest_players")
+	private String guestPlayers;
 	
-	@UpdateTimestamp
-	@Column(name = "created_at")
-	private LocalDateTime createdAt;
-
-	@CreationTimestamp
-	@Column(name = "modified_at")
-	private LocalDateTime modifiedAt;
-	
-	@JoinColumn(name = "home_team_id", referencedColumnName = "id")
 	@ManyToOne
+	@JoinColumn(name = "league_id", referencedColumnName = "id")
+	private LeagueEntity league;
+	
+	@ManyToOne
+	@JoinColumn(name = "home_team_id", referencedColumnName = "id")
 	private TeamEntity homeTeam;
 	
-	@JoinColumn(name = "guest_team_id", referencedColumnName = "id")
 	@ManyToOne
-	private TeamEntity guestTeam;	
+	@JoinColumn(name = "guest_team_id", referencedColumnName = "id")
+	private TeamEntity guestTeam;
+	
+	@ManyToOne
+	@JoinColumn(name = "account_id", referencedColumnName = "id")
+	private AccountEntity account;
+	
+	@ManyToOne
+	@JoinColumn(name = "game_style_id", referencedColumnName = "id")
+	private GameStyleEntity gameStyle;
+	
+	@CreationTimestamp
+	@Column(name = "created_at")
+	private LocalDateTime createdAt;
+	
+	@UpdateTimestamp
+	@Column(name = "modified_at")
+	private LocalDateTime modifiedAt;
 }

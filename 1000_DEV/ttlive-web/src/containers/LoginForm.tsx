@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
-import { AccountCircle, Translate } from "@mui/icons-material";
-import { Button, IconButton, Menu, MenuItem, Stack, TextField } from "@mui/material";
+import { AccountCircle } from "@mui/icons-material";
+import { Button, IconButton, Menu, Stack, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState } from "react";
 
