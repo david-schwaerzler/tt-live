@@ -1,20 +1,22 @@
 import { Button, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { Box, Container, Stack } from "@mui/system";
-import { Link } from 'react-router-dom'
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom"
 export interface HomeViewProps {
 
 }
 
 export function HomeView(props: HomeViewProps) {
+    const [t] = useTranslation();
     return (
         <Container sx={{ marginTop: "20px" }}>
             <Stack direction="column" gap="20px">
                 <Typography variant="h5" sx={{ textAlign: "center" }} >
-                    Willkommen auf TT-Live, <br />dem Tischtennis Liveticker
+                    {t("HomeView.welcomeText")}
                 </Typography>
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
-                    <Link to="/create" style={{ textDecoration: 'none' }}>
-                        <Button sx={{ flexGrow: 0 }} variant="outlined">Livegame Erstellen</Button>
+                    <Link to="/create" style={{ textDecoration: "none" }}>
+                        <Button sx={{ flexGrow: 0 }} variant="outlined">{t("HomeView.createMatch")}</Button>
                     </Link>
                 </Box>
 

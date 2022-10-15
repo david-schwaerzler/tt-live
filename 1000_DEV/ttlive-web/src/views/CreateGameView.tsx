@@ -2,6 +2,7 @@ import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { Button, Divider, MobileStepper, Paper, Step, StepLabel, Stepper } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import LeagueState from "../components/create_game/LeagueState";
 import { MatchStateObject } from "../components/create_game/MatchStateObject";
 import RegionState from "../components/create_game/RegionState";
@@ -24,15 +25,16 @@ const CreateGameView = (props: CreateGameViewProps) => {
 
     const [currentStep, setCurrentStep] = useState(Steps.REGION);
     const [matchStateObject, setMatchStateObject] = useState<MatchStateObject>({ contest: null, league: null, region: null, gameStyle: null });
+    const [t] = useTranslation();
 
     return (
         <Paper sx={{ padding: spacingNormal }}>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                 <Stepper activeStep={currentStep} alternativeLabel >
-                    <Step><StepLabel>Region/Konkurenz</StepLabel></Step>
-                    <Step><StepLabel>Liga/Spielsystem</StepLabel></Step>
-                    <Step><StepLabel>Heimmanschaft</StepLabel></Step>
-                    <Step><StepLabel>Gastmannschaft</StepLabel></Step>
+                    <Step><StepLabel>{t("CreateGameView.stepRegion")}</StepLabel></Step>
+                    <Step><StepLabel>{t("CreateGameView.stepLeague")}</StepLabel></Step>
+                    <Step><StepLabel>{t("CreateGameView.stepHomeTeam")}</StepLabel></Step>
+                    <Step><StepLabel>{t("CreateGameView.stepGuestTeam")}</StepLabel></Step>
                 </Stepper>
                 <Divider orientation="horizontal" sx={{ paddingTop: spacingNormal }} />
             </Box>
@@ -47,22 +49,22 @@ const CreateGameView = (props: CreateGameViewProps) => {
                     activeStep={currentStep}
                     nextButton={
                         <Button size="small" onClick={setNextStep} disabled={false}>
-                            Next
+                            {t("CreateGameView.next")}
                             <KeyboardArrowRight />
                         </Button>
                     }
                     backButton={
                         <Button size="small" onClick={setPreviousStep} disabled={false}>
                             <KeyboardArrowLeft />
-                            Back
+                            {t("CreateGameView.back")}
                         </Button>
                     }
                 />
             </Box>
 
             <Stack sx={{ display: { xs: 'none', sm: 'flex' }, paddingTop: spacingNormal }} direction="row" justifyContent="center" gap="2em">
-                <Button variant="outlined" disabled={currentStep === 0} onClick={setPreviousStep}>Zurück</Button>
-                <Button variant="outlined" onClick={setNextStep}>Weiter</Button>
+                <Button variant="outlined" disabled={currentStep === 0} onClick={setPreviousStep}>{t("CreateGameView.back")}</Button>
+                <Button variant="outlined" onClick={setNextStep}>{t("CreateGameView.next")}</Button>
             </Stack>
 
         </Paper>

@@ -1,6 +1,7 @@
 import { Autocomplete, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { GameStyle } from "../../rest/GameStyle";
 import { League } from "../../rest/League";
 import { Config } from "../utils/Config";
@@ -15,10 +16,11 @@ const ERROR_GAME_STYLE = 2;
 
 const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) => {
     const [leagues, setLeagues] = useState<Array<League>>([]);
-    const [leagueInput, setLeagueInput] = useState<string>('')
+    const [leagueInput, setLeagueInput] = useState<string>("")
     const [gameStyles, setGameStyles] = useState<Array<GameStyle>>([]);
     const [errorMsgs, setErrorMsgs] = useState<Array<string>>([]);
     const hasFetchedData = useRef(false);
+    const [t] = useTranslation();
 
     const updateError = useCallback((code: number, msg: string) => {
         let updated = [...errorMsgs]
@@ -30,52 +32,52 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
         try {
 
             if (matchStateObject.region == null) {
-                updateError(ERROR_GAME_STYLE, "Es muss zunächst ein Verband ausgewählt werden.")
+                updateError(ERROR_GAME_STYLE, t("LeagueState.errorRegion"))
                 return;
             } else if (matchStateObject.contest == null) {
-                updateError(ERROR_GENERAL, "Es muss zunächst eine Konkurrenz ausgewählt werden.")
+                updateError(ERROR_GENERAL, t("LeagueState.errorContest"))
                 return;
             }
 
-            let response = await fetch(Config.REST_URL + `/region/${matchStateObject.region.id}/leagues?content=${matchStateObject.contest}`)
+            let response = await fetch(Config.REST_URL + `/region/${matchStateObject.region.id}/leagues?contest=${matchStateObject.contest}`)
             if (!response.ok) {
-                console.log(`Error fetching leagues. status: '${response.status}'`)
-                updateError(ERROR_GENERAL, `Leider kann der Server nicht erreicht werden. Bitte versuchen sie es später noch einmal`);
+                console.log(`Error fetching leagues. status: "${response.status}"`)
+                updateError(ERROR_GENERAL, t("LeagueState.errorFetch"));
                 return;
             }
             let leagues: Array<League> = await response.json();
             setLeagues(leagues);
 
         } catch (error) {
-            console.log(`Error fetching leagues. error: '${error}'`)
-            updateError(ERROR_GENERAL, `Leider kann der Server nicht erreicht werden. Bitte versuchen sie es später noch einmal`)
+            console.log(`Error fetching leagues. error: "${error}"`)
+            updateError(ERROR_GENERAL, t("LeagueState.errorFetch"))
         }
-    }, [updateError, matchStateObject.region, matchStateObject.contest]);
+    }, [updateError, matchStateObject.region, matchStateObject.contest, t]);
 
     const fetchGmeStyles = useCallback(async () => {
         try {
             let response = await fetch(Config.REST_URL + "/game_style")
             if (!response.ok) {
-                console.log(`Error fetching gameStyle. status: '${response.status}'`)
-                updateError(ERROR_GENERAL, `Leider kann der Server nicht erreicht werden. Bitte versuchen sie es später noch einmal`);
+                console.log(`Error fetching gameStyle. status: "${response.status}"`)
+                updateError(ERROR_GENERAL, t("LeagueState.errorFetch"));
                 return;
             }
             let gameStyles: Array<GameStyle> = await response.json();
             setGameStyles(gameStyles);
         } catch (error) {
-            console.log(`Error fetching gameStyle. error: '${error}'`)
-            updateError(ERROR_GENERAL, `Leider kann der Server nicht erreicht werden. Bitte versuchen sie es später noch einmal`)
+            console.log(`Error fetching gameStyle. error: "${error}"`)
+            updateError(ERROR_GENERAL, t("LeagueState.errorFetch"))
         }
-    }, [updateError]);
+    }, [updateError, t]);
 
 
     useEffect(() => {
         function onValidate(matchStateObject: MatchStateObject) {
             if (matchStateObject.league == null) {
-                updateError(ERROR_LEAGUE, "Es muss eine Liga ausgewählt werden");
+                updateError(ERROR_LEAGUE, t("LeagueState.errorEmptyLeague"));
                 return false;
             } else if (matchStateObject.gameStyle == null) {
-                updateError(ERROR_GAME_STYLE, "Es muss ein Spielsystem ausgewählt werden");
+                updateError(ERROR_GAME_STYLE, t("LeagueState.errorEmptyGameStyle"));
                 return false;
             }
 
@@ -89,13 +91,13 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
             fetchLeagues();
             hasFetchedData.current = true;
         }
-    }, [setValidate, updateError, fetchGmeStyles, fetchLeagues])
+    }, [setValidate, updateError, fetchGmeStyles, fetchLeagues, t])
 
     return (
         <Box sx={{ width: "100%" }}>
             <ErrorMessage msg={errorMsgs[ERROR_GENERAL]} centered sx={{ paddingBottom: spacingSmall }} />
 
-            <Stack sx={{ flexDirection: { xs: "column", md: "row" } }} justifyContent="space-evenly" alignItems="center" >
+            <Stack sx={{ flexDirection: { xs: "column", md: "row" },  alignItems: {xs: "center", md: "flex-end"} }} justifyContent="space-evenly" >
                 <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
                     <ErrorMessage msg={errorMsgs[ERROR_LEAGUE]} centered />
                     <Autocomplete
@@ -107,7 +109,7 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
                         getOptionLabel={option => option.name}
                         inputValue={leagueInput}
                         onInputChange={(e, value) => setLeagueInput(value)}
-                        renderInput={(params) => <TextField {...params} label="Liga" />}
+                        renderInput={(params) => <TextField {...params} label={t("LeagueState.league")} />}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                     />
                 </Box>
@@ -115,12 +117,12 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
                     <ErrorMessage msg={errorMsgs[ERROR_GAME_STYLE]} centered />
                     <FormControl sx={{ minWidth: "200px", alignSelf: "center" }}  >
-                        <InputLabel id="select-gameStyle">Spielsystem</InputLabel>
+                        <InputLabel id="select-gameStyle">{t("LeagueState.gameStyle")}</InputLabel>
                         <Select
                             id="select-gameStyle"
                             labelId="select-gameStyle"
                             label="select-gameStyle"
-                            value={matchStateObject.gameStyle == null || gameStyles.length === 0 ? '' : matchStateObject.gameStyle.id}
+                            value={matchStateObject.gameStyle == null || gameStyles.length === 0 ? "" : matchStateObject.gameStyle.id}
                             onChange={e => onGameStyleSelected(e.target.value)}>
                             {gameStyles.map((value, index) =>
                                 <MenuItem key={index} value={value.id}>{value.name}</MenuItem>
@@ -136,7 +138,7 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
     function onLeagueSelected(value: League | null) {
         let updated = { ...matchStateObject };
         updated.league = value;
-        updateError(ERROR_LEAGUE, '')
+        updateError(ERROR_LEAGUE, "")
         onUpdate(updated);
     }
 
@@ -144,12 +146,12 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
 
         let gameStyle = gameStyles.filter(g => g.id === value);
         if (gameStyle.length === 0 || gameStyle.length > 1) {
-            updateError(ERROR_GAME_STYLE, "Spielsystem konnte nicht ausgewählt werden");
+            updateError(ERROR_GAME_STYLE, t("LeagueState.errorInvalidGameStyle"));
             return;
         }
         let updated = { ...matchStateObject };
         updated.gameStyle = gameStyle[0];
-        updateError(ERROR_GAME_STYLE, '')        
+        updateError(ERROR_GAME_STYLE, "")        
         onUpdate(updated);
     }
 }

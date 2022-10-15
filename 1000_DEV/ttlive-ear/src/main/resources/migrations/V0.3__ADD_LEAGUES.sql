@@ -1,5 +1,6 @@
 
 INSERT INTO ttlive.league(name, contest, region_id) VALUES
+('Hamburg Liga ', 'MEN', 6),
 ('1. Landesliga 1', 'MEN', 6),
 ('1. Landesliga 2', 'MEN', 6),
 ('2. Landesliga 1', 'MEN', 6),
@@ -28,4 +29,10 @@ INSERT INTO ttlive.league(name, contest, region_id) VALUES
 ('4. Kreisliga 1', 'MEN', 6),
 ('4. Kreisliga 2', 'MEN', 6),
 ('4. Kreisliga 3', 'MEN', 6),
-('4. Kreisliga 4', 'MEN', 6);
+('4. Kreisliga 4', 'MEN', 6),
+('Hamburg Liga', 'WOMEN', 6),
+('1. Landesliga', 'WOMEN', 6),
+('2. Landesliga', 'WOMEN', 6),
+('1. Bezirksliga', 'WOMEN', 6),
+('2. Bezirksliga 1', 'WOMEN', 6),
+('1. Kreisliga', 'WOMEN', 6);

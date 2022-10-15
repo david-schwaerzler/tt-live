@@ -9,9 +9,6 @@ import deDe from './locale/de';
 
 const resources = {...deDe, ...enEn};
 
-console.log(resources)
-
-
 i18n
   .use(initReactI18next)
   // init i18next
@@ -19,7 +16,7 @@ i18n
   .init({
     resources,
     fallbackLng: 'de',
-    debug: true,
+    debug: false,
 
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
