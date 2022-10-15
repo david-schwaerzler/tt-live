@@ -19,6 +19,8 @@ public class GameStyleDto {
 	private String name;
 	private String description;	
 	private String gameOrder;
+	private int numPlayers;
+	private int numDoubles;
 	
 	public static class GameStyleDtoBuilder {
 		public GameStyleDtoBuilder bo(GameStyle bo) {
@@ -26,6 +28,8 @@ public class GameStyleDto {
 			this.name = bo.getName();
 			this.description = bo.getDescription();
 			this.gameOrder = bo.getGameOrder();
+			this.numPlayers = bo.getNumPlayers();
+			this.numDoubles = bo.getNumDoubles();
 			return this;
 		}		
 	}

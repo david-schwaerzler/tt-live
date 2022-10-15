@@ -1,6 +1,7 @@
 package com.ttlive.persistence.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -62,6 +64,9 @@ public class MatchEntity {
 	@ManyToOne
 	@JoinColumn(name = "game_style_id", referencedColumnName = "id")
 	private GameStyleEntity gameStyle;
+	
+	@OneToMany(mappedBy = "match")
+	private List<GameEntity> games;	
 	
 	@CreationTimestamp
 	@Column(name = "created_at")

@@ -1,4 +1,4 @@
-import { Autocomplete, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
+import { Autocomplete, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -6,7 +6,7 @@ import { GameStyle } from "../../rest/GameStyle";
 import { League } from "../../rest/League";
 import { Config } from "../utils/Config";
 import ErrorMessage from "../utils/ErrorMessage";
-import { spacingNormal, spacingSmall } from "../utils/StyleVars";
+import { spacingLarge, spacingNormal, spacingSmall } from "../utils/StyleVars";
 import { MatchStateObject } from "./MatchStateObject";
 import { StateProps } from "./StateProps";
 
@@ -30,7 +30,6 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
 
     const fetchLeagues = useCallback(async () => {
         try {
-
             if (matchStateObject.region == null) {
                 updateError(ERROR_GAME_STYLE, t("LeagueState.errorRegion"))
                 return;
@@ -42,7 +41,7 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
             let response = await fetch(Config.REST_URL + `/region/${matchStateObject.region.id}/leagues?contest=${matchStateObject.contest}`)
             if (!response.ok) {
                 console.log(`Error fetching leagues. status: "${response.status}"`)
-                updateError(ERROR_GENERAL, t("LeagueState.errorFetch"));
+                updateError(ERROR_GENERAL, t("Common.errorFetch"));
                 return;
             }
             let leagues: Array<League> = await response.json();
@@ -50,7 +49,7 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
 
         } catch (error) {
             console.log(`Error fetching leagues. error: "${error}"`)
-            updateError(ERROR_GENERAL, t("LeagueState.errorFetch"))
+            updateError(ERROR_GENERAL, t("Common.errorFetch"))
         }
     }, [updateError, matchStateObject.region, matchStateObject.contest, t]);
 
@@ -59,14 +58,14 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
             let response = await fetch(Config.REST_URL + "/game_style")
             if (!response.ok) {
                 console.log(`Error fetching gameStyle. status: "${response.status}"`)
-                updateError(ERROR_GENERAL, t("LeagueState.errorFetch"));
+                updateError(ERROR_GENERAL, t("Common.errorFetch"));
                 return;
             }
             let gameStyles: Array<GameStyle> = await response.json();
             setGameStyles(gameStyles);
         } catch (error) {
             console.log(`Error fetching gameStyle. error: "${error}"`)
-            updateError(ERROR_GENERAL, t("LeagueState.errorFetch"))
+            updateError(ERROR_GENERAL, t("Common.errorFetch"))
         }
     }, [updateError, t]);
 
@@ -97,7 +96,7 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
         <Box sx={{ width: "100%" }}>
             <ErrorMessage msg={errorMsgs[ERROR_GENERAL]} centered sx={{ paddingBottom: spacingSmall }} />
 
-            <Stack sx={{ flexDirection: { xs: "column", md: "row" },  alignItems: {xs: "center", md: "flex-end"} }} justifyContent="space-evenly" >
+            <Stack sx={{ flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "center", md: "flex-end" } }} justifyContent="space-evenly" >
                 <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
                     <ErrorMessage msg={errorMsgs[ERROR_LEAGUE]} centered />
                     <Autocomplete
@@ -132,6 +131,14 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
                     </FormControl>
                 </Box>
             </Stack>
+
+
+            {matchStateObject.gameStyle !== null && (
+                <Box sx={{ paddingTop: spacingLarge }}>
+                    <Typography sx={{ fontWeight: "bold" }}  >{t("LeagueState.gameStyleDesc")}</Typography>
+                    <Typography sx={{ fontStyle: "italic", paddingTop: spacingSmall}}>{matchStateObject.gameStyle.description}</Typography>
+                </Box>
+            )}
         </Box >
     );
 
@@ -151,7 +158,7 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
         }
         let updated = { ...matchStateObject };
         updated.gameStyle = gameStyle[0];
-        updateError(ERROR_GAME_STYLE, "")        
+        updateError(ERROR_GAME_STYLE, "")
         onUpdate(updated);
     }
 }

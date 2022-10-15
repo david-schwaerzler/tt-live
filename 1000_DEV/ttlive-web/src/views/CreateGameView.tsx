@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import LeagueState from "../components/create_game/LeagueState";
 import { MatchStateObject } from "../components/create_game/MatchStateObject";
 import RegionState from "../components/create_game/RegionState";
+import TeamState from "../components/create_game/TeamState";
 import { spacingNormal } from "../components/utils/StyleVars";
 
 export interface CreateGameViewProps {
@@ -24,12 +25,23 @@ function setValidate(validate: ((matchStateObject: MatchStateObject) => boolean)
 const CreateGameView = (props: CreateGameViewProps) => {
 
     const [currentStep, setCurrentStep] = useState(Steps.REGION);
-    const [matchStateObject, setMatchStateObject] = useState<MatchStateObject>({ contest: null, league: null, region: null, gameStyle: null });
+    const [matchStateObject, setMatchStateObject] = useState<MatchStateObject>({
+        contest: null,
+        league: null,
+        region: null,
+        gameStyle: null,
+        guestTeam: null,
+        homeTeam: null,
+        guestClub: null,
+        homeClub: null,
+        guestPositions: null,
+        homePositions: null
+    });
     const [t] = useTranslation();
 
     return (
         <Paper sx={{ padding: spacingNormal }}>
-            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+            <Box sx={{ display: { xs: "none", sm: "block" } }}>
                 <Stepper activeStep={currentStep} alternativeLabel >
                     <Step><StepLabel>{t("CreateGameView.stepRegion")}</StepLabel></Step>
                     <Step><StepLabel>{t("CreateGameView.stepLeague")}</StepLabel></Step>
@@ -41,7 +53,7 @@ const CreateGameView = (props: CreateGameViewProps) => {
 
             {renderState()}
 
-            <Box sx={{ display: { xs: 'block', sm: 'none' }, paddingTop: spacingNormal }}>
+            <Box sx={{ display: { xs: "block", sm: "none" }, paddingTop: spacingNormal }}>
                 <MobileStepper
                     variant="text"
                     steps={4}
@@ -62,7 +74,7 @@ const CreateGameView = (props: CreateGameViewProps) => {
                 />
             </Box>
 
-            <Stack sx={{ display: { xs: 'none', sm: 'flex' }, paddingTop: spacingNormal }} direction="row" justifyContent="center" gap="2em">
+            <Stack sx={{ display: { xs: "none", sm: "flex" }, paddingTop: spacingNormal }} direction="row" justifyContent="center" gap="2em">
                 <Button variant="outlined" disabled={currentStep === 0} onClick={setPreviousStep}>{t("CreateGameView.back")}</Button>
                 <Button variant="outlined" onClick={setNextStep}>{t("CreateGameView.next")}</Button>
             </Stack>
@@ -75,19 +87,24 @@ const CreateGameView = (props: CreateGameViewProps) => {
             <Box sx={{ paddingTop: spacingNormal }}>
                 {currentStep === Steps.REGION && <RegionState setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} />}
                 {currentStep === Steps.LEAGUE && <LeagueState setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} />}
+                {currentStep === Steps.HOME_TEAM && <TeamState isHomeTeam={true} setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} />}
+                {currentStep === Steps.GUEST_TEAM && <TeamState isHomeTeam={false} setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} />}
             </Box>
         );
     }
 
     function setNextStep() {
-        if (currentStep >= Steps.GUEST_TEAM)
-            return; // ToDo handle finish
+
 
         let numericValue: number = currentStep;
 
         if (onValidate != null)
-            if(onValidate(matchStateObject) === false)
+            if (onValidate(matchStateObject) === false)
                 return;
+
+        if (numericValue >= Steps.GUEST_TEAM)
+            return; // ToDo handle finish
+
         setCurrentStep(numericValue + 1);
     }
 

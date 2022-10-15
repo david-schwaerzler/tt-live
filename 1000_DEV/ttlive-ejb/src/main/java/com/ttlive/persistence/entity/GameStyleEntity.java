@@ -29,6 +29,12 @@ public class GameStyleEntity {
 	@Column(name = "game_order")
 	private String gameOrder;
 	
+	@Column(name = "num_players")
+	private int numPlayers;
+	
+	@Column(name = "num_doubles")
+	private int numDoubles;
+	
 	@OneToMany(mappedBy = "gameStyle")
 	private List<MatchEntity> matches;
 }

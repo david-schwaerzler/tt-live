@@ -24,6 +24,7 @@ import com.ttlive.service.RegionService;
 @Stateless
 @Path("/region")
 public class RegionReceiver {
+	
 	@EJB
 	private RegionService regionService;
 

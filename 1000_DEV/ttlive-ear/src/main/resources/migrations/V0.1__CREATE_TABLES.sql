@@ -55,6 +55,8 @@ CREATE TABLE game_style (
 	id BIGSERIAl PRIMARY KEY,
 	name VARCHAR(64) NOT NULL,
 	description VARCHAR(1024) NOT NULL,
+	num_players INTEGER NOT NULL,
+	num_doubles INTEGER NOT NULL,
 	game_order VARCHAR(1024) NOT NULL
 );
 
@@ -73,6 +75,27 @@ CREATE TABLE match (
 	guest_team_id BIGINT NOT NULL REFERENCES team(id),	
 	game_style_id BIGINT NOT NULL REFERENCES game_style(id),
 	account_id BIGINT REFERENCES account(id),
+	
+	created_at TIMESTAMP NOT NULL DEFAULT now(),
+	modified_at TIMESTAMP NOT NULL DEFAULT now()	
+);
+
+CREATE TABLE game (
+	id BIGSERIAl PRIMARY KEY,
+	
+	game_number INTEGER NOT NULL,
+	home_player_number INTEGER NOT NULL,
+	guest_player_number INTEGER NOT NULL,
+	home_player VARCHAR(128) NOT NULL,
+	guest_player VARCHAR(128) NOT NULL,
+	is_double BOOLEAN NOT NULL DEFAULT false,
+	set1 VARCHAR(32),
+	set2 VARCHAR(32),
+	set3 VARCHAR(32),
+	set4 VARCHAR(32),
+	set5 VARCHAR(32),
+	
+	match_id BIGINT NOT NULL REFERENCES match(id),
 	
 	created_at TIMESTAMP NOT NULL DEFAULT now(),
 	modified_at TIMESTAMP NOT NULL DEFAULT now()	

@@ -1,7 +1,7 @@
 const deDe = {
     de: {
         translation: {
-           
+            "Common.fetchError": "Leider kann der Server nicht erreicht werden. Bitte versuchen sie es später noch einmal",
 
             "MenuBar.home": "Home",
             "LoginForm.login": "Login",
@@ -22,20 +22,27 @@ const deDe = {
 
             "RegionState.region": "Verband",
             "RegionState.contest": "Konkurrenz",
-            "RegionState.contestMen": "Damen",
-            "RegionState.contestWomen": "Herren",
-            "RegionState.errorFetch": "Leider kann der Server nicht erreicht werden. Bitte versuchen sie es später noch einmal",
+            "RegionState.contestMen": "Herren",
+            "RegionState.contestWomen": "Damen",
             "RegionState.errorEmptyRegion": "Region muss gesetzt werden",
             "RegionState.errorEmptyContest": "Konkurrenz muss gesetzt werden",
             
             "LeagueState.league": "Liga",
             "LeagueState.gameStyle": "Spielsystem",
+            "LeagueState.gameStyleDesc": "Spielsystem:",
             "LeagueState.errorInvalidGameStyle": "Spielsystem konnte nicht ausgewählt werden",
             "LeagueState.errorEmptyGameStyle": "Spielsystem muss gesetzt werden",
             "LeagueState.errorEmptyLeague": "Liga muss gesetzt werden",
-            "LeagueState.errorFetch": "Leider kann der Server nicht erreicht werden. Bitte versuchen sie es später noch einmal",
             "LeagueState.errorRegion": "Es muss zunächst ein Verband ausgewählt werden.",
             "LeagueState.errorContest": "Es muss zunächst eine Konkurrenz ausgewählt werden.",
+
+            "TeamState.homeTeam": "Heinverein",
+            "TeamState.guestTeam": "Gastverein",
+            "TeamState.number": "Mannschaft",
+            "TeamState.errorGameStyle": "Es muss zunächst ein Spielsystem ausgewählt werden",
+            "TeamState.errorLeague": "Es muss zunächst eine Liga ausgewählt werden",
+            "TeamState.errorEmptyClub": "Verein muss gesetzt werden",
+            "TeamState.errorEmptyNumber": "Mannschaft muss gesetzt werden",
 
         }
     }

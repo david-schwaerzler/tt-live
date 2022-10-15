@@ -33,14 +33,14 @@ const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
             let response = await fetch(Config.REST_URL + "/region")
             if (!response.ok) {
                 console.log(`Error fetching regions. status: '${response.status}'`)
-                updateError(ERROR_GENERAL, t('RegionState.errorFetch'));
+                updateError(ERROR_GENERAL, t('Common.errorFetch'));
                 return;
             }
             let regions: Array<Region> = await response.json();
             setRegions(regions);
         } catch (error) {
             console.log(`Error fetching regions. error: '${error}'`)
-            updateError(ERROR_GENERAL, t('RegionState.errorFetch'))
+            updateError(ERROR_GENERAL, t('Common.errorFetch'))
         }
     }, [updateError, t]);
 

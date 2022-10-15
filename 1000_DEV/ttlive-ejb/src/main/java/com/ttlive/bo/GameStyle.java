@@ -12,6 +12,8 @@ public class GameStyle {
 	private String name;
 	private String description;	
 	private String gameOrder;
+	private int numPlayers;
+	private int numDoubles;
 	
 	public static class GameStyleBuilder {
 		public GameStyleBuilder entity(GameStyleEntity entity) {
@@ -19,6 +21,8 @@ public class GameStyle {
 			this.name = entity.getName();
 			this.description = entity.getDescription();
 			this.gameOrder = entity.getGameOrder();
+			this.numPlayers = entity.getNumPlayers();
+			this.numDoubles = entity.getNumDoubles();			
 			return this;
 		}
 		
