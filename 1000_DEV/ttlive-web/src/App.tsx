@@ -9,6 +9,7 @@ import {
 import CreateGameView from './views/CreateGameView';
 import React from 'react';
 import MainView from './containers/MainView';
+import LoginView from './views/LoginView';
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={renderContent(<HomeView />)} />
                     <Route path="create" element={renderContent(<CreateGameView />)} />
+                    <Route path="login" element={renderContent(<LoginView />)} />
                     <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
             </BrowserRouter>

@@ -2,7 +2,7 @@ import { AppBar, Button, Divider, Toolbar, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom'
-import LoginForm from "./LoginForm";
+import MenuLoginForm from "../components/login/MenuLoginForm";
 
 export interface MenuBarProps {
 
@@ -29,7 +29,7 @@ const MenuBar = (props: MenuBarProps) => {
                         </Button>
                     </Link>
                 </Box>
-                <LoginForm padding={padding} />
+                <MenuLoginForm padding={padding} />
             </Toolbar>
         </AppBar>
     );

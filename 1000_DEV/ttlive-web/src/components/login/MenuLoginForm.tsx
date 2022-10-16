@@ -5,7 +5,7 @@ import { Box } from "@mui/system";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-export interface LoginFormProps {
+export interface MenuLoginFormProps {
     /* Resposive padding for the Toolbar */
     padding: any
 }
@@ -65,7 +65,7 @@ const WhiteButton = styled(Button)({
 })
 
 
-const LoginForm = (props: LoginFormProps) => {
+const MenuLoginForm = (props: MenuLoginFormProps) => {
 
     const [loginAnchor, setLoginAnchor] = useState<null | HTMLElement>(null);
     const [t] = useTranslation();
@@ -113,4 +113,4 @@ const LoginForm = (props: LoginFormProps) => {
 }
 
 
-export default LoginForm;
+export default MenuLoginForm;
