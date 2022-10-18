@@ -4,35 +4,20 @@ import { Button, IconButton, Menu, Stack, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { spacingNormal, spacingSmall } from "../utils/StyleVars";
 
 export interface MenuLoginFormProps {
     /* Resposive padding for the Toolbar */
     padding: any
 }
 
-const SmallTextField = styled(TextField)({
-    margin: "auto",
-
-    "& .MuiFormLabel-root": {
-       // transform: "translate(14px, 5px) scale(1);",
-    },
-    "& .MuiFormLabel-root.Mui-focused": {
-       // transform: "translate(14px, -9px) scale(0.75);",
-    },
-    input: {
-        padding: "5px"
-    }
-});
-
-const WhiteTextField = styled(SmallTextField)({
+const WhiteTextField = styled(TextField)({
 
     "& .MuiFormLabel-root": {
         color: "white",
-        transform: "translate(14px, 5px) scale(1);",
     },
     "& .MuiFormLabel-root.Mui-focused": {
         color: "white",
-        transform: "translate(14px, -9px) scale(0.75);",
     },
     "& label.Mui-focused": {
         color: "white",
@@ -56,8 +41,6 @@ const WhiteTextField = styled(SmallTextField)({
 
 const WhiteButton = styled(Button)({
     color: "white",
-    paddingTop: "4px",
-    paddingBottom: "4px",
     borderColor: "white",
     "&:hover": {
         borderColor: "white"
@@ -72,10 +55,10 @@ const MenuLoginForm = (props: MenuLoginFormProps) => {
     return (
         <Box sx={{ pl: props.padding }}>
             <Box sx={{ display: { xs: "none", md: "flex" }, gap: "1em", flexGrow: 0 }}  >
-                <WhiteTextField label={t("LoginForm.username")} variant="outlined" />
-                <WhiteTextField label={t("LoginForm.password")} variant="outlined" />
-                <WhiteButton variant="outlined">{t("LoginForm.login")}</WhiteButton>
-                <WhiteButton variant="outlined">{t("LoginForm.register")}</WhiteButton>
+                <WhiteTextField size="small" label={t("LoginForm.username")} variant="outlined" />
+                <WhiteTextField size="small" label={t("LoginForm.password")} variant="outlined" />
+                <WhiteButton size="small" variant="outlined">{t("LoginForm.login")}</WhiteButton>
+                <WhiteButton size="small" variant="outlined">{t("LoginForm.register")}</WhiteButton>
 
             </Box>
             <Box sx={{ display: { xs: "flex", md: "none" }, flexGrow: 0 }}  >
@@ -96,14 +79,14 @@ const MenuLoginForm = (props: MenuLoginFormProps) => {
                     vertical: "top",
                     horizontal: "right",
                 }}
-                open={loginAnchor != null}                
-                onClose={() => setLoginAnchor(null)}>                
-                <Stack direction="column" sx={{padding: "0px 10px 10px 10px"}} spacing="10px">
-                    <SmallTextField label={t("LoginForm.username")} sx={{ pt: "10px" }} inputProps={{ style: { padding: "5px" } }} variant="outlined" />
-                    <SmallTextField label={t("LoginForm.password")} sx={{ pt: "10px" }} inputProps={{ style: { padding: "5px" } }} variant="outlined" />
+                open={loginAnchor != null}
+                onClose={() => setLoginAnchor(null)}>
+                <Stack direction="column" sx={{ paddingTop: spacingNormal, paddingLeft: spacingNormal, paddingRight: spacingNormal}} spacing={spacingNormal}>
+                    <TextField size="small" label={t("LoginForm.username")} variant="outlined" />
+                    <TextField size="small" label={t("LoginForm.password")} variant="outlined" />
                     <Box>
-                        <Button>{t("LoginForm.login")}</Button>
-                        <Button>{t("LoginForm.register")}</Button>
+                        <Button size="small">{t("LoginForm.login")}</Button>
+                        <Button size="small">{t("LoginForm.register")}</Button>
                     </Box>
                 </Stack>
             </Menu>

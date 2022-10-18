@@ -1,7 +1,5 @@
 package com.ttlive.persistence.entity;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,37 +9,29 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import lombok.Data;
 import lombok.ToString;
 
 @Data
 @Entity
-@Table(name = "player")
-public class PlayerEntity {
-	
+@Table(name = "doubles")
+public class DoublesEntity {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
-	@Column(name = "name")
-	private String name;	
 
 	@Column(name = "position")
 	private int position;
-	
+
 	@Column(name = "is_home_team")
 	private boolean isHomeTeam;
 	
-	@CreationTimestamp
-	@Column(name = "created_at")
-	private LocalDateTime createdAt;
+	@Column(name = "player_1")
+	private String player1;
 	
-	@UpdateTimestamp
-	@Column(name = "modified_at")
-	private LocalDateTime modifiedAt;
+	@Column(name = "player_2")
+	private String player2;
 	
 	@ManyToOne
 	@JoinColumn(name = "match_id", referencedColumnName = "id")
@@ -52,10 +42,12 @@ public class PlayerEntity {
 		setMatch(match, true);
 	}
 	public void setMatch(MatchEntity match, boolean setBoth) {
-		if(this.match != null && setBoth) 
-			this.match.removePlayer(this, false);
+		if(this.match != null && setBoth)
+			this.match.removeDoubles(this, false);
+		
 		this.match = match;
+		
 		if(setBoth)
-			match.addPlayer(this);
+			match.addDoubles(this, false);
 	}
 }

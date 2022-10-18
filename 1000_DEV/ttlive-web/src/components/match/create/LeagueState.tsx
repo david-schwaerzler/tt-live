@@ -1,13 +1,14 @@
-import { Autocomplete, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { GameStyle } from "../../rest/GameStyle";
-import { League } from "../../rest/League";
-import { Config } from "../utils/Config";
-import ErrorMessage from "../utils/ErrorMessage";
-import { spacingLarge, spacingNormal, spacingSmall } from "../utils/StyleVars";
+import { GameStyle } from "../../../rest/GameStyle";
+import { League } from "../../../rest/League";
+import { Config } from "../../utils/Config";
+import ErrorMessage from "../../utils/ErrorMessage";
+import { spacingLarge, spacingNormal, spacingSmall } from "../../utils/StyleVars";
 import { MatchStateObject } from "./MatchStateObject";
+import LeagueSelector from "./selectors/LeagueSelector";
 import { StateProps } from "./StateProps";
 
 const ERROR_GENERAL = 0;
@@ -16,7 +17,6 @@ const ERROR_GAME_STYLE = 2;
 
 const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) => {
     const [leagues, setLeagues] = useState<Array<League>>([]);
-    const [leagueInput, setLeagueInput] = useState<string>("")
     const [gameStyles, setGameStyles] = useState<Array<GameStyle>>([]);
     const [errorMsgs, setErrorMsgs] = useState<Array<string>>([]);
     const hasFetchedData = useRef(false);
@@ -94,25 +94,23 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
 
     return (
         <Box sx={{ width: "100%" }}>
+
+            <Typography variant="h5" sx={{ textAlign: "center", paddingBottom: spacingNormal }}>
+                {t('CreateGameView.stepLeague')}
+            </Typography>
+
             <ErrorMessage msg={errorMsgs[ERROR_GENERAL]} centered sx={{ paddingBottom: spacingSmall }} />
 
-            <Stack sx={{ flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "center", md: "flex-end" } }} justifyContent="space-evenly" >
+            <Stack sx={{ flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "center", md: "flex-end" }, gap: spacingNormal }} justifyContent="space-around" >
                 <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
                     <ErrorMessage msg={errorMsgs[ERROR_LEAGUE]} centered />
-                    <Autocomplete
-                        id="auto-league"
-                        sx={{ minWidth: "200px", alignSelf: "center" }}
-                        value={matchStateObject.league}
-                        onChange={(e, value) => onLeagueSelected(value)}
-                        options={leagues}
-                        getOptionLabel={option => option.name}
-                        inputValue={leagueInput}
-                        onInputChange={(e, value) => setLeagueInput(value)}
-                        renderInput={(params) => <TextField {...params} label={t("LeagueState.league")} />}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                    <LeagueSelector
+                        matchStateObject={matchStateObject}
+                        leagues={leagues}
+                        onUpdate={onUpdate}
+                        updateError={msg => updateError(ERROR_LEAGUE, msg)}
                     />
                 </Box>
-                <Box sx={{ paddingTop: spacingNormal, display: { xs: "block", md: "none" } }}></Box>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
                     <ErrorMessage msg={errorMsgs[ERROR_GAME_STYLE]} centered />
                     <FormControl sx={{ minWidth: "200px", alignSelf: "center" }}  >
@@ -136,18 +134,11 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
             {matchStateObject.gameStyle !== null && (
                 <Box sx={{ paddingTop: spacingLarge }}>
                     <Typography sx={{ fontWeight: "bold" }}  >{t("LeagueState.gameStyleDesc")}</Typography>
-                    <Typography sx={{ fontStyle: "italic", paddingTop: spacingSmall}}>{matchStateObject.gameStyle.description}</Typography>
+                    <Typography sx={{ fontStyle: "italic", paddingTop: spacingSmall }}>{matchStateObject.gameStyle.description}</Typography>
                 </Box>
             )}
         </Box >
     );
-
-    function onLeagueSelected(value: League | null) {
-        let updated = { ...matchStateObject };
-        updated.league = value;
-        updateError(ERROR_LEAGUE, "")
-        onUpdate(updated);
-    }
 
     function onGameStyleSelected(value: string | number) {
 

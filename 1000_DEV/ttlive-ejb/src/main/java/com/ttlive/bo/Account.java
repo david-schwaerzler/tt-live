@@ -33,7 +33,7 @@ public class Account {
 			this.modifiedAt = entity.getModifiedAt();
 			return this;
 		}
-		public AccountBuilder matchEntities(List<MatchEntity> entities) {
+		public AccountBuilder matches(List<MatchEntity> entities) {
 			this.matches = new LinkedList<Match>();
 			entities.forEach(m -> matches.add(Match.builder().entity(m).build()));
 			return this;

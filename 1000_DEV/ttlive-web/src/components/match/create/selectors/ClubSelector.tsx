@@ -1,7 +1,7 @@
 import { Autocomplete, createFilterOptions, FilterOptionsState, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Team } from "../../../rest/Team";
+import { Team } from "../../../../rest/Team";
 import { MatchStateObject } from "../MatchStateObject";
 
 export interface ClubSelectorProps {
@@ -38,7 +38,7 @@ const ClubSelector = ({ onUpdate, updateError, isHomeTeam, matchStateObject, tea
             onChange={(e, value) => onClubSelected(value)}
             options={clubs}
             inputValue={clubInput}
-            onInputChange={(e, value) => value.startsWith("Add \"") ? value.replace("Add \"", "").replace("\"", "") : setClubInput(value)}
+            onInputChange={(e, value) => value.startsWith("Add \"") === false && setClubInput(value)}
             renderInput={(params) => <TextField {...params} label={isHomeTeam ? t("TeamState.homeTeam") : t("TeamState.guestTeam")} />}
             filterOptions={filterOptions}
         />

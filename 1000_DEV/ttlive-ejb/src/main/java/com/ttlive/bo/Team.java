@@ -34,12 +34,12 @@ public class Team {
 			return this;			
 		}
 		
-		public TeamBuilder leagueEntity(LeagueEntity league) {
+		public TeamBuilder league(LeagueEntity league) {
 			this.league = League.builder().entity(league).build();
 			return this;
 		}
 		
-		public TeamBuilder playerEntities(List<PlayerEntity> entities) {
+		public TeamBuilder players(List<PlayerEntity> entities) {
 			this.players = new LinkedList<Player>();
 			entities.forEach(p -> players.add(Player.builder().entity(p).build()));
 			return this;

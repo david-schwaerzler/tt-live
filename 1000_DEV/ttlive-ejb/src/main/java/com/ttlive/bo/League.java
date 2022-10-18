@@ -37,11 +37,11 @@ public class League {
 			this.modifiedAt = entity.getModifiedAt();
 			return this;
 		}
-		public LeagueBuilder regionEntity(RegionEntity entity) {
+		public LeagueBuilder region(RegionEntity entity) {
 			this.region = Region.builder().entity(entity).build();
 			return this;
 		}
-		public LeagueBuilder teamEntities(List<TeamEntity> entities) {
+		public LeagueBuilder teams(List<TeamEntity> entities) {
 			this.teams = new LinkedList<Team>();
 			entities.forEach(t -> teams.add(Team.builder().entity(t).build()));
 			return this;

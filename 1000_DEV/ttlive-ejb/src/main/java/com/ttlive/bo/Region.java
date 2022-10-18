@@ -26,7 +26,7 @@ public class Region {
 			return this;
 		}
 		
-		public RegionBuilder leagueEntities(List<LeagueEntity> entities) {
+		public RegionBuilder leagues(List<LeagueEntity> entities) {
 			this.leagues = new LinkedList<League>();
 			entities.forEach(l -> leagues.add(League.builder().entity(l).build()));
 			return this;

@@ -1,20 +1,24 @@
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
-import { Button, Divider, MobileStepper, Paper, Step, StepLabel, Stepper } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, MobileStepper, Paper, Step, StepLabel, Stepper } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import LeagueState from "../components/create_game/LeagueState";
-import { MatchStateObject } from "../components/create_game/MatchStateObject";
-import RegionState from "../components/create_game/RegionState";
-import TeamState from "../components/create_game/TeamState";
+import { useNavigate } from "react-router";
+import LeagueState from "../components/match/create/LeagueState";
+import { MatchStateObject } from "../components/match/create/MatchStateObject";
+import RegionState from "../components/match/create/RegionState";
+import SummaryState from "../components/match/create/SummaryState";
+import TeamState from "../components/match/create/TeamState";
+import { Config } from "../components/utils/Config";
 import { spacingNormal } from "../components/utils/StyleVars";
+import { RequestMatch } from "../rest/Match";
 
 export interface CreateGameViewProps {
 
 }
 
 enum Steps {
-    REGION = 0, LEAGUE, HOME_TEAM, GUEST_TEAM
+    REGION = 0, LEAGUE, HOME_TEAM, GUEST_TEAM, SUMMARY
 }
 
 let onValidate: null | ((matchStateObject: MatchStateObject) => boolean);
@@ -33,20 +37,32 @@ const CreateGameView = (props: CreateGameViewProps) => {
         guestTeam: null,
         homeTeam: null,
         guestClub: null,
-        homeClub: null,
-        guestPositions: null,
-        homePositions: null
+        homeClub: null
     });
+    const [errorDialogOpen, setErrorDialogOpen] = useState(false);
     const [t] = useTranslation();
+    const navigate = useNavigate();
 
     return (
         <Paper sx={{ padding: spacingNormal }}>
+
+            <Dialog onClose={onErrorDialogClosed} open={errorDialogOpen} >
+                <DialogTitle>{t("Common.error")}</DialogTitle>
+                <DialogContent>
+                    {t("CreateGameView.createError")}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onErrorDialogClosed} variant="outlined">{t("Common.ok")}</Button>
+                </DialogActions>
+            </Dialog>
+
             <Box sx={{ display: { xs: "none", sm: "block" } }}>
                 <Stepper activeStep={currentStep} alternativeLabel >
                     <Step><StepLabel>{t("CreateGameView.stepRegion")}</StepLabel></Step>
                     <Step><StepLabel>{t("CreateGameView.stepLeague")}</StepLabel></Step>
                     <Step><StepLabel>{t("CreateGameView.stepHomeTeam")}</StepLabel></Step>
                     <Step><StepLabel>{t("CreateGameView.stepGuestTeam")}</StepLabel></Step>
+                    <Step><StepLabel>{t("CreateGameView.stepSummary")}</StepLabel></Step>
                 </Stepper>
                 <Divider orientation="horizontal" sx={{ paddingTop: spacingNormal }} />
             </Box>
@@ -56,12 +72,12 @@ const CreateGameView = (props: CreateGameViewProps) => {
             <Box sx={{ display: { xs: "block", sm: "none" }, paddingTop: spacingNormal }}>
                 <MobileStepper
                     variant="text"
-                    steps={4}
+                    steps={5}
                     position="bottom"
                     activeStep={currentStep}
                     nextButton={
                         <Button size="small" onClick={setNextStep} disabled={false}>
-                            {t("CreateGameView.next")}
+                            {isLastStep() ? t("CreateGameView.submit") : t("CreateGameView.next")}
                             <KeyboardArrowRight />
                         </Button>
                     }
@@ -76,7 +92,9 @@ const CreateGameView = (props: CreateGameViewProps) => {
 
             <Stack sx={{ display: { xs: "none", sm: "flex" }, paddingTop: spacingNormal }} direction="row" justifyContent="center" gap="2em">
                 <Button variant="outlined" disabled={currentStep === 0} onClick={setPreviousStep}>{t("CreateGameView.back")}</Button>
-                <Button variant="outlined" onClick={setNextStep}>{t("CreateGameView.next")}</Button>
+                <Button variant="outlined" onClick={setNextStep}>
+                    {isLastStep() ? t("CreateGameView.submit") : t("CreateGameView.next")}
+                </Button>
             </Stack>
 
         </Paper>
@@ -89,21 +107,22 @@ const CreateGameView = (props: CreateGameViewProps) => {
                 {currentStep === Steps.LEAGUE && <LeagueState setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} />}
                 {currentStep === Steps.HOME_TEAM && <TeamState isHomeTeam={true} setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} />}
                 {currentStep === Steps.GUEST_TEAM && <TeamState isHomeTeam={false} setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} />}
+                {currentStep === Steps.SUMMARY && <SummaryState setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} />}
             </Box>
         );
     }
 
     function setNextStep() {
-
-
         let numericValue: number = currentStep;
 
         if (onValidate != null)
             if (onValidate(matchStateObject) === false)
                 return;
 
-        if (numericValue >= Steps.GUEST_TEAM)
-            return; // ToDo handle finish
+        if (isLastStep()) {
+            onSubmit();
+            return;
+        }
 
         setCurrentStep(numericValue + 1);
     }
@@ -120,6 +139,76 @@ const CreateGameView = (props: CreateGameViewProps) => {
     function onUpdate(updated: MatchStateObject) {
         let merged = { ...matchStateObject, ...updated }
         setMatchStateObject(merged);
+    }
+
+    function isLastStep() {
+        return currentStep === Steps.SUMMARY;
+    }
+
+    function onErrorDialogClosed() {
+        setErrorDialogOpen(false)
+        navigate("/home")
+    }
+
+    async function onSubmit() {
+        if (matchStateObject.contest == null) {
+            console.log("Error match wizard: contest is null");
+            setErrorDialogOpen(true);
+            return;
+        } else if (matchStateObject.region == null) {
+            console.log("Error match wizard: region is null");
+            setErrorDialogOpen(true);
+            return;
+        } else if (matchStateObject.gameStyle == null) {
+            console.log("Error match wizard: gameStyle is null");
+            setErrorDialogOpen(true);
+            return;
+        } else if (matchStateObject.league == null) {
+            console.log("Error match wizard: league is null");
+            setErrorDialogOpen(true);
+            return;
+        } else if (matchStateObject.homeTeam == null) {
+            console.log("Error match wizard: homeTeam is null");
+            setErrorDialogOpen(true);
+            return;
+        } else if (matchStateObject.guestTeam == null) {
+            console.log("Error match wizard: guestTeam is null");
+            setErrorDialogOpen(true);
+            return;
+        }
+
+        let requestMatch: RequestMatch = {
+            contest: matchStateObject.contest,
+            regionId: matchStateObject.region.id,
+            gameStyleId: matchStateObject.gameStyle.id,
+            league: matchStateObject.league,
+            homeTeam: matchStateObject.homeTeam,
+            guestTeam: matchStateObject.guestTeam
+        };
+
+        try {
+            let response = await fetch(Config.REST_URL + "/match", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestMatch)
+            });
+            if (!response.ok) {
+                console.log(`Error creating match on Server: ${response.status}`)
+                setErrorDialogOpen(true);
+                return;
+            }
+
+            let json: { code: string } = await response.json();
+            navigate(`/home?code= + ${json.code}`)
+
+        } catch (error) {
+            console.log(`Error creating match on Server: ${error}`)
+            setErrorDialogOpen(true);
+            return;
+        }
+
     }
 }
 

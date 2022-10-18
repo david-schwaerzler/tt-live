@@ -22,19 +22,40 @@ public class GameStyleEntity {
 
 	@Column(name = "name")
 	private String name;
-	
+
 	@Column(name = "description")
-	private String description;	
-	
+	private String description;
+
 	@Column(name = "game_order")
 	private String gameOrder;
-	
+
 	@Column(name = "num_players")
 	private int numPlayers;
-	
+
 	@Column(name = "num_doubles")
 	private int numDoubles;
-	
+
 	@OneToMany(mappedBy = "gameStyle")
 	private List<MatchEntity> matches;
+
+	public void addMatch(MatchEntity match) {
+		addMatch(match, true);
+	}
+
+	public void addMatch(MatchEntity match, boolean setBoth) {
+		if (!matches.contains(match))
+			matches.add(match);
+		if (setBoth)
+			match.setGameStyle(this, false);
+	}
+
+	public void removeMatch(MatchEntity match) {
+		removeMatch(match, true);
+	}
+
+	public void removeMatch(MatchEntity match, boolean setBoth) {
+		matches.remove(match);
+		if (setBoth)
+			match.setGameStyle(null, false);
+	}
 }

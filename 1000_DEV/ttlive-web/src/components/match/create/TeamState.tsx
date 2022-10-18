@@ -1,14 +1,13 @@
-import { Autocomplete, createFilterOptions, Stack, TextField } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { isNumericLiteral } from "typescript";
-import { Player } from "../../rest/Player";
-import { Team } from "../../rest/Team";
-import { Config } from "../utils/Config";
-import ErrorMessage from "../utils/ErrorMessage";
-import { spacingNormal, spacingSmall } from "../utils/StyleVars";
+import { Team } from "../../../rest/Team";
+import { Config } from "../../utils/Config";
+import ErrorMessage from "../../utils/ErrorMessage";
+import { spacingNormal } from "../../utils/StyleVars";
 import { MatchStateObject } from "./MatchStateObject";
+
 import ClubSelector from "./selectors/ClubSelector";
 import TeamNumberSelector from "./selectors/TeamNumberSelector";
 import { StateProps } from "./StateProps";
@@ -28,8 +27,6 @@ const TeamState = ({ matchStateObject, onUpdate, setValidate, isHomeTeam }: Team
     const [errorMsgs, setErrorMsgs] = useState<Array<string>>([]);
     const [teams, setTeams] = useState<Array<Team>>([]);
 
-    const [players, setPlayers] = useState<Array<Player>>([]);
-
     const hasFetchedData = useRef(false);
     const [t] = useTranslation();
 
@@ -42,6 +39,11 @@ const TeamState = ({ matchStateObject, onUpdate, setValidate, isHomeTeam }: Team
     const fetchTeams = useCallback(async () => {
         if (matchStateObject.league == null) {
             updateError(ERROR_GENERAL, t('TeamState.errorLeague'))
+            return;
+        }
+
+        if(matchStateObject.league.id === -1){ // League has been created by the user
+            setTeams([]);
             return;
         }
 
@@ -73,24 +75,26 @@ const TeamState = ({ matchStateObject, onUpdate, setValidate, isHomeTeam }: Team
                 return false;
             }
 
-            console.log(matchStateObject)
-
             return true;
         }
 
         if (hasFetchedData.current === false) {
             setValidate(onValidate);
             fetchTeams();
-            hasFetchedData.current = true;
+            hasFetchedData.current = true;           
         }
 
-    }, [updateError, matchStateObject.league, t, fetchTeams, setValidate, isHomeTeam, matchStateObject.homeTeam, matchStateObject.guestTeam])
+    }, [updateError, t, fetchTeams, setValidate, isHomeTeam, matchStateObject.homeTeam, matchStateObject.guestTeam, matchStateObject.league, matchStateObject.gameStyle])
 
     return (
         <Box sx={{ width: "100%" }}>
-            <ErrorMessage msg={errorMsgs[ERROR_GENERAL]} centered sx={{ paddingBottom: spacingSmall }} />
+
+            <Typography variant="h5" sx={{ textAlign: "center", paddingBottom: spacingNormal }}>
+                {isHomeTeam ? t('CreateGameView.stepHomeTeam') : t('CreateGameView.stepGuestTeam')}
+            </Typography>
+            <ErrorMessage msg={errorMsgs[ERROR_GENERAL]} centered sx={{ paddingBottom: spacingNormal }} />
             <Stack sx={{ flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "center", md: "flex-end" } }} justifyContent="space-evenly" >
-                <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: spacingNormal }}>
                     <ErrorMessage msg={errorMsgs[ERROR_CLUB]} centered />
                     <ClubSelector
                         isHomeTeam={isHomeTeam}
@@ -101,7 +105,7 @@ const TeamState = ({ matchStateObject, onUpdate, setValidate, isHomeTeam }: Team
                     />
                 </Box>
                 <Box sx={{ paddingTop: spacingNormal, display: { xs: "block", md: "none" } }}></Box>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: spacingNormal }}>
                     <ErrorMessage msg={errorMsgs[ERROR_NUMBER]} centered />
                     <TeamNumberSelector
                         isHomeTeam={isHomeTeam}
@@ -110,9 +114,10 @@ const TeamState = ({ matchStateObject, onUpdate, setValidate, isHomeTeam }: Team
                         onUpdate={onUpdate}
                         updateError={msg => updateError(ERROR_CLUB, msg)}
                     />
-
                 </Box>
             </Stack>
+
+          
         </Box>
     );
 

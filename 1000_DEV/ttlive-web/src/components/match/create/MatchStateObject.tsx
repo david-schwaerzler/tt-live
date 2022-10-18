@@ -1,8 +1,8 @@
-import { GameStyle } from "../../rest/GameStyle";
-import { League } from "../../rest/League";
-import { Region } from "../../rest/Region";
-import { Team } from "../../rest/Team";
-import { MatchPosition } from "./TeamPosition";
+import { GameStyle } from "../../../rest/GameStyle";
+import { League } from "../../../rest/League";
+import { Region } from "../../../rest/Region";
+import { Team } from "../../../rest/Team";
+import { MatchPosition } from "../MatchPosition";
 
 export interface MatchStateObject {
     region: Region | null;
@@ -13,6 +13,4 @@ export interface MatchStateObject {
     guestClub: string | null; // tmp variable used when the club is selected but not the team nr
     homeTeam: Team | null; 
     guestTeam: Team | null;  
-    homePositions: Array<MatchPosition> | null;
-    guestPositions: Array<MatchPosition> | null;
 }

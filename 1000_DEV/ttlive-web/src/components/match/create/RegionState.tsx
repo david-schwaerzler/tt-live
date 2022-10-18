@@ -1,11 +1,11 @@
-import { Autocomplete, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
+import { Autocomplete, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Region } from "../../rest/Region";
-import { Config } from "../utils/Config";
-import ErrorMessage from "../utils/ErrorMessage";
-import { spacingNormal, spacingSmall } from "../utils/StyleVars";
+import { Region } from "../../../rest/Region";
+import { Config } from "../../utils/Config";
+import ErrorMessage from "../../utils/ErrorMessage";
+import { spacingNormal, spacingSmall } from "../../utils/StyleVars";
 import { MatchStateObject } from "./MatchStateObject";
 import { StateProps } from "./StateProps";
 
@@ -65,10 +65,15 @@ const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
     }, [setValidate, fetchRegions, updateError, t])
 
     return (
-        <Box sx={{ width: "100%" }}>
+        <Box sx={{ width: "100%", margin: "auto"}}>
+
+            <Typography variant="h5" sx={{ textAlign: "center", paddingBottom: spacingNormal }}>
+                {t('CreateGameView.stepRegion')}
+            </Typography>
+
             <ErrorMessage msg={errorMsgs[ERROR_GENERAL]} centered sx={{ paddingBottom: spacingSmall }} />
 
-            <Stack sx={{ flexDirection: { xs: "column", md: "row" }, alignItems: {xs: "center", md: "flex-end"} }} justifyContent="space-evenly" >
+            <Stack sx={{ flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "center", md: "flex-end" }, gap: spacingNormal }} justifyContent="space-around" >
                 <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
                     <ErrorMessage msg={errorMsgs[ERROR_REGION]} centered />
                     <Autocomplete
@@ -84,7 +89,6 @@ const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                     />
                 </Box>
-                <Box sx={{ paddingTop: spacingNormal, display: { xs: "block", md: "none" } }}></Box>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
                     <ErrorMessage msg={errorMsgs[ERROR_CONTEST]} centered />
                     <FormControl sx={{ minWidth: "200px", alignSelf: "center" }}  >

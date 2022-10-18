@@ -1,7 +1,9 @@
 const deDe = {
     de: {
         translation: {
-            "Common.fetchError": "Leider kann der Server nicht erreicht werden. Bitte versuchen sie es später noch einmal",
+            "Common.error": "Fehler",
+            "Common.ok": "OK",
+            "Common.errorFetch": "Leider kann der Server nicht erreicht werden. Bitte versuchen sie es später noch einmal",
 
             "MenuBar.home": "Home",
             "LoginForm.login": "Login",
@@ -16,8 +18,11 @@ const deDe = {
             "CreateGameView.stepLeague": "Liga/Spielsystem",
             "CreateGameView.stepHomeTeam": "Heimmanschaft",
             "CreateGameView.stepGuestTeam": "Gastmannschaft",
+            "CreateGameView.stepSummary": "Übersicht",
             "CreateGameView.next": "Weiter",
+            "CreateGameView.submit": "Erstellen",
             "CreateGameView.back": "Zurück",
+            "CreateGameView.createError": "Leider ist ein Fehler aufgetreten und das Match konnte nicht erstellt werden.\nBitte versuchen sie es später erneut.",
 
 
             "RegionState.region": "Verband",
@@ -36,13 +41,22 @@ const deDe = {
             "LeagueState.errorRegion": "Es muss zunächst ein Verband ausgewählt werden.",
             "LeagueState.errorContest": "Es muss zunächst eine Konkurrenz ausgewählt werden.",
 
-            "TeamState.homeTeam": "Heinverein",
+            "TeamState.homeTeam": "Heimverein",
             "TeamState.guestTeam": "Gastverein",
             "TeamState.number": "Mannschaft",
+            "TeamState.lineup": "Aufstellung",
             "TeamState.errorGameStyle": "Es muss zunächst ein Spielsystem ausgewählt werden",
             "TeamState.errorLeague": "Es muss zunächst eine Liga ausgewählt werden",
             "TeamState.errorEmptyClub": "Verein muss gesetzt werden",
             "TeamState.errorEmptyNumber": "Mannschaft muss gesetzt werden",
+            "TeamState.errorGameState": "Es nuss zunächst ein Spielsystem gesetzt werden",
+
+            "SummaryState.region": "Verband:",
+            "SummaryState.contest": "Konkurrenz:",
+            "SummaryState.league": "Liga:",
+            "SummaryState.gameStyle": "Spielsystem:",
+            "SummaryState.homeTeam": "Heimmanschaft:",
+            "SummaryState.guestTeam": "Gastmanschaft:"
 
         }
     }

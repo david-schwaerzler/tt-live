@@ -18,10 +18,6 @@ import lombok.NoArgsConstructor;
 public class GameDto {
 	private long id;
 	private int gameNumber;
-	private int homePlayerNumber;
-	private int guestPlayerNumber;
-	private String homePlayer;
-	private String guestPlayer;
 	private boolean isDouble;
 	private String set1;
 	private String set2;
@@ -29,15 +25,17 @@ public class GameDto {
 	private String set4;
 	private String set5;
 	private LocalDateTime modifiedAt;
-	
+
+	private PlayerDto homePlayer;
+	private PlayerDto guestPlayer;
+
+	private DoublesDto homeDoubles;
+	private DoublesDto guestDoubles;
+
 	public static class GameDtoBuilder {
 		public GameDtoBuilder bo(Game bo) {
 			this.id = bo.getId();
-			this.homePlayerNumber = bo.getHomePlayerNumber();
-			this.guestPlayerNumber = bo.getGuestPlayerNumber();
 			this.gameNumber = bo.getGameNumber();
-			this.homePlayer = bo.getHomePlayer();
-			this.guestPlayer = bo.getGuestPlayer();
 			this.isDouble = bo.isDouble();
 			this.set1 = bo.getSet1();
 			this.set2 = bo.getSet2();
@@ -45,11 +43,21 @@ public class GameDto {
 			this.set4 = bo.getSet4();
 			this.set5 = bo.getSet5();
 			this.modifiedAt = bo.getModifiedAt();
+
+			if (bo.getHomePlayer() != null)
+				this.homePlayer = PlayerDto.builder().bo(bo.getHomePlayer()).build();
+			if (bo.getGuestPlayer() != null)
+				this.guestPlayer = PlayerDto.builder().bo(bo.getGuestPlayer()).build();
+			if (bo.getHomeDoubles() != null)
+				this.homeDoubles = DoublesDto.builder().bo(bo.getHomeDoubles()).build();
+			if (bo.getGuestDoubles() != null)
+				this.guestDoubles = DoublesDto.builder().bo(bo.getGuestDoubles()).build();
+
 			return this;
 		}
 	}
-	
-	public static LinkedList<GameDto> fromBos(List<Game> bos){
+
+	public static LinkedList<GameDto> fromBos(List<Game> bos) {
 		LinkedList<GameDto> dtos = new LinkedList<GameDto>();
 		bos.forEach(bo -> dtos.add(GameDto.builder().bo(bo).build()));
 		return dtos;

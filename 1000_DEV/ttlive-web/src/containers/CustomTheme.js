@@ -3,7 +3,7 @@ import { green, orange } from "@mui/material/colors";
 
 const theme = createTheme({
     palette: {
-        mode: 'dark',
+        mode: 'light',
         primary: {
             main: orange[800]
           },

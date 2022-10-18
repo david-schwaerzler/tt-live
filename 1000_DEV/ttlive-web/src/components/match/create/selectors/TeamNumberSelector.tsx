@@ -1,7 +1,7 @@
 import { Autocomplete, createFilterOptions, FilterOptionsState, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Team } from "../../../rest/Team";
+import { Team } from "../../../../rest/Team";
 import { MatchStateObject } from "../MatchStateObject";
 
 export interface TeamNumberSelectorProps {
@@ -26,12 +26,12 @@ const TeamNumberSelector = ({ onUpdate, updateError, isHomeTeam, teams, matchSta
 
         let options = teams.map(t => { return { ...t } });
 
-        if(isHomeTeam){
-            if(matchStateObject.homeTeam?.id === -1){
+        if (isHomeTeam) {
+            if (matchStateObject.homeTeam?.id === -1) {
                 options.push(matchStateObject.homeTeam)
             }
-        }else{
-            if(matchStateObject.guestTeam?.id === -1){
+        } else {
+            if (matchStateObject.guestTeam?.id === -1) {
                 options.push(matchStateObject.guestTeam)
             }
         }
@@ -47,7 +47,7 @@ const TeamNumberSelector = ({ onUpdate, updateError, isHomeTeam, teams, matchSta
             value={isHomeTeam ? matchStateObject.homeTeam : matchStateObject.guestTeam}
             onChange={(e, value) => onNumberSelected(value)}
             options={tmpTeams.filter(t => isHomeTeam ? t.club === matchStateObject.homeClub : t.club === matchStateObject.guestClub)}
-            getOptionLabel={option => option.number === -1 ? `Add \"${numberInput}\"` : option.number.toString()}
+            getOptionLabel={option => option.number === -1 ? `Add "${numberInput}"` : option.number.toString()}
             inputValue={numberInput}
             onInputChange={(e, value) => onInputChange(value)}
             renderInput={(params) => <TextField {...params} label={t("TeamState.number")} />}
@@ -58,7 +58,7 @@ const TeamNumberSelector = ({ onUpdate, updateError, isHomeTeam, teams, matchSta
 
 
     function onInputChange(value: string) {
-        if (value != "" && isNum(value) == false)
+        if (value !== "" && isNum(value) === false)
             return;
         setNumberInput(value)
     }
@@ -71,9 +71,7 @@ const TeamNumberSelector = ({ onUpdate, updateError, isHomeTeam, teams, matchSta
         if (inputValue !== '' && !isExisting) {
             let newTeam: Team = {
                 id: -1,
-                club: isHomeTeam ?
-                    matchStateObject.homeClub == null ? '' : matchStateObject.homeClub :
-                    matchStateObject.guestClub == null ? '' : matchStateObject.guestClub,
+                club: isHomeTeam ? matchStateObject.homeClub! : matchStateObject.guestClub!, // can't be null here
                 number: -1
             }
             filtered.push(newTeam);
@@ -85,7 +83,7 @@ const TeamNumberSelector = ({ onUpdate, updateError, isHomeTeam, teams, matchSta
 
         if (team != null && team.id === -1) {
             team.number = parseInt(numberInput)
-            
+
             let tmp = teams.map(t => { return { ...t } })
             tmp.push(team);
             setTmpTeams(tmp);

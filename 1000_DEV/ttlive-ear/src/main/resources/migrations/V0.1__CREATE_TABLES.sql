@@ -41,16 +41,6 @@ CREATE TABLE team (
 	modified_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
-CREATE TABLE player (
-	id BIGSERIAl PRIMARY KEY,
-	name VARCHAR(512) UNIQUE NOT NULL,	
-	
-	team_id BIGINT NOT NULL REFERENCES league(id),	
-	
-	created_at TIMESTAMP NOT NULL DEFAULT now(),
-	modified_at TIMESTAMP NOT NULL DEFAULT now()
-);
-
 CREATE TABLE game_style (
 	id BIGSERIAl PRIMARY KEY,
 	name VARCHAR(64) NOT NULL,
@@ -67,8 +57,9 @@ CREATE TABLE match (
 	description VARCHAR(1024),	
 	home_team_score INTEGER NOT NULL DEFAULT 0,
 	guest_team_score INTEGER NOT NULL DEFAULT 0,	
-	home_players VARCHAR(1024) NOT NULL,
-	guest_players VARCHAR(1024) NOT NULL,
+	
+	editorCode VARCHAR(16) NOT NULL,
+	code VARCHAR(16) NOT NULL,
 	
 	league_id BIGINT NOT NULL REFERENCES league(id),		
 	home_team_id BIGINT NOT NULL REFERENCES team(id),
@@ -80,14 +71,31 @@ CREATE TABLE match (
 	modified_at TIMESTAMP NOT NULL DEFAULT now()	
 );
 
+CREATE TABLE doubles (
+	id BIGSERIAl PRIMARY KEY,
+	position INTEGER NOT NULL,	
+	is_home_team BOOLEAN NOT NULL,	
+	player_1 VARCHAR(128) NOT NULL,
+	player_2 VARCHAR(128) NOT NULL,
+	match_id BIGINT NOT NULL REFERENCES match(id)
+);
+
+CREATE TABLE player (
+	id BIGSERIAl PRIMARY KEY,
+	name VARCHAR(512) NOT NULL,	
+	position INTEGER NOT NULL,
+	is_home_team BOOLEAN NOT NULL,
+	
+	created_at TIMESTAMP NOT NULL DEFAULT now(),
+	modified_at TIMESTAMP NOT NULL DEFAULT now(),
+	
+	match_id BIGINT NOT NULL REFERENCES match(id)	
+);
+
 CREATE TABLE game (
 	id BIGSERIAl PRIMARY KEY,
 	
 	game_number INTEGER NOT NULL,
-	home_player_number INTEGER NOT NULL,
-	guest_player_number INTEGER NOT NULL,
-	home_player VARCHAR(128) NOT NULL,
-	guest_player VARCHAR(128) NOT NULL,
 	is_double BOOLEAN NOT NULL DEFAULT false,
 	set1 VARCHAR(32),
 	set2 VARCHAR(32),
@@ -96,6 +104,11 @@ CREATE TABLE game (
 	set5 VARCHAR(32),
 	
 	match_id BIGINT NOT NULL REFERENCES match(id),
+	home_player_id BIGINT REFERENCES player(id),
+	guest_player_id BIGINT REFERENCES player(id),
+	
+	home_doubles_id BIGINT REFERENCES doubles(id),
+	guest_doubles_id BIGINT REFERENCES doubles(id),
 	
 	created_at TIMESTAMP NOT NULL DEFAULT now(),
 	modified_at TIMESTAMP NOT NULL DEFAULT now()	
