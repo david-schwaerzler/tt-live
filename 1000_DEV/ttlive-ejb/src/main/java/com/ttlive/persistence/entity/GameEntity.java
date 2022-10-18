@@ -2,6 +2,7 @@ package com.ttlive.persistence.entity;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -54,12 +55,12 @@ public class GameEntity {
 	@Column(name = "modified_at")
 	private LocalDateTime modifiedAt;
 
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE })
 	@JoinColumn(name = "match_id", referencedColumnName = "id")
 	@ToString.Exclude
 	private MatchEntity match;
 
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE })
 	@JoinColumn(name = "home_player_id")
 	private PlayerEntity homePlayer;
 
@@ -67,11 +68,11 @@ public class GameEntity {
 	@JoinColumn(name = "guest_player_id")
 	private PlayerEntity guestPlayer;
 
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE })
 	@JoinColumn(name = "home_doubles_id")
 	private DoublesEntity homeDoubles;
 
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE })
 	@JoinColumn(name = "guest_doubles_id")
 	private DoublesEntity guestDoubles;
 

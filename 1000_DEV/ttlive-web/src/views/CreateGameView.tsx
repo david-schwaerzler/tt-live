@@ -1,17 +1,18 @@
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, MobileStepper, Paper, Step, StepLabel, Stepper } from "@mui/material";
 import { Box, Stack } from "@mui/system";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
+import { AppContext } from "../AppContext";
 import LeagueState from "../components/match/create/LeagueState";
 import { MatchStateObject } from "../components/match/create/MatchStateObject";
 import RegionState from "../components/match/create/RegionState";
 import SummaryState from "../components/match/create/SummaryState";
 import TeamState from "../components/match/create/TeamState";
-import { Config } from "../components/utils/Config";
 import { spacingNormal } from "../components/utils/StyleVars";
-import { RequestMatch } from "../rest/Match";
+import { postMatch } from "../rest/api/MatchApi";
+import { RequestMatch } from "../rest/data/Match";
 
 export interface CreateGameViewProps {
 
@@ -27,6 +28,8 @@ function setValidate(validate: ((matchStateObject: MatchStateObject) => boolean)
 }
 
 const CreateGameView = (props: CreateGameViewProps) => {
+
+    const context = useContext(AppContext);
 
     const [currentStep, setCurrentStep] = useState(Steps.REGION);
     const [matchStateObject, setMatchStateObject] = useState<MatchStateObject>({
@@ -120,6 +123,7 @@ const CreateGameView = (props: CreateGameViewProps) => {
                 return;
 
         if (isLastStep()) {
+            console.log("Ok")
             onSubmit();
             return;
         }
@@ -186,29 +190,14 @@ const CreateGameView = (props: CreateGameViewProps) => {
             guestTeam: matchStateObject.guestTeam
         };
 
-        try {
-            let response = await fetch(Config.REST_URL + "/match", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(requestMatch)
-            });
-            if (!response.ok) {
-                console.log(`Error creating match on Server: ${response.status}`)
-                setErrorDialogOpen(true);
-                return;
-            }
-
-            let json: { code: string } = await response.json();
-            navigate(`/home?code= + ${json.code}`)
-
-        } catch (error) {
-            console.log(`Error creating match on Server: ${error}`)
-            setErrorDialogOpen(true);
-            return;
+        let response = await postMatch(requestMatch);
+        if(response.data != null){
+            context.setCode(response.data.code);
+            context.setEditorCode(response.data.editorCode);
+            navigate("/live");
+        }else{
+           // setErrorDialogOpen(true);
         }
-
     }
 }
 

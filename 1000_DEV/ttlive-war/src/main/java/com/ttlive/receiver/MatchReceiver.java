@@ -1,8 +1,11 @@
 package com.ttlive.receiver;
 
+import java.util.LinkedList;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -25,6 +28,16 @@ public class MatchReceiver {
 
 	@EJB
 	private MatchService matchService;
+	
+	@GET
+	@Path("/")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response findAll() {
+		LinkedList<Match> matches = matchService.findAll();
+		
+		return Response.ok(MatchDto.fromBos(matches)).build();
+	}
 
 	@POST
 	@Path("/")

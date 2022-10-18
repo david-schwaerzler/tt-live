@@ -24,14 +24,14 @@ public class RegionService {
 
 	public LinkedList<League> findLeagues(long regionId) {
 		RegionEntity region = regionDao.findById(regionId);
-		if(region == null)
+		if (region == null)
 			throw new NullPointerException("Region with id='" + regionId + "' doesn't exist");
-		
+
 		LinkedList<League> leagues = new LinkedList<League>();
-		region.getLeagues().forEach(l -> leagues.add(League.builder().entity(l).build()));
-		return leagues; 
+		region.getLeagues().forEach(l -> leagues.add(League.builder().entity(l).region(l.getRegion()).build()));
+		return leagues;
 	}
-	
+
 	public LinkedList<Region> getDefault(List<RegionEntity> entities) {
 		LinkedList<Region> regions = new LinkedList<Region>();
 		entities.forEach(e -> regions.add(Region.builder().entity(e).build()));

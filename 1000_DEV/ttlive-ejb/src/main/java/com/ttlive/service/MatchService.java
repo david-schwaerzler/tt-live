@@ -2,6 +2,7 @@ package com.ttlive.service;
 
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -41,6 +42,12 @@ public class MatchService {
 
 	@EJB
 	private TeamDao teamDao;
+	
+	
+	public LinkedList<Match> findAll(){
+		List<MatchEntity> entities = matchDao.findAll();
+		return getDefault(entities);
+	}
 
 	public Match create(RequestMatch requestMatch) {
 
@@ -124,11 +131,11 @@ public class MatchService {
 
 			DoublesEntity guestDouble = new DoublesEntity();
 			guestDouble.setPosition(i + 1);
-			guestDouble.setHomeTeam(true);
+			guestDouble.setHomeTeam(false);
 			guestDouble.setPlayer1("");
 			guestDouble.setPlayer2("");
 			guestDouble.setMatch(matchEntity);
-			guestDoubles.add(homeDouble);
+			guestDoubles.add(guestDouble);
 		}
 
 		for (int i = 0; i < gameStyleEntity.getNumPlayers(); i++) {
@@ -157,6 +164,12 @@ public class MatchService {
 
 	}
 
+	public LinkedList<Match> getDefault(List<MatchEntity> entities){
+		LinkedList<Match> matches = new LinkedList<Match>();
+		entities.forEach(m -> matches.add(getDefault(m)));
+		return matches;
+	}
+	
 	public Match getDefault(MatchEntity entity) {
 
 		return Match.builder() //

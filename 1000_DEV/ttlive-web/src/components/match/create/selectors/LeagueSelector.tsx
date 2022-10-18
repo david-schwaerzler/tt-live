@@ -1,7 +1,7 @@
 import { Autocomplete, createFilterOptions, FilterOptionsState, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { League } from "../../../../rest/League";
+import { League } from "../../../../rest/data/League";
 import { MatchStateObject } from "../MatchStateObject";
 
 export interface LeagueSelectorProps {
@@ -58,6 +58,7 @@ const LeagueSelector = ({ onUpdate, updateError, leagues, matchStateObject }: Le
             let newTeam: League = {
                 id: -1,
                 contest: matchStateObject.contest!, // value can never be null here.
+                region: matchStateObject.region!.name,
                 name: ""
             }
             filtered.push(newTeam);

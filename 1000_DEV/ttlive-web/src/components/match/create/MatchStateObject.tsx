@@ -1,8 +1,7 @@
-import { GameStyle } from "../../../rest/GameStyle";
-import { League } from "../../../rest/League";
-import { Region } from "../../../rest/Region";
-import { Team } from "../../../rest/Team";
-import { MatchPosition } from "../MatchPosition";
+import { GameStyle } from "../../../rest/data/GameStyle";
+import { League } from "../../../rest/data/League";
+import { Region } from "../../../rest/data/Region";
+import { Team } from "../../../rest/data/Team";
 
 export interface MatchStateObject {
     region: Region | null;

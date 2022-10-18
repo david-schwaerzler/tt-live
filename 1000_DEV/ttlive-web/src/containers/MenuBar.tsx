@@ -8,7 +8,7 @@ export interface MenuBarProps {
 
 }
 
-const padding = { xs: "0.5em", md: "2em" }
+const padding = { xs: "0.25em", md: "2em" }
 const MenuBar = (props: MenuBarProps) => {
 
     const [t] = useTranslation();
@@ -16,7 +16,7 @@ const MenuBar = (props: MenuBarProps) => {
     return (
         <AppBar position="static">
             <Toolbar>
-                <Typography variant="h6" color="inherit" sx={{minWidth: "fit-content"}}>
+                <Typography variant="h6" color="inherit" sx={{minWidth: "fit-content", mr: padding}}>
                     TT-Live
                 </Typography>
                 <Divider orientation="vertical" flexItem sx={{ mx: padding }} />
@@ -26,6 +26,21 @@ const MenuBar = (props: MenuBarProps) => {
                             sx={{ color: 'white', display: 'block' }}
                         >
                             {t('MenuBar.home')}
+                        </Button>
+                    </Link>
+
+                    <Link to="/live" style={{ textDecoration: 'none' }}>
+                        <Button
+                            sx={{ color: 'white', display: 'block' }}
+                        >
+                            {t('MenuBar.live')}
+                        </Button>
+                    </Link>
+                    <Link to="/live_search" style={{ textDecoration: 'none' }}>
+                        <Button
+                            sx={{ color: 'white', display: 'block' }}
+                        >
+                            {t('MenuBar.live_search')}
                         </Button>
                     </Link>
                 </Box>

@@ -21,10 +21,9 @@ const SummaryState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =
 
         let values: Array<Entry> = [];
         values.push({ key: t("SummaryState.region"), value: matchStateObject.region?.name });
-        values.push({ key: t("SummaryState.contest"), value: matchStateObject.contest });
+        values.push({ key: t("SummaryState.contest"), value: matchStateObject.contest == "MEN" ? t("RegionState.contestMen") : t("RegionState.contestWomen") });
         values.push({ key: t("SummaryState.league"), value: matchStateObject.league?.name });
         values.push({ key: t("SummaryState.gameStyle"), value: matchStateObject.gameStyle?.name });
-        values.push({ key: t("SummaryState.contest"), value: matchStateObject.contest });
         values.push({ key: t("SummaryState.homeTeam"), value: matchStateObject.homeTeam?.club + " " + matchStateObject.homeTeam?.number });
         values.push({ key: t("SummaryState.guestTeam"), value: matchStateObject.guestTeam?.club + " " + matchStateObject.guestTeam?.number });
         setValues(values);

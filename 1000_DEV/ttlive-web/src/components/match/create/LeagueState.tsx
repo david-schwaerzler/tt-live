@@ -2,8 +2,8 @@ import { FormControl, InputLabel, MenuItem, Select, Stack, Typography } from "@m
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { GameStyle } from "../../../rest/GameStyle";
-import { League } from "../../../rest/League";
+import { GameStyle } from "../../../rest/data/GameStyle";
+import { League } from "../../../rest/data/League";
 import { Config } from "../../utils/Config";
 import ErrorMessage from "../../utils/ErrorMessage";
 import { spacingLarge, spacingNormal, spacingSmall } from "../../utils/StyleVars";

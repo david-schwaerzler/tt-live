@@ -6,6 +6,9 @@ const deDe = {
             "Common.errorFetch": "Leider kann der Server nicht erreicht werden. Bitte versuchen sie es später noch einmal",
 
             "MenuBar.home": "Home",
+            "MenuBar.live": "Live",
+            "MenuBar.live_search": "Suche",
+
             "LoginForm.login": "Login",
             "LoginForm.register": "Registrieren",
             "LoginForm.username": "Username",
@@ -56,7 +59,16 @@ const deDe = {
             "SummaryState.league": "Liga:",
             "SummaryState.gameStyle": "Spielsystem:",
             "SummaryState.homeTeam": "Heimmanschaft:",
-            "SummaryState.guestTeam": "Gastmanschaft:"
+            "SummaryState.guestTeam": "Gastmanschaft:",
+
+            "LiveSearch.headline": "Alle Spiele im Überblick",
+            "LiveSearch.region": "Verband",
+            "LiveSearch.league": "Liga",
+            "LiveSearch.homeTeam": "Heim",
+            "LiveSearch.guestTeam": "Gast",
+
+            "LiveView.noMatch": "Kein Livespiel ausgewählt.\nFinde ein Spiel über die Suche",
+            "LiveView.search": "Zur Suche",
 
         }
     }

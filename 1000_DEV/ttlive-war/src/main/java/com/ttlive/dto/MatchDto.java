@@ -2,6 +2,7 @@ package com.ttlive.dto;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.ttlive.bo.Match;
 
@@ -62,5 +63,11 @@ public class MatchDto {
 
 			return this;
 		}
+	}
+	public static LinkedList<MatchDto> fromBos(List<Match> bos){
+		LinkedList<MatchDto> dtos = new LinkedList<MatchDto>();
+		bos.forEach(bo -> dtos.add(MatchDto.builder().bo(bo).build()));
+		return dtos;
+		
 	}
 }

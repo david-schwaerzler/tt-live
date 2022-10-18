@@ -56,7 +56,7 @@ public class Match {
 		}
 
 		public MatchBuilder league(LeagueEntity entity) {
-			this.league = League.builder().entity(entity).build();
+			this.league = League.builder().entity(entity).region(entity.getRegion()).build();
 			return this;
 		}
 
