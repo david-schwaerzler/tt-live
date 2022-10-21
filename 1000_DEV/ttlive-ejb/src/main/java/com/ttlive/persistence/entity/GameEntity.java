@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +16,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.ttlive.utils.MatchState;
 
 import lombok.Data;
 import lombok.ToString;
@@ -29,8 +33,8 @@ public class GameEntity {
 	@Column(name = "game_number")
 	private int gameNumber;
 
-	@Column(name = "is_double")
-	private boolean isDouble;
+	@Column(name = "is_doubles")
+	private boolean isDoubles;
 
 	@Column(name = "set1")
 	private String set1;
@@ -46,6 +50,16 @@ public class GameEntity {
 
 	@Column(name = "set5")
 	private String set5;
+	
+	@Column(name = "home_sets")
+	private int homeSets;
+	
+	@Column(name = "guest_sets")
+	private int guestSets;
+	
+	@Column(name = "state")
+	@Enumerated(EnumType.STRING)
+	private MatchState state;
 
 	@CreationTimestamp
 	@Column(name = "created_at")

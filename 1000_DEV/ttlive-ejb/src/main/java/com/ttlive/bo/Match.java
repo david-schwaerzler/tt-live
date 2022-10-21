@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.Column;
+
 import com.ttlive.persistence.entity.AccountEntity;
 import com.ttlive.persistence.entity.DoublesEntity;
 import com.ttlive.persistence.entity.GameEntity;
@@ -12,6 +14,7 @@ import com.ttlive.persistence.entity.LeagueEntity;
 import com.ttlive.persistence.entity.MatchEntity;
 import com.ttlive.persistence.entity.PlayerEntity;
 import com.ttlive.persistence.entity.TeamEntity;
+import com.ttlive.utils.MatchState;
 
 import lombok.Builder;
 import lombok.Data;
@@ -26,6 +29,7 @@ public class Match {
 	private int guestTeamScore;
 	private String code;
 	private String editorCode;
+	private MatchState state;
 
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
@@ -50,6 +54,7 @@ public class Match {
 			this.guestTeamScore = entity.getGuestTeamScore();
 			this.code = entity.getCode();
 			this.editorCode = entity.getEditorCode();
+			this.state = entity.getState();
 			this.createdAt = entity.getCreatedAt();
 			this.modifiedAt = entity.getModifiedAt();
 			return this;

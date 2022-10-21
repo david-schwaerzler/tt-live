@@ -60,6 +60,7 @@ CREATE TABLE match (
 	
 	editorCode VARCHAR(16) NOT NULL,
 	code VARCHAR(16) NOT NULL,
+	state VARCHAR(32) NOT NULL DEFAULT 'NOT_STARTED',
 	
 	league_id BIGINT NOT NULL REFERENCES league(id),		
 	home_team_id BIGINT NOT NULL REFERENCES team(id),
@@ -67,12 +68,14 @@ CREATE TABLE match (
 	game_style_id BIGINT NOT NULL REFERENCES game_style(id),
 	account_id BIGINT REFERENCES account(id),
 	
+	
 	created_at TIMESTAMP NOT NULL DEFAULT now(),
 	modified_at TIMESTAMP NOT NULL DEFAULT now()	
 );
 
 CREATE TABLE doubles (
 	id BIGSERIAl PRIMARY KEY,
+	state VARCHAR(32) NOT NULL DEFAULT 'NOT_STARTED',
 	position INTEGER NOT NULL,	
 	is_home_team BOOLEAN NOT NULL,	
 	player_1 VARCHAR(128) NOT NULL,
@@ -95,13 +98,18 @@ CREATE TABLE player (
 CREATE TABLE game (
 	id BIGSERIAl PRIMARY KEY,
 	
+	state VARCHAR(32) NOT NULL DEFAULT 'NOT_STARTED',
+	
 	game_number INTEGER NOT NULL,
-	is_double BOOLEAN NOT NULL DEFAULT false,
+	is_doubles BOOLEAN NOT NULL DEFAULT false,
 	set1 VARCHAR(32),
 	set2 VARCHAR(32),
 	set3 VARCHAR(32),
 	set4 VARCHAR(32),
 	set5 VARCHAR(32),
+	
+	home_sets INTEGER NOT NULL DEFAULT 0,
+	guest_sets INTEGER NOT NULL DEFAULT 0,
 	
 	match_id BIGINT NOT NULL REFERENCES match(id),
 	home_player_id BIGINT REFERENCES player(id),

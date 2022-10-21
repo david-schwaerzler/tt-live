@@ -1,7 +1,7 @@
 import { Autocomplete, createFilterOptions, FilterOptionsState, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Team } from "../../../../rest/Team";
+import { Team } from "../../../../rest/data/Team";
 import { MatchStateObject } from "../MatchStateObject";
 
 export interface TeamNumberSelectorProps {

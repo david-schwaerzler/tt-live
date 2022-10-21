@@ -2,7 +2,7 @@ import { Autocomplete, FormControl, InputLabel, MenuItem, Select, Stack, TextFie
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Region } from "../../../rest/Region";
+import { Region } from "../../../rest/data/Region";
 import { Config } from "../../utils/Config";
 import ErrorMessage from "../../utils/ErrorMessage";
 import { spacingNormal, spacingSmall } from "../../utils/StyleVars";

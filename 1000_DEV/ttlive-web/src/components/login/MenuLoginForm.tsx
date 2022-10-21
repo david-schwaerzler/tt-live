@@ -4,7 +4,7 @@ import { Button, IconButton, Menu, Stack, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { spacingNormal, spacingSmall } from "../utils/StyleVars";
+import { spacingNormal } from "../utils/StyleVars";
 
 export interface MenuLoginFormProps {
     /* Resposive padding for the Toolbar */

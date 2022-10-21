@@ -2,7 +2,7 @@ import { Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Team } from "../../../rest/Team";
+import { Team } from "../../../rest/data/Team";
 import { Config } from "../../utils/Config";
 import ErrorMessage from "../../utils/ErrorMessage";
 import { spacingNormal } from "../../utils/StyleVars";

@@ -39,14 +39,14 @@ public class GameFactory {
 
 				entity.setHomeDoubles(homeDoublesMap.get(homePlayerNumber));
 				entity.setGuestDoubles(guestDoublesMap.get(guestPlayerNumber));
-				entity.setDouble(true);
+				entity.setDoubles(true);
 			} else {
 				int homePlayerNumber = Integer.parseInt(pair[HOME_IDX]);
 				int guestPlayerNumber = Integer.parseInt(pair[GUEST_IDX]);
 
 				entity.setHomePlayer(homePlayerMap.get(homePlayerNumber));
 				entity.setGuestPlayer(guestPlayerMap.get(guestPlayerNumber));
-				entity.setDouble(false);
+				entity.setDoubles(false);
 			}
 
 			games.add(entity);

@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.ttlive.bo.Game;
+import com.ttlive.utils.MatchState;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,12 +19,15 @@ import lombok.NoArgsConstructor;
 public class GameDto {
 	private long id;
 	private int gameNumber;
-	private boolean isDouble;
+	private boolean isDoubles;
 	private String set1;
 	private String set2;
 	private String set3;
 	private String set4;
 	private String set5;
+	private int homeSets;
+	private int guestSets;
+	private MatchState state;
 	private LocalDateTime modifiedAt;
 
 	private PlayerDto homePlayer;
@@ -36,12 +40,15 @@ public class GameDto {
 		public GameDtoBuilder bo(Game bo) {
 			this.id = bo.getId();
 			this.gameNumber = bo.getGameNumber();
-			this.isDouble = bo.isDouble();
+			this.isDoubles = bo.isDoubles();
 			this.set1 = bo.getSet1();
 			this.set2 = bo.getSet2();
 			this.set3 = bo.getSet3();
 			this.set4 = bo.getSet4();
 			this.set5 = bo.getSet5();
+			this.homeSets = bo.getHomeSets();
+			this.guestSets = bo.getGuestSets();
+			this.state = bo.getState();
 			this.modifiedAt = bo.getModifiedAt();
 
 			if (bo.getHomePlayer() != null)

@@ -7,6 +7,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,6 +20,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.ttlive.utils.MatchState;
 
 import lombok.Data;
 
@@ -48,6 +52,10 @@ public class MatchEntity {
 
 	@Column(name = "editorCode")
 	private String editorCode;
+	
+	@Column(name = "state")
+	@Enumerated(EnumType.STRING)
+	private MatchState state;
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
 	@JoinColumn(name = "league_id", referencedColumnName = "id")

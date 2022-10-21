@@ -3,6 +3,7 @@ package com.ttlive.bo;
 import java.time.LocalDateTime;
 
 import com.ttlive.persistence.entity.GameEntity;
+import com.ttlive.utils.MatchState;
 
 import lombok.Builder;
 import lombok.Data;
@@ -12,12 +13,15 @@ import lombok.Data;
 public class Game {
 	private long id;
 	private int gameNumber;
-	private boolean isDouble;
+	private boolean isDoubles;
 	private String set1;
 	private String set2;
 	private String set3;
 	private String set4;
 	private String set5;
+	private int homeSets;
+	private int guestSets;
+	private MatchState state;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 
@@ -30,12 +34,16 @@ public class Game {
 	public static class GameBuilder {
 		public GameBuilder entity(GameEntity entity) {
 			this.id = entity.getId();
-			this.isDouble = entity.isDouble();
+			this.isDoubles = entity.isDoubles();
+			this.gameNumber = entity.getGameNumber();
 			this.set1 = entity.getSet1();
 			this.set2 = entity.getSet2();
 			this.set3 = entity.getSet3();
 			this.set4 = entity.getSet4();
 			this.set5 = entity.getSet5();
+			this.homeSets = entity.getHomeSets();
+			this.guestSets = entity.getGuestSets();
+			this.state = entity.getState();
 			this.modifiedAt = entity.getModifiedAt();
 			this.createdAt = entity.getCreatedAt();
 			return this;

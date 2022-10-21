@@ -2,7 +2,7 @@ import { Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { GameStyle } from "../../rest/GameStyle";
+import { GameStyle } from "../../rest/data/GameStyle";
 import { spacingNormal, spacingSmall } from "../utils/StyleVars";
 import { MatchPosition } from "./MatchPosition";
 

@@ -22,6 +22,7 @@ export interface Match {
     guestTeamScore: number;
     code: string;
     editorCode: string;
+    state: "NOT_STARTED" | "LIVE" | "FINISHED";
     
     createdAt: string;
 

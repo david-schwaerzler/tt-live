@@ -6,11 +6,7 @@ import { Link } from "react-router-dom";
 import { AppContext } from "../AppContext";
 import { spacingNormal } from "../components/utils/StyleVars";
 
-export interface LiveViewProps {
-
-}
-
-const LiveView = ({ }: LiveViewProps) => {
+const LiveView = () => {
 
     const context = useContext(AppContext)
     const [t] = useTranslation();
@@ -19,7 +15,7 @@ const LiveView = ({ }: LiveViewProps) => {
         return renderNoMatch()
     return (
         <Box>
-
+            <Typography variant="h1" textAlign="center">Manshi ist die beste</Typography>
         </Box>
     );
 

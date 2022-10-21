@@ -1,22 +1,14 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import MatchTable from "../components/match/MatchTable";
 import ErrorMessage from "../components/utils/ErrorMessage";
 import { spacingLarge, spacingNormal } from "../components/utils/StyleVars";
-import { fetchMatches } from "../rest/api/MatchApi";
-import { Match } from "../rest/data/Match";
 
-export interface LiveSearchView {
-
-}
-
-const LiveSearch = ({ }: LiveSearchView) => {
+const LiveSearch = () => {
 
     const [t] = useTranslation();
-    const ref = useRef(false);
-    const [matches, setMatches] = useState<Array<Match>>([]);
     const [errorMsg, setErrorMsg] = useState<string>("");
 
     return (

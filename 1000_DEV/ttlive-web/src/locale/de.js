@@ -7,7 +7,7 @@ const deDe = {
 
             "MenuBar.home": "Home",
             "MenuBar.live": "Live",
-            "MenuBar.live_search": "Suche",
+            "MenuBar.games": "Spiele",
 
             "LoginForm.login": "Login",
             "LoginForm.register": "Registrieren",
@@ -69,6 +69,12 @@ const deDe = {
 
             "LiveView.noMatch": "Kein Livespiel ausgewählt.\nFinde ein Spiel über die Suche",
             "LiveView.search": "Zur Suche",
+
+            "MatchStateLabel.live": "Live",
+            "MatchStateLabel.notStarted": "Bald",
+            "MatchStateLabel.finished": "Beendet",
+
+            "MatchCard.linkGame": "zum Spiel"
 
         }
     }
