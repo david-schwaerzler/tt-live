@@ -11,7 +11,7 @@ const LiveView = () => {
     const context = useContext(AppContext)
     const [t] = useTranslation();
 
-    if (context.code === "")
+    if (context.matchId == null)
         return renderNoMatch()
     return (
         <Box>

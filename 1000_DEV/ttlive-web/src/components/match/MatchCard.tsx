@@ -142,7 +142,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
                 <Typography sx={{ order: { xs: 2 }, display: { md: "none", xs: "block" } }}>&nbsp;- &nbsp;</Typography>
                 <Typography sx={{ flex: { xs: "1 0 0", md: "1 1 0" }, order: { xs: 3 } }}>{game.guestPlayer.name}</Typography>
                 <Box sx={{ display: "flex", alignItems: "center", textWeight: "bold", paddingRight: spacingSmall, paddingLeft: spacingSmall, order: { xs: 4, md: 2 } }}>
-                    <b>{game.homeSets}:{game.guestSets}</b>
+                    {game.state === "NOT_STARTED" ? <b>-:-</b> : <b>{game.homeSets}:{game.guestSets}</b>}
                 </Box>
             </React.Fragment >
         )
@@ -157,7 +157,8 @@ const MatchCard = ({ match }: MatchCardProps) => {
                 <Typography sx={{ flex: { md: "1 1 0" }, order: 1, display: { xs: "none", md: "block" }, textAlign: "right" }}>{game.homeDoubles.player1}/{game.homeDoubles.player2}</Typography>
                 <Typography sx={{ flex: { md: "1 1 0" }, order: 3, display: { xs: "none", md: "block" } }}>{game.guestDoubles.player1}/{game.guestDoubles.player2}</Typography>
                 <Box sx={{ display: "flex", alignItems: "center", textWeight: "bold", paddingRight: spacingSmall, paddingLeft: spacingSmall, order: { md: 2 } }}>
-                    <b>{game.homeSets}:{game.guestSets}</b>
+                    {game.state === "NOT_STARTED" ? <b>-:-</b> : <b>{game.homeSets}:{game.guestSets}</b>}
+
                 </Box>
             </React.Fragment >
         )
@@ -165,7 +166,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
 
 
     function onLinkGame() {
-        context.setCode(match.code);
+        context.setMatchId(match.id);
         navigate("/live");
     }
 }

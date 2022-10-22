@@ -16,9 +16,9 @@ import LiveSearch from './views/LiveSearchView';
 
 
 function App() {
-    const [code, setCode] = useState<string>(() => {
-        let code = localStorage.getItem("code");
-        return code == null ? "" : code;
+    const [matchId, setMatchId] = useState<number | null>(() => {
+        let matchId = localStorage.getItem("matchId");
+        return matchId == null || matchId === "" ? null : parseInt(matchId);
     });
     const [editorCode, setEditorCode] = useState<string>(() => {
         let editorCode = localStorage.getItem("editorCode");
@@ -27,11 +27,11 @@ function App() {
 
 
     const valueProvider: AppContextProps = useMemo(() => ({
-        code: code,
+        matchId: matchId,
         editorCode: editorCode,
-        setCode: code => { localStorage.setItem("code", code); setCode(code) },
+        setMatchId: id => { localStorage.setItem("matchId", id == null ? "" : id.toString()); setMatchId(id) },
         setEditorCode: editorCode => { localStorage.setItem("editorCode", editorCode); setEditorCode(editorCode) }
-    }), [code, setCode, editorCode]);
+    }), [matchId, setMatchId, editorCode]);
 
     return (
         <div className="App">
@@ -53,8 +53,6 @@ function App() {
     function renderContent(content: React.ReactNode) {
         return <MainView content={content} />
     }
-
-
 }
 
 export default App;

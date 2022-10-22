@@ -1,16 +1,16 @@
 import React from "react";
 
 export interface AppContextProps {
-    code: string;
+    matchId: number | null;
     editorCode: string;
 
-    setCode: (code: string) => void;
+    setMatchId: (id: number | null) => void;
     setEditorCode: (editorCode: string) => void;
 }
 
 export const AppContext = React.createContext<AppContextProps>({
-    code: "",
+    matchId: -1,
     editorCode: "",
     setEditorCode: editorCode => {},
-    setCode: code => {}
+    setMatchId: code => {}
 });

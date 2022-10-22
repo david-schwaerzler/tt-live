@@ -35,7 +35,7 @@ const MenuBar = () => {
                             {t('MenuBar.games')}
                         </Button>
                     </Link>
-                    {context.code !== "" &&
+                    {context.matchId != null &&
                         <Link to="/live" style={{ textDecoration: 'none' }}>
                             <Button
                                 sx={{ color: 'white', display: 'block' }}
