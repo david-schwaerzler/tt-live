@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.ttlive.bo.Doubles;
-import com.ttlive.utils.MatchState;
 
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +16,6 @@ public class DoublesDto {
 	private boolean isHomeTeam;
 	private String player1;
 	private String player2;
-	private MatchState state;
 	
 	public static class DoublesDtoBuilder {
 		public DoublesDtoBuilder bo(Doubles bo) {
@@ -26,7 +24,6 @@ public class DoublesDto {
 			this.isHomeTeam = bo.isHomeTeam();
 			this.player1 = bo.getPlayer1();
 			this.player2 = bo.getPlayer2();
-			this.state = bo.getState();
 			return this;
 		}
 	}

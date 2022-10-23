@@ -1,7 +1,6 @@
 package com.ttlive.bo;
 
 import com.ttlive.persistence.entity.DoublesEntity;
-import com.ttlive.utils.MatchState;
 
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +13,6 @@ public class Doubles {
 	private boolean isHomeTeam;
 	private String player1;
 	private String player2;
-	private MatchState state;
 	
 	public static class DoublesBuilder {
 		public DoublesBuilder entity(DoublesEntity entity) {
@@ -23,7 +21,6 @@ public class Doubles {
 			this.isHomeTeam = entity.isHomeTeam();
 			this.player1 = entity.getPlayer1();
 			this.player2 = entity.getPlayer2();
-			this.state = entity.getState();
 			return this;
 		}
 	}

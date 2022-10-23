@@ -13,6 +13,8 @@ import LoginView from './views/LoginView';
 import LiveView from './views/LiveView';
 import { AppContext, AppContextProps } from './AppContext';
 import LiveSearch from './views/LiveSearchView';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 
 function App() {
@@ -34,6 +36,8 @@ function App() {
     }), [matchId, setMatchId, editorCode]);
 
     return (
+        <LocalizationProvider dateAdapter={AdapterMoment}>
+
         <div className="App">
             <AppContext.Provider value={valueProvider}>
                 <BrowserRouter>
@@ -48,6 +52,7 @@ function App() {
                 </BrowserRouter>
             </AppContext.Provider>
         </div>
+        </LocalizationProvider>
     );
 
     function renderContent(content: React.ReactNode) {

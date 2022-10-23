@@ -38,11 +38,14 @@ const deDe = {
             "LeagueState.league": "Liga",
             "LeagueState.gameStyle": "Spielsystem",
             "LeagueState.gameStyleDesc": "Spielsystem:",
+            "LeagueState.startDate": "Spielbeginn",
             "LeagueState.errorInvalidGameStyle": "Spielsystem konnte nicht ausgewählt werden",
             "LeagueState.errorEmptyGameStyle": "Spielsystem muss gesetzt werden",
             "LeagueState.errorEmptyLeague": "Liga muss gesetzt werden",
+            "LeagueState.errorEmptyStartDate": "Spielbeginn muss gesetzt werden",
+            "LeagueState.errorInvalidStartDate": "Ungültiges Datumsformat",
             "LeagueState.errorRegion": "Es muss zunächst ein Verband ausgewählt werden.",
-            "LeagueState.errorContest": "Es muss zunächst eine Konkurrenz ausgewählt werden.",
+            "LeagueState.errorContest": "Es muss zunächst eine Konkurrenz ausgewählt werden.",            
 
             "TeamState.homeTeam": "Heimverein",
             "TeamState.guestTeam": "Gastverein",
@@ -58,9 +61,11 @@ const deDe = {
             "SummaryState.contest": "Konkurrenz:",
             "SummaryState.league": "Liga:",
             "SummaryState.gameStyle": "Spielsystem:",
-            "SummaryState.homeTeam": "Heimmanschaft:",
             "SummaryState.guestTeam": "Gastmanschaft:",
-
+            "SummaryState.homeTeam": "Heimmanschaft:",
+            "SummaryState.startDate": "Spielbeginn:",
+            
+            
             "LiveSearch.headline": "Alle Spiele im Überblick",
             "LiveSearch.region": "Verband",
             "LiveSearch.league": "Liga",

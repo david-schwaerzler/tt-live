@@ -30,6 +30,7 @@ public class Match {
 	private String code;
 	private String editorCode;
 	private MatchState state;
+	private LocalDateTime startDate;
 
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
@@ -55,6 +56,7 @@ public class Match {
 			this.code = entity.getCode();
 			this.editorCode = entity.getEditorCode();
 			this.state = entity.getState();
+			this.startDate = entity.getStartDate();
 			this.createdAt = entity.getCreatedAt();
 			this.modifiedAt = entity.getModifiedAt();
 			return this;

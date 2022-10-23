@@ -26,6 +26,7 @@ const SummaryState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =
         values.push({ key: t("SummaryState.gameStyle"), value: matchStateObject.gameStyle?.name });
         values.push({ key: t("SummaryState.homeTeam"), value: matchStateObject.homeTeam?.club + " " + matchStateObject.homeTeam?.number });
         values.push({ key: t("SummaryState.guestTeam"), value: matchStateObject.guestTeam?.club + " " + matchStateObject.guestTeam?.number });
+        values.push({ key: t("SummaryState.startDate"), value: matchStateObject.startDate?.format("YYYY-MM-DD HH:mm") });
         setValues(values);
     }, [matchStateObject, t])
 

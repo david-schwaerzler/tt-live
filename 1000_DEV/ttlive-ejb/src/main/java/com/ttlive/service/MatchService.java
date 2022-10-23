@@ -24,6 +24,7 @@ import com.ttlive.persistence.entity.RegionEntity;
 import com.ttlive.persistence.entity.TeamEntity;
 import com.ttlive.utils.CodeFactory;
 import com.ttlive.utils.GameFactory;
+import com.ttlive.utils.MatchState;
 
 @Stateless
 public class MatchService {
@@ -47,6 +48,14 @@ public class MatchService {
 	public LinkedList<Match> findAll(){
 		List<MatchEntity> entities = matchDao.findAll();
 		return getDefault(entities);
+	}
+	
+	public Match findById(long id){
+		MatchEntity match = matchDao.findById(id);
+		if (match == null)
+			throw new NullPointerException(
+					"Match with the given id='" + id + " doesn't exist");		
+		return getDefault(match);
 	}
 
 	public Match create(RequestMatch requestMatch) {
@@ -113,6 +122,8 @@ public class MatchService {
 		matchEntity.setGameStyle(gameStyleEntity);
 		matchEntity.setCode(CodeFactory.createCode(existingCodes));
 		matchEntity.setEditorCode(CodeFactory.createCode(existingCodes));
+		matchEntity.setStartDate(requestMatch.getStartDate());
+		matchEntity.setState(MatchState.NOT_STARTED); 
 
 		LinkedList<PlayerEntity> homePlayers = new LinkedList<PlayerEntity>();
 		LinkedList<PlayerEntity> guestPlayers = new LinkedList<PlayerEntity>();

@@ -32,6 +32,7 @@ public class GameFactory {
 			}
 
 			GameEntity entity = new GameEntity();
+			entity.setState(MatchState.NOT_STARTED);
 			entity.setGameNumber(i + 1);
 			if (pair[0].contains("D") && pair[1].contains("D")) {
 				int homePlayerNumber = Integer.parseInt(pair[HOME_IDX].replace("D", ""));

@@ -12,6 +12,7 @@ export interface RequestMatch {
     league: League;
     homeTeam: Team;
     guestTeam: Team;
+    startDate: string;
 }
 
 export interface Match {

@@ -25,6 +25,7 @@ public class MatchDto {
 	private String code;
 	private String editorCode;
 	private MatchState state;
+	private LocalDateTime startDate;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 
@@ -50,6 +51,7 @@ public class MatchDto {
 			this.editorCode = bo.getEditorCode();
 			this.code = bo.getCode();
 			this.state = bo.getState();
+			this.startDate = bo.getStartDate();
 			this.modifiedAt = bo.getModifiedAt();
 
 			this.league = LeagueDto.builder().bo(bo.getLeague()).build();

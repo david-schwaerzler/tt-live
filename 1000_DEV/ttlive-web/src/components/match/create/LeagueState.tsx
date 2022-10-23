@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select, Stack, Typography } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -10,10 +10,13 @@ import { spacingLarge, spacingNormal, spacingSmall } from "../../utils/StyleVars
 import { MatchStateObject } from "./MatchStateObject";
 import LeagueSelector from "./selectors/LeagueSelector";
 import { StateProps } from "./StateProps";
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { Dayjs } from 'dayjs';
 
 const ERROR_GENERAL = 0;
 const ERROR_LEAGUE = 1;
 const ERROR_GAME_STYLE = 2;
+const ERROR_START_DATE = 3;
 
 const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) => {
     const [leagues, setLeagues] = useState<Array<League>>([]);
@@ -78,6 +81,12 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
             } else if (matchStateObject.gameStyle == null) {
                 updateError(ERROR_GAME_STYLE, t("LeagueState.errorEmptyGameStyle"));
                 return false;
+            } else if (matchStateObject.startDate == null){
+                updateError(ERROR_START_DATE, t("LeagueState.errorEmptyStartDate"));
+                return false;                
+            }else if(matchStateObject.startDate.isValid() === false){
+                updateError(ERROR_START_DATE, t("LeagueState.errorInvalidStartDate"));
+                return false;
             }
 
             return true;
@@ -128,6 +137,18 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
                         </Select>
                     </FormControl>
                 </Box>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
+                    <ErrorMessage msg={errorMsgs[ERROR_START_DATE]} centered />
+                    <FormControl sx={{ width: "200px", alignSelf: "center" }}  >
+                        <DateTimePicker                            
+                            ampm={false}
+                            label={t("LeagueState.startDate")}
+                            value={matchStateObject.startDate}
+                            onChange={onStartDateSelected}
+                            renderInput={(params) => <TextField {...params} />}
+                        />
+                    </FormControl>
+                </Box>
             </Stack>
 
 
@@ -139,6 +160,14 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
             )}
         </Box >
     );
+
+    function onStartDateSelected(startDate: Dayjs | null){
+        console.log(startDate)
+        let updated = { ...matchStateObject };
+        updated.startDate = startDate;
+        updateError(ERROR_START_DATE, "")
+        onUpdate(updated);
+    }
 
     function onGameStyleSelected(value: string | number) {
 

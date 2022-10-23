@@ -8,6 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -28,15 +29,23 @@ public class MatchReceiver {
 
 	@EJB
 	private MatchService matchService;
-	
+
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response findAll() {
 		LinkedList<Match> matches = matchService.findAll();
-		
 		return Response.ok(MatchDto.fromBos(matches)).build();
+	}
+
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response findById(@PathParam("id") long id) {
+		Match match = matchService.findById(id);
+		return Response.ok(MatchDto.builder().bo(match).build()).build();
 	}
 
 	@POST
@@ -59,6 +68,9 @@ public class MatchReceiver {
 		}
 		if (requestMatchDto.getLeague() == null) {
 			return Response.status(Status.BAD_REQUEST).entity("league must be set").build();
+		}
+		if (requestMatchDto.getStartDate() == null) {
+			return Response.status(Status.BAD_REQUEST).entity("startDate must be set").build();
 		}
 
 		League league = League.builder() //
@@ -86,6 +98,7 @@ public class MatchReceiver {
 				.league(league) //
 				.homeTeam(homeTeam) //
 				.guestTeam(guestTeam) //
+				.startDate(requestMatchDto.getStartDate())//
 				.build();
 
 		Match match = matchService.create(requestMatch);

@@ -1,5 +1,7 @@
 package com.ttlive.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,5 +17,6 @@ public class RequestMatchDto {
 	private long gameStyleId;
 	private LeagueDto league;
 	private TeamDto homeTeam;
-	private TeamDto guestTeam;	
+	private TeamDto guestTeam;
+	private LocalDateTime startDate;
 }

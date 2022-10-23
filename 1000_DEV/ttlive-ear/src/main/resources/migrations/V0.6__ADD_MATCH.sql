@@ -3,8 +3,8 @@
 -- Data for Name: match; Type: TABLE DATA; Schema: ttlive; Owner: ttlive
 --
 
-INSERT INTO ttlive.match (id, state, title, description, home_team_score, guest_team_score, editorcode, code, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at) 
-VALUES (1, 'LIVE', '', '', 4, 1, '21g7ot', 'zm43v1', 1, 3, 11, 1, NULL, '2022-10-19 00:26:30.799099', '2022-10-19 00:26:30.799817');
+INSERT INTO ttlive.match (id, state, title, description, home_team_score, guest_team_score, editorcode, code, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, start_date) 
+VALUES (1, 'LIVE', '', '', 4, 1, '21g7ot', 'zm43v1', 1, 3, 11, 1, NULL, '2022-10-19 00:26:30.799099', '2022-10-19 00:26:30.799817', '2022-10-19 12:30:00');
 
 INSERT INTO ttlive.doubles (id, "position", is_home_team, player_1, player_2, match_id) VALUES (1, 1, true, 'Ackermann Tim', 'Meyhöfer Morris ', 1);
 INSERT INTO ttlive.doubles (id, "position", is_home_team, player_1, player_2, match_id) VALUES (2, 1, false, 'Louis Arne', 'Herzog Julian', 1);
@@ -45,8 +45,8 @@ INSERT INTO ttlive.game (id, game_number, state, is_doubles, set1, set2, set3, s
 
 
 
-INSERT INTO ttlive.match (id, state, title, description, home_team_score, guest_team_score, editorcode, code, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at) 
-VALUES (2, 'NOT_STARTED', '', '', 0, 5, 'rnz6ts', '5y3sd4', 1, 9, 2, 1, NULL, '2022-10-19 14:24:49.519367', '2022-10-19 14:24:49.520146');
+INSERT INTO ttlive.match (id, state, title, description, home_team_score, guest_team_score, editorcode, code, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, start_date) 
+VALUES (2, 'NOT_STARTED', '', '', 0, 5, 'rnz6ts', '5y3sd4', 1, 9, 2, 1, NULL, '2022-10-19 14:24:49.519367', '2022-10-19 14:24:49.520146', '2022-10-19 13:30:00');
 
 INSERT INTO ttlive.doubles (id, "position", is_home_team, player_1, player_2, match_id) VALUES (5, 1, true, 'Gez Waldemar', 'Heuck Francisco', 2);
 INSERT INTO ttlive.doubles (id, "position", is_home_team, player_1, player_2, match_id) VALUES (6, 1, false, 'Almér Gustaf', 'Schütt Marcel', 2);
@@ -83,8 +83,8 @@ INSERT INTO ttlive.game (id, game_number, state, is_doubles, set1, set2, set3, s
 INSERT INTO ttlive.game (id, game_number, state, is_doubles, set1, set2, set3, set4, set5, home_sets, guest_sets, match_id, home_player_id, guest_player_id, home_doubles_id, guest_doubles_id, created_at, modified_at) VALUES 
 (20, 10, 'NOT_STARTED', false, NULL, NULL, NULL, NULL, NULL, 0,0,2, 12, 16, NULL, NULL, '2022-10-19 14:24:49.623375', '2022-10-19 14:24:49.636627');
 
-INSERT INTO ttlive.match (id, state, title, description, home_team_score, guest_team_score, editorcode, code, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at) 
-VALUES (3, 'FINISHED', '', '', 3, 4, 'mon6p7', 'ppins9', 1, 5, 4, 1, NULL, '2022-10-19 14:25:34.880507', '2022-10-19 14:25:34.880531');
+INSERT INTO ttlive.match (id, state, title, description, home_team_score, guest_team_score, editorcode, code, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, start_date) 
+VALUES (3, 'FINISHED', '', '', 3, 4, 'mon6p7', 'ppins9', 1, 5, 4, 1, NULL, '2022-10-19 14:25:34.880507', '2022-10-19 14:30:00', '2022-10-19 13:30:00');
 
 
 INSERT INTO ttlive.doubles (id, "position", is_home_team, player_1, player_2, match_id) VALUES (9, 1, true, 'Trinh Antonio', 'Zeyn Timo', 3);

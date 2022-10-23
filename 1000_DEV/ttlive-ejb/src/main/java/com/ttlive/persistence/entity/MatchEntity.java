@@ -56,6 +56,9 @@ public class MatchEntity {
 	@Column(name = "state")
 	@Enumerated(EnumType.STRING)
 	private MatchState state;
+	
+	@Column(name="start_date")
+	private LocalDateTime startDate;
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
 	@JoinColumn(name = "league_id", referencedColumnName = "id")

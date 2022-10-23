@@ -40,7 +40,8 @@ const CreateGameView = (props: CreateGameViewProps) => {
         guestTeam: null,
         homeTeam: null,
         guestClub: null,
-        homeClub: null
+        homeClub: null,
+        startDate: null
     });
     const [errorDialogOpen, setErrorDialogOpen] = useState(false);
     const [t] = useTranslation();
@@ -179,6 +180,10 @@ const CreateGameView = (props: CreateGameViewProps) => {
             console.log("Error match wizard: guestTeam is null");
             setErrorDialogOpen(true);
             return;
+        } else if (matchStateObject.startDate == null) {
+            console.log("Error match wizard: startDate is null");
+            setErrorDialogOpen(true);
+            return;
         }
 
         let requestMatch: RequestMatch = {
@@ -187,16 +192,17 @@ const CreateGameView = (props: CreateGameViewProps) => {
             gameStyleId: matchStateObject.gameStyle.id,
             league: matchStateObject.league,
             homeTeam: matchStateObject.homeTeam,
-            guestTeam: matchStateObject.guestTeam
+            guestTeam: matchStateObject.guestTeam,
+            startDate: matchStateObject.startDate.toISOString()
         };
 
         let response = await postMatch(requestMatch);
-        if(response.data != null){
+        if (response.data != null) {
             context.setMatchId(response.data.id);
             context.setEditorCode(response.data.editorCode);
             navigate("/live");
-        }else{
-           setErrorDialogOpen(true);
+        } else {
+            //setErrorDialogOpen(true);
         }
     }
 }
