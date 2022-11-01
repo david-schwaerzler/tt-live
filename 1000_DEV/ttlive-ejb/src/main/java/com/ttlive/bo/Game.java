@@ -1,7 +1,9 @@
 package com.ttlive.bo;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 
+import com.ttlive.bo.GameSet.InvalidGameSetFormat;
 import com.ttlive.persistence.entity.GameEntity;
 import com.ttlive.utils.MatchState;
 
@@ -14,11 +16,7 @@ public class Game {
 	private long id;
 	private int gameNumber;
 	private boolean isDoubles;
-	private String set1;
-	private String set2;
-	private String set3;
-	private String set4;
-	private String set5;
+	private LinkedList<GameSet> sets;
 	private int homeSets;
 	private int guestSets;
 	private MatchState state;
@@ -32,20 +30,23 @@ public class Game {
 	private Doubles guestDoubles;
 
 	public static class GameBuilder {
-		public GameBuilder entity(GameEntity entity) {
+		public GameBuilder entity(GameEntity entity) throws InvalidGameSetFormat {
 			this.id = entity.getId();
 			this.isDoubles = entity.isDoubles();
-			this.gameNumber = entity.getGameNumber();
-			this.set1 = entity.getSet1();
-			this.set2 = entity.getSet2();
-			this.set3 = entity.getSet3();
-			this.set4 = entity.getSet4();
-			this.set5 = entity.getSet5();
+			this.gameNumber = entity.getGameNumber();			
 			this.homeSets = entity.getHomeSets();
 			this.guestSets = entity.getGuestSets();
 			this.state = entity.getState();
 			this.modifiedAt = entity.getModifiedAt();
 			this.createdAt = entity.getCreatedAt();
+			
+			this.sets = new LinkedList<GameSet>();
+			this.sets.add(GameSet.builder().set(entity.getSet1(), 1).build());
+			this.sets.add(GameSet.builder().set(entity.getSet2(), 2).build());
+			this.sets.add(GameSet.builder().set(entity.getSet3(), 3).build());
+			this.sets.add(GameSet.builder().set(entity.getSet4(), 4).build());
+			this.sets.add(GameSet.builder().set(entity.getSet5(), 5).build());
+					
 			return this;
 		}
 
@@ -65,4 +66,5 @@ public class Game {
 			return this;
 		}
 	}
+	
 }

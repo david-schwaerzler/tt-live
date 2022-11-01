@@ -20,7 +20,7 @@ public class GameDto {
 	private long id;
 	private int gameNumber;
 	private boolean isDoubles;
-	private String set1;
+	private List<GameSetDto> sets;
 	private String set2;
 	private String set3;
 	private String set4;
@@ -41,15 +41,12 @@ public class GameDto {
 			this.id = bo.getId();
 			this.gameNumber = bo.getGameNumber();
 			this.isDoubles = bo.isDoubles();
-			this.set1 = bo.getSet1();
-			this.set2 = bo.getSet2();
-			this.set3 = bo.getSet3();
-			this.set4 = bo.getSet4();
-			this.set5 = bo.getSet5();
 			this.homeSets = bo.getHomeSets();
 			this.guestSets = bo.getGuestSets();
 			this.state = bo.getState();
 			this.modifiedAt = bo.getModifiedAt();
+
+			this.sets = GameSetDto.fromBos(bo.getSets());
 
 			if (bo.getHomePlayer() != null)
 				this.homePlayer = PlayerDto.builder().bo(bo.getHomePlayer()).build();

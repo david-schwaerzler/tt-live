@@ -7,6 +7,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
+import com.ttlive.bo.GameSet.InvalidGameSetFormat;
 import com.ttlive.bo.Match;
 import com.ttlive.bo.RequestMatch;
 import com.ttlive.persistence.dao.GameStyleDao;
@@ -45,12 +46,12 @@ public class MatchService {
 	private TeamDao teamDao;
 	
 	
-	public LinkedList<Match> findAll(){
+	public LinkedList<Match> findAll() throws InvalidGameSetFormat{
 		List<MatchEntity> entities = matchDao.findAll();
 		return getDefault(entities);
 	}
 	
-	public Match findById(long id){
+	public Match findById(long id) throws InvalidGameSetFormat{
 		MatchEntity match = matchDao.findById(id);
 		if (match == null)
 			throw new NullPointerException(
@@ -58,7 +59,7 @@ public class MatchService {
 		return getDefault(match);
 	}
 
-	public Match create(RequestMatch requestMatch) {
+	public Match create(RequestMatch requestMatch) throws InvalidGameSetFormat {
 
 		RegionEntity regionEntity = regionDao.findById(requestMatch.getRegionId());
 		if (regionEntity == null)
@@ -175,13 +176,15 @@ public class MatchService {
 
 	}
 
-	public LinkedList<Match> getDefault(List<MatchEntity> entities){
+	public LinkedList<Match> getDefault(List<MatchEntity> entities) throws InvalidGameSetFormat{
 		LinkedList<Match> matches = new LinkedList<Match>();
-		entities.forEach(m -> matches.add(getDefault(m)));
+		for(MatchEntity entity: entities) {
+			matches.add(getDefault(entity));
+		}
 		return matches;
 	}
 	
-	public Match getDefault(MatchEntity entity) {
+	public Match getDefault(MatchEntity entity) throws InvalidGameSetFormat {
 
 		return Match.builder() //
 				.entity(entity) //

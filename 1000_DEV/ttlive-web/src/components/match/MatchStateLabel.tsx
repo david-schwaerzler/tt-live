@@ -4,10 +4,11 @@ import { useTranslation } from "react-i18next";
 
 export interface MatchStateLabelProps {
     state: "NOT_STARTED" | "LIVE" | "FINISHED"
-    sx?: any
+    sx?: any,
+    variant?: "normal" | "border"    
 }
 
-const MatchStateLabel = ({ sx, state }: MatchStateLabelProps) => {
+const MatchStateLabel = ({ sx, state, variant = "normal" }: MatchStateLabelProps) => {
 
 
     const [t] = useTranslation();
@@ -18,7 +19,7 @@ const MatchStateLabel = ({ sx, state }: MatchStateLabelProps) => {
             display: "inline-flex",
             justifyContent: "center",
             alignItems: "center",
-            border: "2px solid",
+            border: variant == "border" ? "2px solid" : "hidden",
             borderColor: getColor(),
             borderRadius: "10px",
             paddingLeft: "10px",

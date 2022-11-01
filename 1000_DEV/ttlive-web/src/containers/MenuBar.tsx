@@ -1,47 +1,76 @@
-import { AppBar, Button, Divider, Toolbar, Typography } from "@mui/material";
+import { AppBar, Button, Divider, styled, Toolbar, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { AppContext } from "../AppContext";
 import MenuLoginForm from "../components/login/MenuLoginForm";
 
+
+const HoverButton = styled(Button)(({ theme }) => ({
+    zIndex: 100,
+    "::after": {
+        content: '""',
+        position: "absolute",
+        transform: "scaleX(0)",
+        height: "4px",
+        bottom: "0px",
+        right: "5px",
+        left: "5px",
+        borderRadius: "2px",
+        backgroundColor: theme.palette.primary.main,
+        transformOrigin: "bottom center",
+        transition: "transform 0.2s ease-out"
+    },
+    '&.current::after': {
+        transform: "scaleX(1)",
+        transformOrigin: "bottom center"
+    }
+
+}))
 
 const padding = { xs: "0.25em", md: "2em" }
 const MenuBar = () => {
 
     const [t] = useTranslation();
     const context = useContext(AppContext);
+    const location = useLocation();
+    console.log(location);
+
+
 
     return (
-        <AppBar position="static">
+        <AppBar position="static" elevation={2}>
             <Toolbar>
                 <Typography variant="h6" color="inherit" sx={{ minWidth: "fit-content", mr: padding }}>
                     TT-Live
                 </Typography>
                 <Divider orientation="vertical" flexItem sx={{ mx: padding }} />
                 <Box sx={{ flexGrow: 1, display: 'flex', gap: padding }} >
-                    <Link to="/" style={{ textDecoration: 'none' }}>
-                        <Button
+                    <Link to="/" style={{ textDecoration: 'none' }} >
+                        <HoverButton
+                            className={location.pathname === "/" ? "current" : ""}
                             sx={{ color: 'white', display: 'block' }}
                         >
                             {t('MenuBar.home')}
-                        </Button>
+                        </HoverButton>
                     </Link>
-                    <Link to="/live_search" style={{ textDecoration: 'none' }}>
-                        <Button
+                    <Link to="/live_search" style={{ textDecoration: 'none' }} tabIndex={-1}>
+                        <HoverButton
+                            className={location.pathname === "/live_search" ? "current" : ""}
                             sx={{ color: 'white', display: 'block' }}
                         >
                             {t('MenuBar.games')}
-                        </Button>
+                        </HoverButton>
                     </Link>
                     {context.matchId != null &&
-                        <Link to="/live" style={{ textDecoration: 'none' }}>
-                            <Button
+                        <Link to="/live" style={{ textDecoration: 'none' }} tabIndex={-1}>
+                            <HoverButton
+                                className={location.pathname === "/live" ? "current" : ""}
                                 sx={{ color: 'white', display: 'block' }}
                             >
                                 {t('MenuBar.live')}
-                            </Button>
+                            </HoverButton>
                         </Link>
                     }
 

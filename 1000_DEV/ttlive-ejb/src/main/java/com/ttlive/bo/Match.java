@@ -4,8 +4,7 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.persistence.Column;
-
+import com.ttlive.bo.GameSet.InvalidGameSetFormat;
 import com.ttlive.persistence.entity.AccountEntity;
 import com.ttlive.persistence.entity.DoublesEntity;
 import com.ttlive.persistence.entity.GameEntity;
@@ -111,9 +110,11 @@ public class Match {
 			return this;
 		}
 
-		public MatchBuilder games(List<GameEntity> games) {
+		public MatchBuilder games(List<GameEntity> games) throws InvalidGameSetFormat {
 			this.games = new LinkedList<Game>();
-			games.forEach(g -> this.games.add(Game.builder().entity(g).players(g).doubles(g).build()));
+			for (GameEntity game : games) {
+				this.games.add(Game.builder().entity(game).players(game).doubles(game).build());
+			}
 			return this;
 		}
 	}

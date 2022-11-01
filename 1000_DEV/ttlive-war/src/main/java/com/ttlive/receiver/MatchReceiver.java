@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.ttlive.bo.GameSet.InvalidGameSetFormat;
 import com.ttlive.bo.League;
 import com.ttlive.bo.Match;
 import com.ttlive.bo.RequestMatch;
@@ -34,7 +35,7 @@ public class MatchReceiver {
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response findAll() {
+	public Response findAll() throws InvalidGameSetFormat {		
 		LinkedList<Match> matches = matchService.findAll();
 		return Response.ok(MatchDto.fromBos(matches)).build();
 	}
@@ -43,7 +44,7 @@ public class MatchReceiver {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response findById(@PathParam("id") long id) {
+	public Response findById(@PathParam("id") long id) throws InvalidGameSetFormat {
 		Match match = matchService.findById(id);
 		return Response.ok(MatchDto.builder().bo(match).build()).build();
 	}
@@ -52,7 +53,7 @@ public class MatchReceiver {
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response create(RequestMatchDto requestMatchDto) {
+	public Response create(RequestMatchDto requestMatchDto) throws InvalidGameSetFormat {
 
 		if (requestMatchDto.getContest() == null
 				|| (!requestMatchDto.getContest().equals("WOMEN") && !requestMatchDto.getContest().equals("MEN"))) {

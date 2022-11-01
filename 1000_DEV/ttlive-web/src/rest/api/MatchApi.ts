@@ -15,7 +15,7 @@ export async function postMatch(requestMatch: RequestMatch) : Promise<MatchRespo
             body: JSON.stringify(requestMatch)
         });
         if (!response.ok) {
-            console.log(`Error creating match on Server: ${response.status}`)
+            console.log(`Error creating match from the Server: ${response.status}`)
             return returnError(response.status.toString());
         }
 
@@ -27,14 +27,11 @@ export async function postMatch(requestMatch: RequestMatch) : Promise<MatchRespo
         return returnError(`${error}`);
     }
 }
-
-
-
 export async function fetchMatches() : Promise<MatchesReponse>{
     try {
         let response = await fetch(Config.REST_URL + "/match");
         if (!response.ok) {
-            console.log(`Error fetching matches on Server: ${response.status}`)
+            console.log(`Error fetching matches from the Server: ${response.status}`)
             return returnError(response.status.toString());
         }
 
@@ -43,6 +40,23 @@ export async function fetchMatches() : Promise<MatchesReponse>{
 
     } catch (error) {
         console.log(`Error fetching matches on Server: ${error}`)
+        return returnError(`${error}`);
+    }
+}
+
+export async function fetchMatch(id : number) : Promise<MatchResponse>{
+    try {
+        let response = await fetch(Config.REST_URL + "/match/" + id);
+        if (!response.ok) {
+            console.log(`Error fetching match with id=${id} from the Server: ${response.status}`)
+            return returnError(response.status.toString());
+        }
+
+        let match : Match = await response.json();
+        return returnData(match);
+
+    } catch (error) {
+        console.log(`Error fetching match with id=${id} from Server: ${error}`)
         return returnError(`${error}`);
     }
 

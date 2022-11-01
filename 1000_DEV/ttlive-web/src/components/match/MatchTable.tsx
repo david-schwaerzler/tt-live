@@ -5,6 +5,7 @@ import { Match } from "../../rest/data/Match";
 import { Stack } from "@mui/system";
 import { spacingNormal } from "../utils/StyleVars";
 import MatchCard from "./MatchCard";
+import { Box } from "@mui/material";
 
 export interface MatchTableProps {
     onError: (msg: string) => void;
@@ -49,10 +50,9 @@ const MatchTable = ({ sx, fetchDelay = 0, onError, onFetched }: MatchTableProps)
     return (
 
         <Stack sx={{ gap: spacingNormal }}>
-            {matches.map(match => (
+            {matches.map(match =>
                 <MatchCard key={match.id} match={match} />
-            ))
-            }
+            )}
         </Stack >
 
     );

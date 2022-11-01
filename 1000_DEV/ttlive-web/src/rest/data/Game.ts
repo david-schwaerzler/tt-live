@@ -1,15 +1,12 @@
 import { Doubles } from "./Doubles";
+import { GameSet } from "./GameSet";
 import { Player } from "./Player";
 
 export interface Game {
     id: number;
     gameNumber: number;
     doubles: boolean;
-    set1: string | null;
-    set2: string | null;
-    set3: string | null;
-    set4: string | null;
-    set5: string | null;
+    sets: Array<GameSet>;
     homeSets: number;
     guestSets: number;
     state: "NOT_STARTED" | "LIVE" | "FINISHED"
