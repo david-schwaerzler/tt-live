@@ -8,7 +8,8 @@ import MenuLoginForm from "../components/login/MenuLoginForm";
 
 
 const HoverButton = styled(Button)(({ theme }) => ({
-    zIndex: 100,
+    color: "white",
+    display: "block",
     "::after": {
         content: '""',
         position: "absolute",
@@ -18,7 +19,7 @@ const HoverButton = styled(Button)(({ theme }) => ({
         right: "5px",
         left: "5px",
         borderRadius: "2px",
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.mode === "dark" ? theme.palette.primary.main : "white",
         transformOrigin: "bottom center",
         transition: "transform 0.2s ease-out"
     },
@@ -29,15 +30,13 @@ const HoverButton = styled(Button)(({ theme }) => ({
 
 }))
 
-const padding = { xs: "0.25em", md: "2em" }
+const padding = { xs: 2, md: 4 };
+
 const MenuBar = () => {
 
     const [t] = useTranslation();
     const context = useContext(AppContext);
     const location = useLocation();
-    console.log(location);
-
-
 
     return (
         <AppBar position="static" elevation={2}>
@@ -45,21 +44,15 @@ const MenuBar = () => {
                 <Typography variant="h6" color="inherit" sx={{ minWidth: "fit-content", mr: padding }}>
                     TT-Live
                 </Typography>
-                <Divider orientation="vertical" flexItem sx={{ mx: padding }} />
+                <Divider orientation="vertical" flexItem sx={{ mr: padding }} />
                 <Box sx={{ flexGrow: 1, display: 'flex', gap: padding }} >
                     <Link to="/" style={{ textDecoration: 'none' }} >
-                        <HoverButton
-                            className={location.pathname === "/" ? "current" : ""}
-                            sx={{ color: 'white', display: 'block' }}
-                        >
+                        <HoverButton className={location.pathname === "/" ? "current" : ""}>
                             {t('MenuBar.home')}
                         </HoverButton>
                     </Link>
                     <Link to="/live_search" style={{ textDecoration: 'none' }} tabIndex={-1}>
-                        <HoverButton
-                            className={location.pathname === "/live_search" ? "current" : ""}
-                            sx={{ color: 'white', display: 'block' }}
-                        >
+                        <HoverButton className={location.pathname === "/live_search" ? "current" : ""}>
                             {t('MenuBar.games')}
                         </HoverButton>
                     </Link>
@@ -73,8 +66,8 @@ const MenuBar = () => {
                             </HoverButton>
                         </Link>
                     }
-
                 </Box>
+
                 <MenuLoginForm padding={padding} />
             </Toolbar>
         </AppBar>

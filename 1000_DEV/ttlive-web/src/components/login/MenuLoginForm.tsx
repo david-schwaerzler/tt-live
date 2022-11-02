@@ -48,12 +48,12 @@ const WhiteButton = styled(Button)({
 })
 
 
-const MenuLoginForm = (props: MenuLoginFormProps) => {
+const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
 
     const [loginAnchor, setLoginAnchor] = useState<null | HTMLElement>(null);
     const [t] = useTranslation();
     return (
-        <Box sx={{ pl: props.padding }}>
+        <Box sx={{ pl: padding }}>
             <Box sx={{ display: { xs: "none", md: "flex" }, gap: "1em", flexGrow: 0 }}  >
                 <WhiteTextField size="small" label={t("LoginForm.username")} variant="outlined" />
                 <WhiteTextField size="small" label={t("LoginForm.password")} variant="outlined" />
@@ -81,7 +81,7 @@ const MenuLoginForm = (props: MenuLoginFormProps) => {
                 }}
                 open={loginAnchor != null}
                 onClose={() => setLoginAnchor(null)}>
-                <Stack direction="column" sx={{ paddingTop: spacingNormal, paddingLeft: spacingNormal, paddingRight: spacingNormal}} spacing={spacingNormal}>
+                <Stack direction="column" sx={{ paddingTop: spacingNormal, paddingLeft: spacingNormal, paddingRight: spacingNormal }} spacing={spacingNormal}>
                     <TextField size="small" label={t("LoginForm.username")} variant="outlined" />
                     <TextField size="small" label={t("LoginForm.password")} variant="outlined" />
                     <Box>
