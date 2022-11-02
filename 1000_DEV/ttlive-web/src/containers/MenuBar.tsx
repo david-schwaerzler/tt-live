@@ -30,7 +30,7 @@ const HoverButton = styled(Button)(({ theme }) => ({
 
 }))
 
-const padding = { xs: 2, md: 4 };
+const padding = { xs: 1, md: 6 };
 
 const MenuBar = () => {
 
@@ -46,7 +46,7 @@ const MenuBar = () => {
                 </Typography>
                 <Divider orientation="vertical" flexItem sx={{ mr: padding }} />
                 <Box sx={{ flexGrow: 1, display: 'flex', gap: padding }} >
-                    <Link to="/" style={{ textDecoration: 'none' }} >
+                    <Link to="/" style={{ textDecoration: 'none' }} tabIndex={-1}>
                         <HoverButton className={location.pathname === "/" ? "current" : ""}>
                             {t('MenuBar.home')}
                         </HoverButton>

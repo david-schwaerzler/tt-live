@@ -153,7 +153,7 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
 
 
             {matchStateObject.gameStyle !== null && (
-                <Box sx={{ paddingTop: spacingLarge }}>
+                <Box sx={{ paddingTop: spacingNormal }}>
                     <Typography sx={{ fontWeight: "bold" }}  >{t("LeagueState.gameStyleDesc")}</Typography>
                     <Typography sx={{ fontStyle: "italic", paddingTop: spacingSmall }}>{matchStateObject.gameStyle.description}</Typography>
                 </Box>

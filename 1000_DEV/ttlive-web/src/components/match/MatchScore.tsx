@@ -5,12 +5,13 @@ import { spacingNormal, spacingSmall } from "../utils/StyleVars";
 
 export interface MatchScoreProps {
     match: Match;
-    scoreSize?: string | { xs?: string, sm?: string, md?: string }
+    scoreSize?: string | { xs?: string, sm?: string, md?: string },
+    sx?: any;
 }
 
-const MatchScore = ({ match, scoreSize = "3rem" }: MatchScoreProps) => {
+const MatchScore = ({ match, scoreSize = "3rem", sx }: MatchScoreProps) => {
     return (
-        <Box sx={{ padding: spacingNormal, minHeight: "10em" }} >
+        <Box sx={{  minHeight: "10em", ...sx }} >
             {renderScore(match)}
         </Box >
     )

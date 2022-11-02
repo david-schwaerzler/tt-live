@@ -30,8 +30,9 @@ const MatchCard = ({ match }: MatchCardProps) => {
         <Paper elevation={5} >
             {renderHeader()}
             <Divider />
-            <MatchScore match={match} scoreSize={{ xs: "2rem", sm: "3rem" }} />
-            <Stack direction={{ xs: "column", sm: "column-reverse" }} padding={spacingSmall} gap={spacingNormal}>
+
+            <MatchScore sx={{pt: spacingNormal}} match={match} scoreSize={{ xs: "2rem", sm: "3rem" }} />
+            <Stack direction={{ xs: "column", sm: "column-reverse" }} p={spacingSmall} gap={spacingNormal}>
                 <Box sx={{ display: "flex", paddingLeft: spacingSmall, paddingRight: spacingSmall, justifyContent: "center" }} >
                     <Button sx={{ flexGrow: 1, maxWidth: "300px" }} variant="outlined" onClick={onLinkGame}>{t("MatchCard.linkGame")}</Button>
                 </Box>
@@ -88,7 +89,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
         }
 
         return (
-            <Stack sx={{ gap: spacingNormal }} >
+            <Stack sx={{ gap: 2 }} >
                 {displayGames.map(game => (
                     <GameScore game={game} />
                 ))}
