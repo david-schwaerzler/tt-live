@@ -1,3 +1,4 @@
+import { Dayjs } from "dayjs";
 import { Doubles } from "./Doubles";
 import { Game } from "./Game";
 import { GameStyle } from "./GameStyle";
@@ -25,6 +26,7 @@ export interface Match {
     editorCode: string;
     state: "NOT_STARTED" | "LIVE" | "FINISHED";
     
+    startDate: string;
     createdAt: string;
 
     league: League;

@@ -87,6 +87,7 @@ const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
                         onInputChange={(e, value) => setRegionInput(value)}
                         renderInput={(params) => <TextField {...params} label={t('RegionState.region')} />}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
+                        autoHighlight={true}
                     />
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>

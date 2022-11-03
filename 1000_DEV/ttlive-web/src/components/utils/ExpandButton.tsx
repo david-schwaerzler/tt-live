@@ -1,6 +1,6 @@
-import styled from "@emotion/styled";
-import { IconButton } from "@mui/material";
+import { Button, IconButton, styled } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Box } from "@mui/system";
 
 
 const StyledButton = styled((props: any) => {
@@ -10,10 +10,21 @@ const StyledButton = styled((props: any) => {
     transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
     transition: theme.transitions.create('transform', {
         duration: theme.transitions.duration.shortest,
-    })
-
+    }),
+    opacity: "1"
 }));
 
+const StyledDiv = styled(Box)(({ theme }) => ({
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "0",
+    margin: "0",
+    "&:hover": {
+        background: `${theme.palette.primary.main}0C`,
+    }
+}));
 
 export interface ExpandButtonProps {
     expanded: boolean
@@ -21,13 +32,15 @@ export interface ExpandButtonProps {
 
 const ExpandButton = ({ expanded }: ExpandButtonProps) => {
     return (
-        <StyledButton
-            expand={expanded}
-            aria-expanded={expanded}
-            aria-label="show more"
-        >
-            <ExpandMoreIcon />
-        </StyledButton>
+        <StyledDiv>
+            <StyledButton
+                expand={expanded}
+                aria-expanded={expanded}
+                aria-label="show more"
+            >
+                <ExpandMoreIcon sx={{opacity: 1}}/>
+            </StyledButton>
+        </StyledDiv>
     )
 }
 

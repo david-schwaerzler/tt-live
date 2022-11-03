@@ -1,6 +1,5 @@
-import styled from "@emotion/styled";
 import { Box, Collapse, Divider, Grid, Stack, Typography } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Game } from "../../rest/data/Game";
 import { GameSet } from "../../rest/data/GameSet";
 import MatchStateLabel from "../match/MatchStateLabel";
@@ -24,7 +23,6 @@ const GameLiveScore = ({ game }: GameLiveScoreProps) => {
     useEffect(() => {
 
         let sortedSets = game.sets.sort((a, b) => b.number - a.number);
-
 
         let displayedSets = sortedSets.filter(s => s.state === "LIVE"); // all live sets will be displayed (should normally be only 1)
         if (displayedSets.length < NUM_DISPLAYED_SETS) {
@@ -64,7 +62,7 @@ const GameLiveScore = ({ game }: GameLiveScoreProps) => {
                 </Grid>
 
                 {displayedSets.map(value =>
-                    <Grid key={value.number} container textAlign="center" justifyContent="center" sx={{ fontSize: value.state == "LIVE" ? "1.4rem" : "inherit", opacity: value.state !== "LIVE" ? 0.5 : 1 }}>
+                    <Grid key={value.number} container textAlign="center" justifyContent="center" sx={{ fontSize: value.state === "LIVE" ? "1.4rem" : "inherit", opacity: value.state !== "LIVE" ? 0.5 : 1 }}>
                         <Grid item xs={1}>
                             <Box fontWeight={value.homeScore > value.guestScore ? "bold" : "normal"}>{value.homeScore}</Box>
                         </Grid>
@@ -80,7 +78,7 @@ const GameLiveScore = ({ game }: GameLiveScoreProps) => {
 
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     {hiddenSets.map(value =>
-                        <Grid key={value.number} container textAlign="center" justifyContent="center" sx={{ fontSize: value.state == "LIVE" ? "1.4rem" : "inherit", opacity: value.state !== "LIVE" ? 0.5 : 1 }}  >
+                        <Grid key={value.number} container textAlign="center" justifyContent="center" sx={{ fontSize: value.state === "LIVE" ? "1.4rem" : "inherit", opacity: value.state !== "LIVE" ? 0.5 : 1 }}  >
                             <Grid item xs={1}>
                                 <Box fontWeight={value.homeScore > value.guestScore ? "bold" : "normal"}>{value.homeScore}</Box>
                             </Grid>
@@ -127,7 +125,7 @@ const GameLiveScore = ({ game }: GameLiveScoreProps) => {
 
     function renderSet2(set: GameSet, isHome: boolean) {
 
-        if (set.state == "NOT_STARTED")
+        if (set.state === "NOT_STARTED")
             return <Grid item xs={1} >-</Grid>
 
 

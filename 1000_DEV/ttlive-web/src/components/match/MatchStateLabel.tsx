@@ -1,17 +1,24 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import dayjs, { Dayjs } from "dayjs";
+import { useEffect } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface MatchStateLabelProps {
-    state: "NOT_STARTED" | "LIVE" | "FINISHED"
-    sx?: any,
-    variant?: "normal" | "border"    
+    state: "NOT_STARTED" | "LIVE" | "FINISHED";
+    sx?: any;
+    variant?: "normal" | "border";
+    startDate?: string;
 }
 
-const MatchStateLabel = ({ sx, state, variant = "normal" }: MatchStateLabelProps) => {
-
-
+const MatchStateLabel = ({ sx, state, variant = "normal", startDate }: MatchStateLabelProps) => {
     const [t] = useTranslation();
+
+    const [time, setTime] = useState<string | null>(null);
+    useEffect(() => {
+        setTime(dayjs(startDate).format("HH:mm"));
+    }, [startDate])
 
     return (
         <Box sx={{
@@ -19,7 +26,7 @@ const MatchStateLabel = ({ sx, state, variant = "normal" }: MatchStateLabelProps
             display: "inline-flex",
             justifyContent: "center",
             alignItems: "center",
-            border: variant == "border" ? "2px solid" : "hidden",
+            border: variant === "border" ? "2px solid" : "hidden",
             borderColor: getColor(),
             borderRadius: "10px",
             paddingLeft: "10px",
@@ -27,14 +34,14 @@ const MatchStateLabel = ({ sx, state, variant = "normal" }: MatchStateLabelProps
                 "10px",
             ...sx
         }}>
-            {state === "LIVE" && <Box sx={{ height: "10px", width: "10px", backgroundColor:"red", borderRadius: "50%", display: "inline-block" }} />}
+            {state === "LIVE" && <Box sx={{ height: "10px", width: "10px", backgroundColor: "red", borderRadius: "50%", display: "inline-block" }} />}
             {state === "LIVE" && <Box>&nbsp;</Box>}
             <Typography component="div" >
                 <b>{renderText()}</b>
             </Typography>
         </Box >
     )
-    
+
     function getColor() {
         switch (state) {
             case "LIVE":
@@ -55,7 +62,7 @@ const MatchStateLabel = ({ sx, state, variant = "normal" }: MatchStateLabelProps
             case "FINISHED":
                 return 0.5;
             case "NOT_STARTED":
-                return ;
+                return;
             default:
                 console.error(`Invalid matchStateLabel = '${state}. Must be 'LIVE', 'FINISHED', 'NOT_STARTED`);
         }
@@ -68,7 +75,7 @@ const MatchStateLabel = ({ sx, state, variant = "normal" }: MatchStateLabelProps
             case "FINISHED":
                 return t("MatchStateLabel.finished");
             case "NOT_STARTED":
-                return t("MatchStateLabel.notStarted");
+                return time == null ? t("MatchStateLabel.notStarted") : time;
             default:
                 console.error(`Invalid matchStateLabel = '${state}. Must be 'LIVE', 'FINISHED', 'NOT_STARTED`);
         }

@@ -6,7 +6,7 @@ import { GameStyle } from "../../../rest/data/GameStyle";
 import { League } from "../../../rest/data/League";
 import { Config } from "../../utils/Config";
 import ErrorMessage from "../../utils/ErrorMessage";
-import { spacingLarge, spacingNormal, spacingSmall } from "../../utils/StyleVars";
+import { spacingNormal, spacingSmall } from "../../utils/StyleVars";
 import { MatchStateObject } from "./MatchStateObject";
 import LeagueSelector from "./selectors/LeagueSelector";
 import { StateProps } from "./StateProps";

@@ -21,9 +21,9 @@ const HoverButton = styled(Button)(({ theme }) => ({
         borderRadius: "2px",
         backgroundColor: theme.palette.mode === "dark" ? theme.palette.primary.main : "white",
         transformOrigin: "bottom center",
-        transition: "transform 0.2s ease-out"
+        transition: "transform 0.1s ease-out"
     },
-    '&.current::after': {
+    '&.current::after,&:hover::after': {
         transform: "scaleX(1)",
         transformOrigin: "bottom center"
     }

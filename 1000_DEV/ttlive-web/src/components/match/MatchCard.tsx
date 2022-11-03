@@ -3,7 +3,6 @@ import { Box } from "@mui/system";
 import { useContext, useState } from "react";
 import { Match } from "../../rest/data/Match";
 import { spacingNormal, spacingSmall } from "../utils/StyleVars";
-import styled from "@emotion/styled";
 import MatchStateLabel from "./MatchStateLabel";
 import { Game } from "../../rest/data/Game";
 import { useTranslation } from "react-i18next";
@@ -52,7 +51,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
             <Box sx={{ opacity: 0.5, display: "flex" }} padding={spacingSmall}>
                 <Typography sx={{ flexGrow: 1 }}>{match.league.name}</Typography>
                 <Box sx={{ opacity: 1, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
-                    <MatchStateLabel variant="border" state={match.state} />
+                    <MatchStateLabel variant="border" state={match.state} startDate={match.startDate}/>
                 </Box>
                 <Typography>{match.league.region}</Typography>
             </Box>
@@ -91,7 +90,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
         return (
             <Stack sx={{ gap: 2 }} >
                 {displayGames.map(game => (
-                    <GameScore game={game} />
+                    <GameScore key={game.id} game={game} />
                 ))}
             </Stack >
         )

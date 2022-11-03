@@ -1,7 +1,6 @@
-import { Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { Match } from "../../rest/data/Match";
-import { spacingNormal, spacingSmall } from "../utils/StyleVars";
+import { spacingSmall } from "../utils/StyleVars";
 
 export interface MatchScoreProps {
     match: Match;

@@ -53,6 +53,7 @@ const TeamNumberSelector = ({ onUpdate, updateError, isHomeTeam, teams, matchSta
             renderInput={(params) => <TextField {...params} label={t("TeamState.number")} />}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             filterOptions={filterOptions}
+            autoHighlight={true}
         />
     );
 

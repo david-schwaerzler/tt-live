@@ -41,6 +41,8 @@ const ClubSelector = ({ onUpdate, updateError, isHomeTeam, matchStateObject, tea
             onInputChange={(e, value) => value.startsWith("Add \"") === false && setClubInput(value)}
             renderInput={(params) => <TextField {...params} label={isHomeTeam ? t("TeamState.homeTeam") : t("TeamState.guestTeam")} />}
             filterOptions={filterOptions}
+            autoHighlight={true}
+
         />
     )
 

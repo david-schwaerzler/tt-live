@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { AppContext } from "../AppContext";
 import GameLiveScore from "../components/game/GameLiveScore";
 import MatchScore from "../components/match/MatchScore";
+import ErrorMessage from "../components/utils/ErrorMessage";
 import { spacingNormal } from "../components/utils/StyleVars";
 import { fetchMatch } from "../rest/api/MatchApi";
 import { Match } from "../rest/data/Match";
@@ -36,18 +37,19 @@ const LiveView = () => {
     if (context.matchId == null)
         return renderNoMatch()
 
-    if(match == null)
-        return renderLoading();    
+    if (match == null)
+        return renderLoading();
 
     return (
         <Box>
             <Stack direction="column" gap={spacingNormal}>
+                <ErrorMessage msg={errorMsg} centered />
                 <Paper elevation={1}>
                     <MatchScore match={match} />
                 </Paper>
 
                 {match?.games.filter(game => game.state === "LIVE").map(game =>
-                    <Paper elevation={1} sx={{ paddingLeft: spacingNormal, paddingRight: spacingNormal, paddingTop: spacingNormal }}>
+                    <Paper  key={game.id} elevation={1} sx={{ paddingLeft: spacingNormal, paddingRight: spacingNormal, paddingTop: spacingNormal }}>
                         <GameLiveScore game={game} />
                     </Paper>
                 )}
@@ -73,7 +75,7 @@ const LiveView = () => {
         )
     }
 
-    function renderLoading(){
+    function renderLoading() {
         // TODO render loading
         return <h1>TODO Render loading</h1>
     }

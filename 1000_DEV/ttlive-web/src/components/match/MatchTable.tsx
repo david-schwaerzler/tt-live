@@ -5,7 +5,6 @@ import { Match } from "../../rest/data/Match";
 import { Stack } from "@mui/system";
 import { spacingNormal } from "../utils/StyleVars";
 import MatchCard from "./MatchCard";
-import { Box } from "@mui/material";
 
 export interface MatchTableProps {
     onError: (msg: string) => void;
@@ -18,7 +17,6 @@ const MatchTable = ({ sx, fetchDelay = 0, onError, onFetched }: MatchTableProps)
 
     const [t] = useTranslation();
     const [matches, setMatches] = useState<Array<Match>>([]);
-
 
     useEffect(() => {
         async function fetch() {

@@ -45,9 +45,9 @@ const LeagueSelector = ({ onUpdate, updateError, leagues, matchStateObject }: Le
             renderInput={(params) => <TextField {...params} label={t("LeagueState.league")} />}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             filterOptions={filterOptions}
+            autoHighlight={true}
         />
     )
-
 
     function filterOptions(options: Array<League>, params: FilterOptionsState<League>) {
         const filtered = filter(options, params);
