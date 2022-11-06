@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { AppContext } from "../AppContext";
 import GameLiveScore from "../components/game/GameLiveScore";
+import LineupForm from "../components/LineupForm";
 import MatchScore from "../components/match/MatchScore";
 import ErrorMessage from "../components/utils/ErrorMessage";
 import { spacingNormal } from "../components/utils/StyleVars";
@@ -49,11 +50,17 @@ const LiveView = () => {
                 </Paper>
 
                 {match?.games.filter(game => game.state === "LIVE").map(game =>
-                    <Paper  key={game.id} elevation={1} sx={{ paddingLeft: spacingNormal, paddingRight: spacingNormal, paddingTop: spacingNormal }}>
+                    <Paper key={game.id} elevation={1} sx={{ paddingLeft: spacingNormal, paddingRight: spacingNormal, paddingTop: spacingNormal }}>
                         <GameLiveScore game={game} />
                     </Paper>
                 )}
+                <Paper>
+                    {match &&
+                        <LineupForm games={match.games} />
+                    }
+                </Paper>
             </Stack>
+
         </Box >
     );
 

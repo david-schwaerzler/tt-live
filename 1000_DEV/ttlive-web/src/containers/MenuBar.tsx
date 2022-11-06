@@ -1,10 +1,12 @@
-import { AppBar, Button, Divider, styled, Toolbar, Typography } from "@mui/material";
+import { AppBar, Button, styled, Toolbar, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from 'react-router-dom'
 import { AppContext } from "../AppContext";
 import MenuLoginForm from "../components/login/MenuLoginForm";
+import { LogoIcon, LogoIcon2, LogoIcon3, LogoIcon4 } from "../components/utils/Icons";
+import theme from "./CustomTheme";
 
 
 const HoverButton = styled(Button)(({ theme }) => ({
@@ -40,11 +42,10 @@ const MenuBar = () => {
 
     return (
         <AppBar position="static" elevation={2}>
-            <Toolbar>
-                <Typography variant="h6" color="inherit" sx={{ minWidth: "fit-content", mr: padding }}>
-                    TT-Live
-                </Typography>
-                <Divider orientation="vertical" flexItem sx={{ mr: padding }} />
+            <Toolbar sx={{ paddingLeft: { xs: 1, md: 2 } }}>
+                <Box sx={{ pr: padding }}>
+                    <LogoIcon4 sx={{ mt: "5px" }} color={theme.palette.mode === "dark" ? theme.palette.primary.main : "#FFFFFF"} />
+                </Box>
                 <Box sx={{ flexGrow: 1, display: 'flex', gap: padding }} >
                     <Link to="/" style={{ textDecoration: 'none' }} tabIndex={-1}>
                         <HoverButton className={location.pathname === "/" ? "current" : ""}>
