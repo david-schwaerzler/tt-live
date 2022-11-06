@@ -162,7 +162,6 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
     );
 
     function onStartDateSelected(startDate: Dayjs | null){
-        console.log(startDate)
         let updated = { ...matchStateObject };
         updated.startDate = startDate;
         updateError(ERROR_START_DATE, "")

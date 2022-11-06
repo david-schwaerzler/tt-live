@@ -5,7 +5,7 @@ import { ApiResponse, returnData, returnError } from "./ApiResponse";
 type MatchResponse = ApiResponse<Match>;
 type MatchesReponse = ApiResponse<Array<Match>>;
 
-export async function postMatch(requestMatch: RequestMatch) : Promise<MatchResponse>{
+export async function postMatch(requestMatch: RequestMatch): Promise<MatchResponse> {
     try {
         let response = await fetch(Config.REST_URL + "/match", {
             method: "POST",
@@ -19,15 +19,15 @@ export async function postMatch(requestMatch: RequestMatch) : Promise<MatchRespo
             return returnError(response.status.toString());
         }
 
-        let match : Match = await response.json();
-        return returnData(match);
+        let match: Match = await response.json();
+        return returnData(sortMatch(match));
 
     } catch (error) {
         console.log(`Error creating match on Server: ${error}`)
         return returnError(`${error}`);
     }
 }
-export async function fetchMatches() : Promise<MatchesReponse>{
+export async function fetchMatches(): Promise<MatchesReponse> {
     try {
         let response = await fetch(Config.REST_URL + "/match");
         if (!response.ok) {
@@ -35,8 +35,9 @@ export async function fetchMatches() : Promise<MatchesReponse>{
             return returnError(response.status.toString());
         }
 
-        let match : Array<Match> = await response.json();
-        return returnData(match);
+        let matches: Array<Match> = await response.json();
+        matches = matches.map(m => sortMatch(m));
+        return returnData(matches);
 
     } catch (error) {
         console.log(`Error fetching matches on Server: ${error}`)
@@ -44,7 +45,7 @@ export async function fetchMatches() : Promise<MatchesReponse>{
     }
 }
 
-export async function fetchMatch(id : number) : Promise<MatchResponse>{
+export async function fetchMatch(id: number): Promise<MatchResponse> {
     try {
         let response = await fetch(Config.REST_URL + "/match/" + id);
         if (!response.ok) {
@@ -52,8 +53,8 @@ export async function fetchMatch(id : number) : Promise<MatchResponse>{
             return returnError(response.status.toString());
         }
 
-        let match : Match = await response.json();
-        return returnData(match);
+        let match: Match = await response.json();
+        return returnData(sortMatch(match));
 
     } catch (error) {
         console.log(`Error fetching match with id=${id} from Server: ${error}`)
@@ -62,3 +63,13 @@ export async function fetchMatch(id : number) : Promise<MatchResponse>{
 
 }
 
+function sortMatch(match: Match) {
+    match.games = match.games.sort((a, b) => a.gameNumber - b.gameNumber);
+    match.games.forEach(g => g.sets.sort((a, b) => a.number - b.number));
+    
+    match.games.forEach(g => {
+        if (g.id === 5)
+            console.log(g)
+    });
+    return match;
+}

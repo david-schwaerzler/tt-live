@@ -26,11 +26,11 @@ const MatchCard = ({ match }: MatchCardProps) => {
     const context = useContext(AppContext);
 
     return (
-        <Paper elevation={5} >
+        <Paper elevation={1} >
             {renderHeader()}
             <Divider />
 
-            <MatchScore sx={{pt: spacingNormal}} match={match} scoreSize={{ xs: "2rem", sm: "3rem" }} />
+            <MatchScore sx={{ pt: spacingNormal }} match={match} scoreSize={{ xs: "2rem", sm: "3rem" }} />
             <Stack direction={{ xs: "column", sm: "column-reverse" }} p={spacingSmall} gap={spacingNormal}>
                 <Box sx={{ display: "flex", paddingLeft: spacingSmall, paddingRight: spacingSmall, justifyContent: "center" }} >
                     <Button sx={{ flexGrow: 1, maxWidth: "300px" }} variant="outlined" onClick={onLinkGame}>{t("MatchCard.linkGame")}</Button>
@@ -39,10 +39,11 @@ const MatchCard = ({ match }: MatchCardProps) => {
                     {renderGames()}
                 </Collapse>
             </Stack>
-
-            <Box sx={{ cursor: "pointer", display: "flex", justifyContent: "center" }} onClick={() => setExpanded(!expanded)}>
-                <ExpandButton expanded={expanded} />
-            </Box>
+            {match.state !== "NOT_STARTED" &&
+                <Box sx={{ cursor: "pointer", display: "flex", justifyContent: "center" }} onClick={() => setExpanded(!expanded)}>
+                    <ExpandButton expanded={expanded} />
+                </Box>
+            }
         </Paper >
     );
 
@@ -51,19 +52,11 @@ const MatchCard = ({ match }: MatchCardProps) => {
             <Box sx={{ opacity: 0.5, display: "flex" }} padding={spacingSmall}>
                 <Typography sx={{ flexGrow: 1 }}>{match.league.name}</Typography>
                 <Box sx={{ opacity: 1, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
-                    <MatchStateLabel variant="border" state={match.state} startDate={match.startDate}/>
+                    <MatchStateLabel variant="border" state={match.state} startDate={match.startDate} />
                 </Box>
                 <Typography>{match.league.region}</Typography>
             </Box>
         );
-    }
-
-    function renderMatchScore(teamName: string, score: number) {
-        return (
-            <Box sx={{ display: "flex", flexDirection: { xs: "row", sm: "column" }, flex: "1 1 0", justifyContent: "center" }}>
-                <Typography variant="h6" sx={{ flexGrow: 1, textAlign: { sm: "center" }, paddingBottom: spacingSmall }}>{teamName}</Typography>
-                <Typography variant="h5" sx={{ fontSize: { md: "3rem" }, minWidth: "2em", textAlign: "center" }}><b>{score}</b></Typography>
-            </Box>);
     }
 
     function renderGames() {

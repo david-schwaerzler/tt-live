@@ -18,7 +18,7 @@ const LiveSearch = () => {
                 {t("LiveSearch.headline")}
             </Typography>
 
-           <MatchTable onError={msg => setErrorMsg(msg)} onFetched={() => setErrorMsg("")} fetchDelay={10000}/>
+           <MatchTable onError={msg => setErrorMsg(msg)} onFetched={() => setErrorMsg("")} fetchDelay={1000*60}/>
 
         </Box>
     )

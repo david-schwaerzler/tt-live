@@ -124,7 +124,6 @@ const CreateGameView = (props: CreateGameViewProps) => {
                 return;
 
         if (isLastStep()) {
-            console.log("Ok")
             onSubmit();
             return;
         }

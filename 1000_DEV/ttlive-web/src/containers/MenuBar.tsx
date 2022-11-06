@@ -1,4 +1,4 @@
-import { AppBar, Button, styled, Toolbar, Typography } from "@mui/material";
+import { AppBar, Button, styled, Toolbar } from "@mui/material";
 import { Box } from "@mui/system";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";

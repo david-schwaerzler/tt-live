@@ -1,4 +1,4 @@
-import { Button, IconButton, styled } from "@mui/material";
+import { IconButton, styled } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box } from "@mui/system";
 
@@ -8,23 +8,57 @@ const StyledButton = styled((props: any) => {
     return <IconButton {...other} />;
 })(({ theme, expand }) => ({
     transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-    transition: theme.transitions.create('transform', {
+    transition: theme.transitions.create(['transform'], {
         duration: theme.transitions.duration.shortest,
     }),
-    opacity: "1"
+    width: "fit-content",
+    margin: "auto",
+
+    svg: {
+        color: theme.palette.primary.main,
+        transition: "color 0.1s ease"
+    },
+
+    "&:active": {
+        color: theme.palette.primary.main,
+    }
+
 }));
 
-const StyledDiv = styled(Box)(({ theme }) => ({
+const StyledBox = styled(Box)(({ theme }) => ({
     width: "100%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "0",
-    margin: "0",
-    "&:hover": {
-        background: `${theme.palette.primary.main}0C`,
+    "::before": {
+        content: '""',
+        margin: "auto",
+        display: "block",
+        position: "relative",
+        height: "30px",
+        width: "30px",
+        borderRadius: "50%",
+        backgroundColor: theme.palette.primary.main,
+        transformOrigin: "center",
+        transition: "transform 0.1s ease-out",
+        transform: "scale(0)",
+        gridColumn: 1,
+        gridRow: 1
+    },
+    '&:hover::before': {
+        transform: "scale(1)",
+        transformOrigin: "center",
+        transitionDelay: "50ms"
+    },
+
+    '&:hover svg': {
+        color: "white",
+        transitionDelay: "50ms"
+    },
+
+    '&:hover': {
+        background: `${theme.palette.primary.main}0C`
     }
+
 }));
+
 
 export interface ExpandButtonProps {
     expanded: boolean
@@ -32,15 +66,16 @@ export interface ExpandButtonProps {
 
 const ExpandButton = ({ expanded }: ExpandButtonProps) => {
     return (
-        <StyledDiv>
+        <StyledBox sx={{ display: "grid" }}>
             <StyledButton
                 expand={expanded}
                 aria-expanded={expanded}
                 aria-label="show more"
+                sx={{ gridColumn: 1, gridRow: 1 }}
             >
-                <ExpandMoreIcon sx={{opacity: 1}}/>
+                <ExpandMoreIcon sx={{ zIndex: 100 }} />
             </StyledButton>
-        </StyledDiv>
+        </StyledBox>
     )
 }
 

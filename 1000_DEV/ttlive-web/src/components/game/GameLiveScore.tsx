@@ -1,4 +1,4 @@
-import { Box, Collapse, Divider, Grid, Stack, Typography } from "@mui/material";
+import { Box, Collapse, Grid, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Game } from "../../rest/data/Game";
 import { GameSet } from "../../rest/data/GameSet";
@@ -22,7 +22,9 @@ const GameLiveScore = ({ game }: GameLiveScoreProps) => {
 
     useEffect(() => {
 
-        let sortedSets = game.sets.sort((a, b) => b.number - a.number);
+        // need to create a copy, otherwise the sets will be in the wrong order
+        let sortedSets = [...game.sets];
+        sortedSets.sort((a, b) => b.number - a.number);
 
         let displayedSets = sortedSets.filter(s => s.state === "LIVE"); // all live sets will be displayed (should normally be only 1)
         if (displayedSets.length < NUM_DISPLAYED_SETS) {
@@ -34,7 +36,7 @@ const GameLiveScore = ({ game }: GameLiveScoreProps) => {
             }
         }
 
-        let hiddenSets = sortedSets.filter(d => displayedSets.includes(d) === false);
+        let hiddenSets = sortedSets.filter(d => displayedSets.includes(d) === false && d.state !== "NOT_STARTED");
 
         setDisplayedSets(displayedSets);
         setHiddenSets(hiddenSets);
@@ -92,53 +94,13 @@ const GameLiveScore = ({ game }: GameLiveScoreProps) => {
                     )}
                 </Collapse>
 
-                <Box sx={{ cursor: "pointer", display: "flex", justifyContent: "center" }} onClick={() => setExpanded(!expanded)}>
+                <Box sx={{ cursor: "pointer", width: "100%", left: 0}} onClick={() => setExpanded(!expanded)}>
                     <ExpandButton expanded={expanded} />
                 </Box>
 
             </Stack>
         );
-    }
-
-    function renderSingles2(game: Game) {
-        return (
-            <React.Fragment>
-                <Grid container sx={{ textAlign: "center" }}>
-                    <Grid item xs={4} sx={{ textAlign: "left", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>{game.homePlayer.name}</Grid>
-                    <Grid item xs={1}></Grid>
-                    {game.sets.map(value => renderSet2(value, true))}
-                    <Grid item xs={1}></Grid>
-                    <Grid item xs={1} sx={{ fontWeight: "bold" }}>{game.homeSets}</Grid>
-                </Grid>
-                <Divider />
-                <Grid container sx={{ textAlign: "center" }}>
-                    <Grid item xs={4} sx={{ textAlign: "left", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>{game.guestPlayer.name}</Grid>
-                    <Grid item xs={1}></Grid>
-                    {game.sets.map(value => renderSet2(value, false))}
-                    <Grid item xs={1}></Grid>
-                    <Grid item xs={1} sx={{ fontWeight: "bold" }}>{game.guestSets}</Grid>
-                </Grid>
-
-            </React.Fragment>
-        )
-    }
-
-    function renderSet2(set: GameSet, isHome: boolean) {
-
-        if (set.state === "NOT_STARTED")
-            return <Grid item xs={1} >-</Grid>
-
-
-        if (isHome) {
-            if (set.homeScore < set.guestScore)
-                return <Grid item xs={1} sx={{ fontWeight: "bold" }}>{set.homeScore}</Grid>
-            return <Grid item xs={1} >{set.homeScore}</Grid>
-        } else {
-            if (set.guestScore < set.homeScore)
-                return <Grid item xs={1} sx={{ fontWeight: "bold" }}>{set.guestScore}</Grid>
-            return <Grid item xs={1} >{set.guestScore}</Grid>
-        }
-    }
+    }   
 
     function renderDoubles(game: Game) {
         return (

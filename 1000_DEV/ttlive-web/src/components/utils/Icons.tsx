@@ -1,6 +1,5 @@
-import { colors, PaletteColor, SvgIcon } from '@mui/material';
+import { SvgIcon } from '@mui/material';
 import { DefaultComponentProps, OverridableTypeMap } from '@mui/material/OverridableComponent';
-import { styled } from '@mui/system';
 
 export interface ColorProps extends DefaultComponentProps<OverridableTypeMap> {
   color: string;

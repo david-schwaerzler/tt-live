@@ -74,12 +74,17 @@ const deDe = {
 
             "LiveView.noMatch": "Kein Livespiel ausgewählt.\nFinde ein Spiel über die Suche",
             "LiveView.search": "Zur Suche",
+            "LiveView.live": "Live",
+            "LiveView.lineup": "Spielbericht",
 
             "MatchStateLabel.live": "Live",
             "MatchStateLabel.notStarted": "Bald",
             "MatchStateLabel.finished": "Beendet",
 
-            "MatchCard.linkGame": "zum Spiel"
+            "MatchCard.linkGame": "zum Spiel",
+
+            "GameReport.singles": "Einzel",
+            "GameReport.doubles": "Doubles"
 
         }
     }
