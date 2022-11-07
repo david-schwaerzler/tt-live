@@ -58,8 +58,8 @@ const LiveView = () => {
                 <Tab label={t("LiveView.lineup")} />
             </Tabs>
 
-            {activeTab === 0 && renderLive()}
-            {activeTab === 1 && renderLinup()}
+            <Box display={activeTab === 0 ? "block" : "none"}>{renderLive()}</Box>
+            <Box display={activeTab === 1 ? "block" : "none"}>{renderLinup()}</Box>
         </Box>
     );
 
@@ -81,7 +81,6 @@ const LiveView = () => {
                         <GameLiveScore game={game} />
                     </Paper>
                 )}
-
             </Stack>
         );
     }
