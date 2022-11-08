@@ -63,13 +63,25 @@ export async function fetchMatch(id: number): Promise<MatchResponse> {
 
 }
 
+export async function fetchValidateErrorCode(id: number, editorCode: string){
+    try {
+        let response = await fetch(Config.REST_URL + "/match/" + id + "/validate?editorCode=" + editorCode);
+        if (!response.ok) {
+            console.log(`Error checking editorCode for match with id=${id} from the Server: ${response.status}`)
+            return returnError(response.status.toString());
+        }
+
+        let valid: {valid: boolean} = await response.json();
+        return returnData(valid.valid);
+
+    } catch (error) {
+        console.log(`Error checking editorCode for match with id=${id} from Server: ${error}`)
+        return returnError(`${error}`);
+    }
+}
+
 function sortMatch(match: Match) {
     match.games = match.games.sort((a, b) => a.gameNumber - b.gameNumber);
     match.games.forEach(g => g.sets.sort((a, b) => a.number - b.number));
-    
-    match.games.forEach(g => {
-        if (g.id === 5)
-            console.log(g)
-    });
     return match;
 }

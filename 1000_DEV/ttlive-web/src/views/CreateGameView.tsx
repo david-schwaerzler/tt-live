@@ -198,10 +198,10 @@ const CreateGameView = (props: CreateGameViewProps) => {
         let response = await postMatch(requestMatch);
         if (response.data != null) {
             context.setMatchId(response.data.id);
-            context.setEditorCode(response.data.editorCode);
+            context.setEditorCode(response.data.id, response.data.editorCode);
             navigate("/live");
         } else {
-            //setErrorDialogOpen(true);
+            setErrorDialogOpen(true);
         }
     }
 }

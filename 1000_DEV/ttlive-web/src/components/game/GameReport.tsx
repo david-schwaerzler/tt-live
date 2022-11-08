@@ -73,13 +73,13 @@ const GameReport = ({ games }: GameReportProps) => {
             <Box key={game.gameNumber} sx={{ display: "flex" }}>
                 <Box sx={{ flexGrow: 1 }}>
                     <Grid container sx={{ textAlign: "center" }} columns={11}>
-                        <PlayerCell item xs={5} sx={{ fontSize: "0.8rem", fontWeight: homeWon ? 500 : "normal" }}>{game.homeDoubles.player1}<br />{game.homeDoubles.player2}</PlayerCell>
+                        <PlayerCell item xs={5} sx={{ fontSize: "0.8rem", fontWeight: homeWon ? 500 : "normal" }}>{renderPlayer(game.homeDoubles.player1)}<br />{renderPlayer(game.homeDoubles.player2)}</PlayerCell>
                         {game.sets.map(value => <Grid key={value.number} sx={{ opacity: 0.5 }} item xs={1} margin="auto">{renderSet(value, true)}</Grid>)}
                         <Grid item xs={1} sx={{ fontWeight: "bold", m: "auto" }}>{game.state !== "NOT_STARTED" ? game.homeSets : "-"}</Grid>
                     </Grid>
                     <Divider />
                     <Grid container sx={{ textAlign: "center" }} columns={11}>
-                        <PlayerCell item xs={5} sx={{ fontSize: "0.8rem", fontWeight: guestWon ? 500 : "normal" }}>{game.guestDoubles.player1}<br />{game.guestDoubles.player2}</PlayerCell>
+                        <PlayerCell item xs={5} sx={{ fontSize: "0.8rem", fontWeight: guestWon ? 500 : "normal" }}>{renderPlayer(game.guestDoubles.player1)}<br />{renderPlayer(game.guestDoubles.player2)}</PlayerCell>
                         {game.sets.map(value => <Grid key={value.number} sx={{ opacity: 0.5 }} item xs={1} margin="auto">{renderSet(value, false)}</Grid>)}
                         <Grid item xs={1} sx={{ fontWeight: "bold", m: "auto" }}>{game.state !== "NOT_STARTED" ? game.guestSets : "-"}</Grid>
                     </Grid>
@@ -91,6 +91,13 @@ const GameReport = ({ games }: GameReportProps) => {
         )
     }
 
+    function renderPlayer(player: string) {
+        if (player === "") {
+            return <i>{t("GameReport.noPlayer")}</i>;
+        }
+        return player;
+    }
+
 
     function renderSingles(game: GameScore) {
         let homeWon = game.state === "FINISHED" && game.homeSets > game.guestSets;
@@ -100,13 +107,13 @@ const GameReport = ({ games }: GameReportProps) => {
             <Box key={game.gameNumber} sx={{ display: "flex" }}>
                 <Box sx={{ flexGrow: 1 }}>
                     <Grid container sx={{ textAlign: "center" }} columns={11}>
-                        <PlayerCell item xs={5} sx={{ fontWeight: homeWon ? 500 : "normal" }}>{game.homePlayer.name}</PlayerCell>
+                        <PlayerCell item xs={5} sx={{ fontWeight: homeWon ? 500 : "normal" }}>{renderPlayer(game.homePlayer.name)}</PlayerCell>
                         {game.sets.map(value => <Grid key={value.number} sx={{ opacity: 0.5 }} item xs={1}>{renderSet(value, true)}</Grid>)}
                         <Grid item xs={1} sx={{ fontWeight: "bold" }}>{game.state !== "NOT_STARTED" ? game.homeSets : "-"}</Grid>
                     </Grid>
                     <Divider />
                     <Grid container sx={{ textAlign: "center" }} columns={11}>
-                        <PlayerCell item xs={5} sx={{ fontWeight: guestWon ? 500 : "normal" }}>{game.guestPlayer.name}</PlayerCell>
+                        <PlayerCell item xs={5} sx={{ fontWeight: guestWon ? 500 : "normal" }}>{renderPlayer(game.guestPlayer.name)}</PlayerCell>
                         {game.sets.map(value => <Grid key={value.number} sx={{ opacity: 0.5 }} item xs={1}>{renderSet(value, false)}</Grid>)}
                         <Grid item xs={1} sx={{ fontWeight: "bold" }}>{game.state !== "NOT_STARTED" ? game.guestSets : "-"}</Grid>
                     </Grid>

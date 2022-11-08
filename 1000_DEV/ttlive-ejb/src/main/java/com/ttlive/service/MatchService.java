@@ -184,6 +184,15 @@ public class MatchService {
 		return matches;
 	}
 	
+	public boolean isEditorCodeValid(long id, String editorCode) {
+		MatchEntity match = matchDao.findById(id);
+		if (match == null)
+			throw new NullPointerException(
+					"Match with the given id='" + id + " doesn't exist");		
+		
+		return match.getEditorCode().equals(editorCode);
+	}
+	
 	public Match getDefault(MatchEntity entity) throws InvalidGameSetFormat {
 
 		return Match.builder() //

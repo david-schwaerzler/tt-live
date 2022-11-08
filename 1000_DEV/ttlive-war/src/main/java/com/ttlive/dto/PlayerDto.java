@@ -17,11 +17,15 @@ import lombok.NoArgsConstructor;
 public class PlayerDto {
 	private long id;
 	private String name;
+	private int position;
+	private boolean isHomeTeam;	
 
 	public static class PlayerDtoBuilder {
 		public PlayerDtoBuilder bo(Player bo) {
 			this.id = bo.getId();
 			this.name = bo.getName();
+			this.position = bo.getPosition();
+			this.isHomeTeam = bo.isHomeTeam();
 			return this;
 		}
 	}

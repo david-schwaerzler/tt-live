@@ -1,0 +1,66 @@
+import { Box, Button, TextField, Typography } from "@mui/material";
+import { useContext, useState } from "react";
+import { Trans, useTranslation } from "react-i18next";
+import { AppContext } from "../../../AppContext";
+import { fetchValidateErrorCode } from "../../../rest/api/MatchApi";
+import { Match } from "../../../rest/data/Match";
+import ErrorMessage from "../../utils/ErrorMessage";
+
+export interface NoCodeSettingProps {
+    match: Match
+}
+
+enum Errors {
+    GENERAL,
+    VALIDATE_CODE
+
+}
+const NoCodeSetting = ({ match }: NoCodeSettingProps) => {
+    const [errorMsgs, setErrorMsgs] = useState<Array<string>>([]);
+    const [newEditorCode, setNewEditorCode] = useState<string>("");
+    const [t] = useTranslation();
+    const context = useContext(AppContext);
+
+    return (
+        <Box>
+            <ErrorMessage msg={errorMsgs[Errors.GENERAL]} />
+            <Typography variant="h4" textAlign="left" sx={[{ "strong": { color: (theme) => theme.palette.primary.main, fontSize: "2.5rem" } }]}>
+                <Trans i18nKey="MatchSettings.noCodeHeader" t={t} />
+            </Typography>
+            <Typography textAlign="left" mt={1}>
+                {t("MatchSettings.noCodeText")}
+            </Typography>
+
+            <ErrorMessage msg={errorMsgs[Errors.VALIDATE_CODE]} sx={{ mt: 2 }} />
+            <TextField sx={{ width: "200px", mt: 2, display: "block" }}
+                label={t("MatchSettings.editorCodeInput")} value={newEditorCode}
+                onChange={e => setNewEditorCode(e.target.value)}
+            />
+            <Button variant="outlined" sx={{ mt: 1 }} onClick={checkCode}>{t("MatchSettings.noCodeButton")}</Button>
+        </Box>
+    );
+
+
+    async function checkCode() {
+
+        let response = await fetchValidateErrorCode(match.id, newEditorCode);
+        if (response.data != null) {
+            if (response.data === true) {
+                context.setEditorCode(match.id, newEditorCode);
+                setErrorMsgs([]);
+            } else {
+                updateError(Errors.VALIDATE_CODE, t("MatchSettings.errorInvalidCode"));
+            }
+        } else {
+            updateError(Errors.GENERAL, t("MatchSettings.errorValidatingCode"));
+        }
+    }
+
+    function updateError(key: number, msg: string) {
+        let copy = [...errorMsgs];
+        copy[key] = msg;
+        setErrorMsgs(copy);
+    }
+}
+
+export default NoCodeSetting

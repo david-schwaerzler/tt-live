@@ -48,7 +48,8 @@ public class MatchDto {
 			this.homeTeamScore = bo.getHomeTeamScore();
 			this.guestTeamScore = bo.getGuestTeamScore();
 			this.createdAt = bo.getCreatedAt();
-			this.editorCode = bo.getEditorCode();
+			// Don't send the editor code. It should be a secret and only be added on special requests
+			this.editorCode = null;
 			this.code = bo.getCode();
 			this.state = bo.getState();
 			this.startDate = bo.getStartDate();

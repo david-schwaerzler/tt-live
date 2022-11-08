@@ -50,7 +50,6 @@ const deDe = {
             "TeamState.homeTeam": "Heimverein",
             "TeamState.guestTeam": "Gastverein",
             "TeamState.number": "Mannschaft",
-            "TeamState.lineup": "Aufstellung",
             "TeamState.errorGameStyle": "Es muss zunächst ein Spielsystem ausgewählt werden",
             "TeamState.errorLeague": "Es muss zunächst eine Liga ausgewählt werden",
             "TeamState.errorEmptyClub": "Verein muss gesetzt werden",
@@ -76,6 +75,7 @@ const deDe = {
             "LiveView.search": "Zur Suche",
             "LiveView.live": "Live",
             "LiveView.lineup": "Spielbericht",
+            "LiveView.settings": "Settings",
 
             "MatchStateLabel.live": "Live",
             "MatchStateLabel.notStarted": "Bald",
@@ -84,7 +84,22 @@ const deDe = {
             "MatchCard.linkGame": "zum Spiel",
 
             "GameReport.singles": "Einzel",
-            "GameReport.doubles": "Doubles"
+            "GameReport.doubles": "Doubles",
+            "GameReport.noPlayer": "Nicht eingegeben",
+
+            "MatchSettings.noCodeHeader": "Du bist <strong style='color=\"red\"'>kein</strong> Editor!",
+            "MatchSettings.noCodeText": "Gib den Editor-Code ein um einer zu werden.\nAndere Editoren oder der Spielersteller besitzen den Code.",
+            "MatchSettings.editorCodeInput": "Editor-Code",
+            "MatchSettings.noCodeButton": "Bestätigen",
+            "MatchSettings.errorValidatingCode": "Es ist ein Fehler beim überprüfen des Codes aufgetreten. Bitte versuchen sie es später erneut",
+            "MatchSettings.errorInvalidCode": "Fehlerhafter Code",
+
+            "LineupSetting.double": "Doppel",
+            "LineupSetting.player": "Spieler",
+            "LineupSetting.doubles": "Doppel",
+            "LineupSetting.singles": "Einzel",
+            "LineupSetting.homeTeam": "Aufstellung Heimverein",
+            "LineupSetting.guestTeam": "Aufstellung Gastverein",
 
         }
     }

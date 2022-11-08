@@ -10,9 +10,12 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import org.json.JSONObject;
 
 import com.ttlive.bo.GameSet.InvalidGameSetFormat;
 import com.ttlive.bo.League;
@@ -103,8 +106,27 @@ public class MatchReceiver {
 				.build();
 
 		Match match = matchService.create(requestMatch);
+		
+		MatchDto matchDto = MatchDto.builder() //
+				.bo(match) //
+				.editorCode(match.getEditorCode()) //
+				.build();
 
-		return Response.ok(MatchDto.builder().bo(match).build()).build();
-
+		return Response.ok(matchDto).build();
+	}
+	
+	
+	@GET
+	@Path("/{id}/validate")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response isEditorCodeValid(@PathParam("id") long id, @QueryParam("editorCode") String editorCode) {		
+		if(editorCode == null)
+			return Response.status(Status.BAD_REQUEST).entity("No editorCode was provided in the path").build();
+		
+		boolean isEditorCodeValid = matchService.isEditorCodeValid(id, editorCode);
+		JSONObject ret = new JSONObject();
+		ret.put("valid", isEditorCodeValid);
+		return Response.ok(ret.toString()).build();
 	}
 }

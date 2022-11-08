@@ -1,5 +1,6 @@
 import { Button, Paper, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { render } from "@testing-library/react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -8,6 +9,7 @@ import { AppContext } from "../AppContext";
 import GameLiveScore from "../components/game/GameLiveScore";
 import GameReport from "../components/game/GameReport";
 import MatchScore from "../components/match/MatchScore";
+import MatchSettings from "../components/match/settings/MatchSettings";
 import ErrorMessage from "../components/utils/ErrorMessage";
 import { spacingNormal } from "../components/utils/StyleVars";
 import { fetchMatch } from "../rest/api/MatchApi";
@@ -17,6 +19,7 @@ const LiveView = () => {
     const [match, setMatch] = useState<Match | null>(null);
     const [errorMsg, setErrorMsg] = useState<string>("");
     const [activeTab, setActiveTab] = useState(0);
+    const [editorCode, setEditorCode] = useState<string | null>(null)
 
     const context = useContext(AppContext)
     const [t] = useTranslation();
@@ -24,25 +27,29 @@ const LiveView = () => {
 
 
     const swipeHanlder = useSwipeable({
-        onSwipedRight: () => setActiveTab(0),
-        onSwipedLeft: () => setActiveTab(1)
+        onSwipedRight: () => setActiveTab(activeTab - 1 < 0 ? 0 : activeTab - 1),
+        onSwipedLeft: () => setActiveTab(activeTab + 1 > 2 ? 2 : activeTab + 1)
     })
 
     useEffect(() => {
         async function fetchData(id: number) {
             let response = await fetchMatch(id);
-            if (response.data != null)
+            if (response.data != null) {
                 setMatch(response.data);
-            else
+                if (context.editorCode[response.data?.id] != null)
+                    setEditorCode(context.editorCode[response.data?.id]);
+                else
+                    setEditorCode(null)
+            } else {
                 setErrorMsg(response.error == null ? "" : response.error);
+            }
         }
 
         if (context.matchId == null)
             setMatch(null)
         else
             fetchData(context.matchId);
-    }, [setMatch, context.matchId])
-
+    }, [context.matchId, context.editorCode])
 
     if (context.matchId == null)
         return renderNoMatch()
@@ -54,14 +61,20 @@ const LiveView = () => {
     return (
         <Box {...swipeHanlder} >
             <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} centered variant="fullWidth" sx={{ mb: 4 }}>
+                <Tab label={t("LiveView.settings")} />
                 <Tab label={t("LiveView.live")} />
                 <Tab label={t("LiveView.lineup")} />
             </Tabs>
 
-            <Box display={activeTab === 0 ? "block" : "none"}>{renderLive()}</Box>
-            <Box display={activeTab === 1 ? "block" : "none"}>{renderLinup()}</Box>
+            <Box display={activeTab === 0 ? "block" : "none"}>{renderSettings()}</Box>
+            <Box display={activeTab === 1 ? "block" : "none"}>{renderLive()}</Box>
+            <Box display={activeTab === 2 ? "block" : "none"}>{renderLinup()}</Box>
         </Box>
     );
+
+    function renderSettings(){
+        return match && <MatchSettings match={match} editorCode={editorCode} />;
+    }
 
     function renderLinup() {
         return (match && <GameReport games={match.games} />);
