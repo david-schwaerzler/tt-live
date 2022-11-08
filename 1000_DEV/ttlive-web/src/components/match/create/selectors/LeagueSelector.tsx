@@ -9,11 +9,12 @@ export interface LeagueSelectorProps {
     updateError: (msg: string) => void;
     leagues: Array<League>
     matchStateObject: MatchStateObject;
+    error: boolean
 }
 
 const filter = createFilterOptions<League>();
 
-const LeagueSelector = ({ onUpdate, updateError, leagues, matchStateObject }: LeagueSelectorProps) => {
+const LeagueSelector = ({ onUpdate, updateError, leagues, matchStateObject, error }: LeagueSelectorProps) => {
 
     const [leagueInput, setLeagueInput] = useState<string>("")
     const [tmpLeagues, setTmpLeagues] = useState<Array<League>>([]);
@@ -42,10 +43,10 @@ const LeagueSelector = ({ onUpdate, updateError, leagues, matchStateObject }: Le
             getOptionLabel={option => option.name === "" ? `Add "${leagueInput}"` : option.name}
             inputValue={leagueInput}
             onInputChange={(e, value) => value.startsWith("Add \"") === false && setLeagueInput(value)}
-            renderInput={(params) => <TextField {...params} label={t("LeagueState.league")} />}
+            renderInput={(params) => <TextField {...params} error={error} label={t("LeagueState.league")} />}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             filterOptions={filterOptions}
-            autoHighlight={true}
+            autoHighlight={true}                        
         />
     )
 

@@ -10,13 +10,13 @@ export interface ClubSelectorProps {
     isHomeTeam: boolean;
     teams: Array<Team>
     matchStateObject: MatchStateObject;
-
+    error: boolean;
 }
 
 const filter = createFilterOptions<string>();
 
 
-const ClubSelector = ({ onUpdate, updateError, isHomeTeam, matchStateObject, teams }: ClubSelectorProps) => {
+const ClubSelector = ({ onUpdate, updateError, isHomeTeam, matchStateObject, teams, error }: ClubSelectorProps) => {
 
     const [clubInput, setClubInput] = useState<string>("");
     const [tmpClub, setTmpClub] = useState<string>("");
@@ -39,7 +39,7 @@ const ClubSelector = ({ onUpdate, updateError, isHomeTeam, matchStateObject, tea
             options={clubs}
             inputValue={clubInput}
             onInputChange={(e, value) => value.startsWith("Add \"") === false && setClubInput(value)}
-            renderInput={(params) => <TextField {...params} label={isHomeTeam ? t("TeamState.homeTeam") : t("TeamState.guestTeam")} />}
+            renderInput={(params) => <TextField {...params} label={isHomeTeam ? t("TeamState.homeTeam") : t("TeamState.guestTeam")} error={error}/>}
             filterOptions={filterOptions}
             autoHighlight={true}
 

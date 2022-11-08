@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, FormControl, FormHelperText, TextField, Typography } from "@mui/material";
 import { useContext, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { AppContext } from "../../../AppContext";
@@ -13,7 +13,6 @@ export interface NoCodeSettingProps {
 enum Errors {
     GENERAL,
     VALIDATE_CODE
-
 }
 const NoCodeSetting = ({ match }: NoCodeSettingProps) => {
     const [errorMsgs, setErrorMsgs] = useState<Array<string>>([]);
@@ -31,11 +30,13 @@ const NoCodeSetting = ({ match }: NoCodeSettingProps) => {
                 {t("MatchSettings.noCodeText")}
             </Typography>
 
-            <ErrorMessage msg={errorMsgs[Errors.VALIDATE_CODE]} sx={{ mt: 2 }} />
-            <TextField sx={{ width: "200px", mt: 2, display: "block" }}
-                label={t("MatchSettings.editorCodeInput")} value={newEditorCode}
-                onChange={e => setNewEditorCode(e.target.value)}
-            />
+            <FormControl error={errorMsgs[Errors.VALIDATE_CODE] != null && errorMsgs[Errors.VALIDATE_CODE] !== ""} >
+                <TextField sx={{ width: "200px", mt: 2, display: "block" }}
+                    label={t("MatchSettings.editorCodeInput")} value={newEditorCode}
+                    onChange={e => setNewEditorCode(e.target.value)}
+                />
+                <FormHelperText >{errorMsgs[Errors.VALIDATE_CODE]}</FormHelperText>
+            </FormControl>
             <Button variant="outlined" sx={{ mt: 1 }} onClick={checkCode}>{t("MatchSettings.noCodeButton")}</Button>
         </Box>
     );

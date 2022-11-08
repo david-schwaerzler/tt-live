@@ -1,4 +1,4 @@
-import { Autocomplete, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
+import { Autocomplete, FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -65,7 +65,7 @@ const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
     }, [setValidate, fetchRegions, updateError, t])
 
     return (
-        <Box sx={{ width: "100%", margin: "auto"}}>
+        <Box sx={{ width: "100%", margin: "auto" }}>
 
             <Typography variant="h5" sx={{ textAlign: "center", paddingBottom: spacingNormal }}>
                 {t('CreateGameView.stepRegion')}
@@ -73,9 +73,8 @@ const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
 
             <ErrorMessage msg={errorMsgs[ERROR_GENERAL]} centered sx={{ paddingBottom: spacingSmall }} />
 
-            <Stack sx={{ flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "center", md: "flex-end" }, gap: spacingNormal }} justifyContent="space-around" >
-                <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
-                    <ErrorMessage msg={errorMsgs[ERROR_REGION]} centered />
+            <Stack sx={{ flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "center", md: "flex-start" }, gap: spacingNormal }} justifyContent="space-evenly" >
+                <FormControl >
                     <Autocomplete
                         id="auto-region"
                         sx={{ minWidth: "200px", alignSelf: "center" }}
@@ -85,14 +84,14 @@ const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
                         getOptionLabel={option => option.name}
                         inputValue={regionInput}
                         onInputChange={(e, value) => setRegionInput(value)}
-                        renderInput={(params) => <TextField {...params} label={t('RegionState.region')} />}
+                        renderInput={(params) => <TextField {...params} label={t('RegionState.region')} error={errorMsgs[ERROR_REGION] != null && errorMsgs[ERROR_REGION] !== ""} />}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                         autoHighlight={true}
                     />
-                </Box>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
-                    <ErrorMessage msg={errorMsgs[ERROR_CONTEST]} centered />
-                    <FormControl sx={{ minWidth: "200px", alignSelf: "center" }}  >
+                    <FormHelperText error={errorMsgs[ERROR_REGION] != null && errorMsgs[ERROR_REGION] !== ""} >{errorMsgs[ERROR_REGION]}</FormHelperText>
+                </FormControl>
+                <FormControl >
+                    <FormControl sx={{ minWidth: "200px", alignSelf: "center" }} error={errorMsgs[ERROR_CONTEST] != null && errorMsgs[ERROR_REGION] !== ""} >
                         <InputLabel id="select-contest">{t('RegionState.contest')}</InputLabel>
                         <Select
                             id="select-contest"
@@ -103,8 +102,10 @@ const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
                             <MenuItem value="WOMEN">{t('RegionState.contestWomen')}</MenuItem>
                             <MenuItem value="MEN">{t('RegionState.contestMen')}</MenuItem>
                         </Select>
+                        <FormHelperText>{errorMsgs[ERROR_CONTEST]}</FormHelperText>
+
                     </FormControl>
-                </Box>
+                </FormControl>
             </Stack>
         </Box >
     );

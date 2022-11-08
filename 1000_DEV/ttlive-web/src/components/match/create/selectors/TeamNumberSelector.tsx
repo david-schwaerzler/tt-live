@@ -10,12 +10,13 @@ export interface TeamNumberSelectorProps {
     isHomeTeam: boolean;
     teams: Array<Team>
     matchStateObject: MatchStateObject;
+    error: boolean;
 }
 
 const filter = createFilterOptions<Team>();
 
 
-const TeamNumberSelector = ({ onUpdate, updateError, isHomeTeam, teams, matchStateObject }: TeamNumberSelectorProps) => {
+const TeamNumberSelector = ({ onUpdate, updateError, isHomeTeam, teams, matchStateObject, error }: TeamNumberSelectorProps) => {
 
     const [numberInput, setNumberInput] = useState<string>("");
     const [tmpTeams, setTmpTeams] = useState<Array<Team>>([]);
@@ -50,7 +51,7 @@ const TeamNumberSelector = ({ onUpdate, updateError, isHomeTeam, teams, matchSta
             getOptionLabel={option => option.number === -1 ? `Add "${numberInput}"` : option.number.toString()}
             inputValue={numberInput}
             onInputChange={(e, value) => onInputChange(value)}
-            renderInput={(params) => <TextField {...params} label={t("TeamState.number")} />}
+            renderInput={(params) => <TextField {...params} label={t("TeamState.number")} error={error} />}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             filterOptions={filterOptions}
             autoHighlight={true}

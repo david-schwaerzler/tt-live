@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { FormControl, FormHelperText, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -42,7 +42,7 @@ const TeamState = ({ matchStateObject, onUpdate, setValidate, isHomeTeam }: Team
             return;
         }
 
-        if(matchStateObject.league.id === -1){ // League has been created by the user
+        if (matchStateObject.league.id === -1) { // League has been created by the user
             setTeams([]);
             return;
         }
@@ -81,7 +81,7 @@ const TeamState = ({ matchStateObject, onUpdate, setValidate, isHomeTeam }: Team
         if (hasFetchedData.current === false) {
             setValidate(onValidate);
             fetchTeams();
-            hasFetchedData.current = true;           
+            hasFetchedData.current = true;
         }
 
     }, [updateError, t, fetchTeams, setValidate, isHomeTeam, matchStateObject.homeTeam, matchStateObject.guestTeam, matchStateObject.league, matchStateObject.gameStyle])
@@ -93,31 +93,34 @@ const TeamState = ({ matchStateObject, onUpdate, setValidate, isHomeTeam }: Team
                 {isHomeTeam ? t('CreateGameView.stepHomeTeam') : t('CreateGameView.stepGuestTeam')}
             </Typography>
             <ErrorMessage msg={errorMsgs[ERROR_GENERAL]} centered sx={{ paddingBottom: spacingNormal }} />
-            <Stack sx={{ flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "center", md: "flex-end" } }} justifyContent="space-evenly" >
-                <Box sx={{ display: "flex", flexDirection: "column", gap: spacingNormal }}>
-                    <ErrorMessage msg={errorMsgs[ERROR_CLUB]} centered />
+            <Stack sx={{ flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "center", md: "flex-start" },  gap: spacingNormal  }} justifyContent="space-evenly" >
+                <FormControl>
                     <ClubSelector
                         isHomeTeam={isHomeTeam}
                         matchStateObject={matchStateObject}
                         teams={teams}
                         onUpdate={onUpdate}
                         updateError={msg => updateError(ERROR_CLUB, msg)}
+                        error={errorMsgs[ERROR_CLUB] != null && errorMsgs[ERROR_CLUB] !== ""}
                     />
-                </Box>
-                <Box sx={{ paddingTop: spacingNormal, display: { xs: "block", md: "none" } }}></Box>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: spacingNormal }}>
-                    <ErrorMessage msg={errorMsgs[ERROR_NUMBER]} centered />
+                    <FormHelperText error={errorMsgs[ERROR_CLUB] != null && errorMsgs[ERROR_CLUB] !== ""} >{errorMsgs[ERROR_CLUB]}</FormHelperText>
+
+                </FormControl>
+                <FormControl>
                     <TeamNumberSelector
                         isHomeTeam={isHomeTeam}
                         matchStateObject={matchStateObject}
                         teams={teams}
                         onUpdate={onUpdate}
                         updateError={msg => updateError(ERROR_CLUB, msg)}
+                        error={errorMsgs[ERROR_NUMBER] != null && errorMsgs[ERROR_NUMBER] !== ""}
                     />
-                </Box>
+                    <FormHelperText error={errorMsgs[ERROR_NUMBER] != null && errorMsgs[ERROR_NUMBER] !== ""} >{errorMsgs[ERROR_NUMBER]}</FormHelperText>
+
+                </FormControl>
             </Stack>
 
-          
+
         </Box>
     );
 

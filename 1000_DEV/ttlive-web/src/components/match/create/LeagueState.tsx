@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -81,10 +81,10 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
             } else if (matchStateObject.gameStyle == null) {
                 updateError(ERROR_GAME_STYLE, t("LeagueState.errorEmptyGameStyle"));
                 return false;
-            } else if (matchStateObject.startDate == null){
+            } else if (matchStateObject.startDate == null) {
                 updateError(ERROR_START_DATE, t("LeagueState.errorEmptyStartDate"));
-                return false;                
-            }else if(matchStateObject.startDate.isValid() === false){
+                return false;
+            } else if (matchStateObject.startDate.isValid() === false) {
                 updateError(ERROR_START_DATE, t("LeagueState.errorInvalidStartDate"));
                 return false;
             }
@@ -110,19 +110,19 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
 
             <ErrorMessage msg={errorMsgs[ERROR_GENERAL]} centered sx={{ paddingBottom: spacingSmall }} />
 
-            <Stack sx={{ flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "center", md: "flex-end" }, gap: spacingNormal }} justifyContent="space-around" >
-                <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
-                    <ErrorMessage msg={errorMsgs[ERROR_LEAGUE]} centered />
+            <Stack sx={{ flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "center", md: "flex-start" }, gap: spacingNormal }} justifyContent="space-evenly" >
+                <FormControl sx={{ minWidth: "200px" }}  >
                     <LeagueSelector
                         matchStateObject={matchStateObject}
                         leagues={leagues}
                         onUpdate={onUpdate}
                         updateError={msg => updateError(ERROR_LEAGUE, msg)}
+                        error={errorMsgs[ERROR_LEAGUE] != null && errorMsgs[ERROR_LEAGUE] !== ""}
                     />
-                </Box>
+                    <FormHelperText error={errorMsgs[ERROR_LEAGUE] != null && errorMsgs[ERROR_LEAGUE] !== ""}>{errorMsgs[ERROR_LEAGUE]}</FormHelperText>
+                </FormControl>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
-                    <ErrorMessage msg={errorMsgs[ERROR_GAME_STYLE]} centered />
-                    <FormControl sx={{ minWidth: "200px", alignSelf: "center" }}  >
+                    <FormControl sx={{ minWidth: "200px" }} error={errorMsgs[ERROR_GAME_STYLE] != null && errorMsgs[ERROR_GAME_STYLE] !== ""}   >
                         <InputLabel id="select-gameStyle">{t("LeagueState.gameStyle")}</InputLabel>
                         <Select
                             id="select-gameStyle"
@@ -135,18 +135,19 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
                             )}
 
                         </Select>
+                        <FormHelperText>{errorMsgs[ERROR_GAME_STYLE]}</FormHelperText>
                     </FormControl>
                 </Box>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
-                    <ErrorMessage msg={errorMsgs[ERROR_START_DATE]} centered />
                     <FormControl sx={{ width: "200px", alignSelf: "center" }}  >
-                        <DateTimePicker                            
+                        <DateTimePicker
                             ampm={false}
                             label={t("LeagueState.startDate")}
                             value={matchStateObject.startDate}
                             onChange={onStartDateSelected}
-                            renderInput={(params) => <TextField {...params} />}
+                            renderInput={(params) => <TextField {...params} error={errorMsgs[ERROR_START_DATE] != null && errorMsgs[ERROR_START_DATE] !== ""} />}
                         />
+                        <FormHelperText error={errorMsgs[ERROR_START_DATE] != null && errorMsgs[ERROR_START_DATE] !== ""} >{errorMsgs[ERROR_START_DATE]}</FormHelperText>
                     </FormControl>
                 </Box>
             </Stack>
@@ -161,7 +162,7 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
         </Box >
     );
 
-    function onStartDateSelected(startDate: Dayjs | null){
+    function onStartDateSelected(startDate: Dayjs | null) {
         let updated = { ...matchStateObject };
         updated.startDate = startDate;
         updateError(ERROR_START_DATE, "")
