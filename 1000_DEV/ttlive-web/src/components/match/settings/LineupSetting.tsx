@@ -1,82 +1,113 @@
-import { Collapse, Divider, Paper, Stack, TextField, Typography } from "@mui/material";
+import { Button, Card, CardActions, CardContent, Collapse, Divider, FormControl, Paper, Skeleton, Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Doubles } from "../../../rest/data/Doubles";
+import { putLineup } from "../../../rest/api/MatchApi";
+import { Doubles, RequestDouble } from "../../../rest/data/Doubles";
 import { Match } from "../../../rest/data/Match";
-import { Player } from "../../../rest/data/Player";
+import { Player, RequestPlayer } from "../../../rest/data/Player";
+import { RequestLineup } from "../../../rest/data/RequestLineup";
+import ErrorMessage from "../../utils/ErrorMessage";
 import ExpandButton from "../../utils/ExpandButton";
-import { spacingNormal } from "../../utils/StyleVars";
+import LoadingButton from "../../utils/LoadingButton";
 
 export interface LineupSettingProps {
-    match: Match,
+    match: Match | null,
+    editorCode: string,
     isHomeTeam: boolean
+    onMatchChanged: (updated: Match) => void;
 }
 
-const LineupSetting = ({ match, isHomeTeam }: LineupSettingProps) => {
+const LineupSetting = ({ match, isHomeTeam, editorCode, onMatchChanged }: LineupSettingProps) => {
 
     const [doubles, setDoubles] = useState<Array<Doubles>>([]);
     const [players, setPlayers] = useState<Array<Player>>([]);
     const [expanded, setExpanded] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [errorMsg, setErrorMsg] = useState<string>(); const [t] = useTranslation();
+
+
 
     useEffect(() => {
 
+        if (match == null) {
+            setDoubles([]);
+            setPlayers([]);
+            return;
+        }
         let doubles = isHomeTeam ? match.homeDoubles.map(d => ({ ...d })) : match.guestDoubles.map(d => ({ ...d }));
         let players = isHomeTeam ? match.homePlayers.map(d => ({ ...d })) : match.guestPlayers.map(d => ({ ...d }));
 
         setDoubles(doubles);
         setPlayers(players);
 
-    }, [match.homePlayers, match.guestPlayers, match.homeDoubles, match.guestDoubles]);
+    }, [match]);
 
-    const [t] = useTranslation();
+    if (match == null)
+        return <Skeleton sx={{ height: { xs: "88px", sm: "88px" } }} variant="rectangular" />
+
     return (
-        <Paper elevation={1} >
-            <Typography variant="h5" p={2}>
-                {isHomeTeam ? t('LineupSetting.homeTeam') : t('LineupSetting.guestTeam')}
-            </Typography>
+        <Card >
+            <CardContent>
+                <Typography variant="h5">
+                    {isHomeTeam ? t('LineupSetting.homeTeam') : t('LineupSetting.guestTeam')}
+                </Typography>
 
-            <Collapse in={expanded} timeout="auto" >
-                <Divider />
-                <Stack direction="column" sx={{ gap: 2, p: 2 }}>
+                <Collapse in={expanded} timeout="auto" >
+                    <Divider />
+                    <Stack direction="column" sx={{ gap: 2, p: 2 }}>
+                        <ErrorMessage msg={errorMsg} />
 
-                    <Typography variant="h6">{t("LineupSetting.singles")}:</Typography>
-                    {players.map((player, index) => (
+                        <Typography variant="h6" width="100%">
+                            {t("LineupSetting.player")}:
+                            <Button sx={{ float: "right" }} onClick={() => onResetPlayers(match)}>reset</Button>
+                        </Typography>
+                        {players.map((player, index) => (
+                            <FormControl>
+                                <TextField key={player.id} sx={{ minWidth: "100px" }}
+                                    label={t("LineupSetting.player") + " " + player.position}
+                                    variant="outlined"
+                                    value={player.name}
+                                    onChange={e => updatePlayer(index, e.target.value)}
+                                />
+                            </FormControl>
+                        ))}
 
-                        <TextField key={player.position} sx={{ minWidth: "100px" }}
-                            label={t("LineupSetting.player") + " " + player.position}
-                            variant="outlined"
-                            defaultValue={player.name}
-                            value={player.name}
-                            onChange={e => updatePlayer(index, e.target.value)}
-                        />
-                    ))}
+                        <Typography variant="h6" width="100%">
+                            {t("LineupSetting.double")}:
+                            <Button sx={{ float: "right" }} onClick={() => onResetDoubles(match)}>reset</Button>
+                        </Typography>
+                        {doubles.map((double, index) => (
+                            <Stack gap={1} key={double.id}>
+                                <FormControl>
+                                    <TextField
+                                        label={t('LineupSetting.double') + " " + double.position + " - " + t('LineupSetting.player') + " 1"}
+                                        variant="outlined"
+                                        value={double.player1}
+                                        onChange={e => updateDoubles(index, e.target.value, double.player2)} />
+                                </FormControl>
+                                <FormControl>
+                                    <TextField label={t('LineupSetting.double') + " " + double.position + " - " + t('LineupSetting.player') + " 2"}
+                                        variant="outlined"
+                                        value={double.player2}
+                                        onChange={e => updateDoubles(index, double.player1, e.target.value)}
+                                    />
+                                </FormControl>
+                            </Stack>
+                        ))}
 
-                    <Typography variant="h6" mt={2}>{t("LineupSetting.doubles")}:</Typography>
-                    {doubles.map((double, index) => (
-                        <Stack key={double.position} direction="row" sx={{ gap: spacingNormal }}>
-                            <TextField label={t('LineupSetting.double') + " " + double.position + " - " + t('LineupSetting.player') + " 1"}
-                                variant="outlined"
-                                value={double.player1}
-                                defaultValue={double.player1}
-                                onChange={e => updateDoubles(index, e.target.value, double.player2)} />
-                            <TextField label={t('LineupSetting.double') + " " + double.position + " - " + t('LineupSetting.player') + " 2"}
-                                variant="outlined"
-                                value={double.player1}
-                                defaultValue={double.player1}
-                                onChange={e => updateDoubles(index, e.target.value, double.player2)}
-                            />
-                        </Stack>
-                    ))}
+                        <LoadingButton loading={loading} variant="outlined" onClick={() => onSave(match)}>Save</LoadingButton>
+                    </Stack>
 
-                </Stack>
 
-            </Collapse>
-
-            <Box sx={{ cursor: "pointer", display: "flex", justifyContent: "center" }} onClick={() => setExpanded(!expanded)}>
-                <ExpandButton expanded={expanded} />
-            </Box>
-        </Paper >
+                </Collapse>
+            </CardContent>
+            <CardActions>
+                <Box sx={{ cursor: "pointer", display: "flex", justifyContent: "center", width: "100%" }} onClick={() => setExpanded(!expanded)}>
+                    <ExpandButton expanded={expanded} />
+                </Box>
+            </CardActions>
+        </Card >
     );
 
     function updatePlayer(index: number, newName: string) {
@@ -92,6 +123,31 @@ const LineupSetting = ({ match, isHomeTeam }: LineupSettingProps) => {
         setDoubles(tmp);
     }
 
+    function onResetDoubles(match: Match) {
+        let doubles = isHomeTeam ? match.homeDoubles.map(d => ({ ...d })) : match.guestDoubles.map(d => ({ ...d }));
+        setDoubles(doubles);
+    }
+    function onResetPlayers(match: Match) {
+        let players = isHomeTeam ? match.homePlayers.map(d => ({ ...d })) : match.guestPlayers.map(d => ({ ...d }));
+        setPlayers(players)
+    }
+
+    async function onSave(match: Match) {
+
+        let requestLineUp: RequestLineup = {
+            doubles: doubles.map<RequestDouble>(d => ({ id: d.id, player1: d.player1, player2: d.player2 })),
+            players: players.map<RequestPlayer>(p => ({ id: p.id, name: p.name }))
+        };
+        setLoading(true);
+        let response = await putLineup(match.id, editorCode, requestLineUp);
+        if (response.data != null) {
+            onMatchChanged(response.data)
+            setExpanded(false);
+        } else {
+            setErrorMsg(t("LineupSetting.player"));
+        }
+        setLoading(false);
+    }
 }
 
 export default LineupSetting;

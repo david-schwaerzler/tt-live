@@ -1,13 +1,14 @@
-import { Box, Button, FormControl, FormHelperText, TextField, Typography } from "@mui/material";
+import { Box, Button, FormControl, FormHelperText, Skeleton, TextField, Typography } from "@mui/material";
 import { useContext, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { AppContext } from "../../../AppContext";
 import { fetchValidateErrorCode } from "../../../rest/api/MatchApi";
 import { Match } from "../../../rest/data/Match";
 import ErrorMessage from "../../utils/ErrorMessage";
+import LoadingButton from "../../utils/LoadingButton";
 
 export interface NoCodeSettingProps {
-    match: Match
+    match: Match | null;
 }
 
 enum Errors {
@@ -17,8 +18,12 @@ enum Errors {
 const NoCodeSetting = ({ match }: NoCodeSettingProps) => {
     const [errorMsgs, setErrorMsgs] = useState<Array<string>>([]);
     const [newEditorCode, setNewEditorCode] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
     const [t] = useTranslation();
     const context = useContext(AppContext);
+
+    if (match == null)
+        return <Skeleton sx={{ height: { xs: "304px", sm: "224px" } }} variant="rectangular" />;
 
     return (
         <Box>
@@ -37,12 +42,13 @@ const NoCodeSetting = ({ match }: NoCodeSettingProps) => {
                 />
                 <FormHelperText >{errorMsgs[Errors.VALIDATE_CODE]}</FormHelperText>
             </FormControl>
-            <Button variant="outlined" sx={{ mt: 1 }} onClick={checkCode}>{t("MatchSettings.noCodeButton")}</Button>
+            <LoadingButton loading={loading} variant="outlined" sx={{ mt: 1 }} onClick={() => checkCode(match)}>{t("MatchSettings.noCodeButton")}</LoadingButton>
         </Box>
     );
 
 
-    async function checkCode() {
+    async function checkCode(match: Match) {
+        setLoading(true);
 
         let response = await fetchValidateErrorCode(match.id, newEditorCode);
         if (response.data != null) {
@@ -55,6 +61,7 @@ const NoCodeSetting = ({ match }: NoCodeSettingProps) => {
         } else {
             updateError(Errors.GENERAL, t("MatchSettings.errorValidatingCode"));
         }
+        setLoading(false);
     }
 
     function updateError(key: number, msg: string) {

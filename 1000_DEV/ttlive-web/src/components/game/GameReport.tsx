@@ -1,4 +1,4 @@
-import { Box, Divider, Grid, Paper, styled, Typography } from "@mui/material";
+import { Box, Card, CardContent, Divider, Grid, Paper, Skeleton, styled, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -7,7 +7,7 @@ import { GameSet } from "../../rest/data/GameSet";
 import GameScore from "./GameScore";
 
 export interface GameReportProps {
-    games: Array<Game>;
+    games: Array<Game> | null;
 }
 
 const PlayerCell = styled(Grid)({
@@ -22,11 +22,16 @@ type GameScore = Game & { homeTeamScore: number, guestTeamScore: number };
 
 const GameReport = ({ games }: GameReportProps) => {
 
-    const [gameScores, setgameScores] = useState<Array<GameScore>>([]);
+    const [gameScores, setGameScores] = useState<Array<GameScore> | null>(null);
     const [t] = useTranslation();
 
 
     useEffect(() => {
+        if (games == null) {
+            setGameScores(null);
+            return;
+        }
+
         let homeTeamScore = 0;
         let guestTeamScore = 0;
 
@@ -43,24 +48,34 @@ const GameReport = ({ games }: GameReportProps) => {
                 guestTeamScore: homeTeamScore
             }
         });
-        setgameScores(gameScores);
+        setGameScores(gameScores);
     }, [games]);
 
 
     return (
         <React.Fragment>
-            <Paper sx={{ p: 2, mb: 2 }}>
-                <Typography pb={2} variant="h5" >{t("GameReport.doubles")}</Typography>
-                <Stack gap={1.5}>
-                    {gameScores.filter(game => game.doubles).map(game => renderDoubles(game))}
-                </Stack>
-            </Paper>
-            <Paper sx={{ p: 2 }}>
-                <Typography pb={2} variant="h5">{t("GameReport.singles")}</Typography>
-                <Stack gap={1.5}>
-                    {gameScores.filter(game => !game.doubles).map(game => renderSingles(game))}
-                </Stack>
-            </Paper>
+            {gameScores == null
+                ? <Skeleton sx={{ height: { xs: "247px", sm: "247px" }, mb: 2 }} variant="rectangular" />
+                : <Card sx={{ mb: 2 }}>
+                    <CardContent>
+                        <Typography pb={2} variant="h5" >{t("GameReport.doubles")}</Typography>
+                        <Stack gap={1.5}>
+                            {gameScores.filter(game => game.doubles).map(game => renderDoubles(game))}
+                        </Stack>
+                    </CardContent>
+                </Card>
+            }
+            {gameScores == null
+                ? <Skeleton sx={{ height: { xs: "556px", sm: "556px" } }} variant="rectangular" />
+                : <Card>
+                    <CardContent>
+                        <Typography pb={2} variant="h5">{t("GameReport.singles")}</Typography>
+                        <Stack gap={1.5}>
+                            {gameScores.filter(game => !game.doubles).map(game => renderSingles(game))}
+                        </Stack>
+                    </CardContent>
+                </Card>
+            }
         </React.Fragment>
     )
 

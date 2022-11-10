@@ -1,6 +1,6 @@
-import { Button, Collapse, Divider, Paper, Stack, Typography } from "@mui/material";
+import { Button, Card, CardActions, CardContent, Collapse, Divider, Paper, Skeleton, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Match } from "../../rest/data/Match";
 import { spacingNormal, spacingSmall } from "../utils/StyleVars";
 import MatchStateLabel from "./MatchStateLabel";
@@ -13,7 +13,7 @@ import MatchScore from "./MatchScore";
 import ExpandButton from "../utils/ExpandButton";
 
 export interface MatchCardProps {
-    match: Match
+    match: Match | null
 }
 
 const NUMBER_MATCHES = 4;
@@ -26,28 +26,37 @@ const MatchCard = ({ match }: MatchCardProps) => {
     const context = useContext(AppContext);
 
     return (
-        <Paper elevation={1} >
-            {renderHeader()}
-            <Divider />
+        <Card>
+            {match == null ? <Skeleton sx={{ height: { xs: "40px", sm: "56px" } }} variant="rectangular" /> : renderHeader(match)}
+            <Divider sx={{  }} />
+            <CardContent >
 
-            <MatchScore sx={{ pt: spacingNormal }} match={match} scoreSize={{ xs: "2rem", sm: "3rem" }} />
-            <Stack direction={{ xs: "column", sm: "column-reverse" }} p={spacingSmall} gap={spacingNormal}>
-                <Box sx={{ display: "flex", paddingLeft: spacingSmall, paddingRight: spacingSmall, justifyContent: "center" }} >
-                    <Button sx={{ flexGrow: 1, maxWidth: "300px" }} variant="outlined" onClick={onLinkGame}>{t("MatchCard.linkGame")}</Button>
-                </Box>
-                <Collapse in={expanded} timeout="auto" unmountOnExit>
-                    {renderGames()}
-                </Collapse>
-            </Stack>
-            {match.state !== "NOT_STARTED" &&
-                <Box sx={{ cursor: "pointer", display: "flex", justifyContent: "center" }} onClick={() => setExpanded(!expanded)}>
-                    <ExpandButton expanded={expanded} />
-                </Box>
-            }
-        </Paper >
+                {match == null ? <Skeleton sx={{ height: { xs: "248px", sm: "260px" } }} variant="rectangular" /> :
+                    <React.Fragment>
+                        <MatchScore sx={{ pt: spacingNormal }} match={match} scoreSize={{ xs: "2rem", sm: "3rem" }} />
+                        <Stack direction={{ xs: "column", sm: "column-reverse" }} gap={spacingNormal}>
+                            <Box sx={{ display: "flex", paddingLeft: spacingSmall, paddingRight: spacingSmall, justifyContent: "center" }} >
+                                <Button sx={{ flexGrow: 1, maxWidth: "300px" }} variant="outlined" onClick={() => onLinkGame(match)}>{t("MatchCard.linkGame")}</Button>
+                            </Box>
+
+                            <Collapse in={expanded} timeout="auto" unmountOnExit>
+                                {renderGames(match)}
+                            </Collapse>
+                        </Stack>
+                    </React.Fragment>
+                }
+            </CardContent>
+            <CardActions>
+                {match != null && match.state !== "NOT_STARTED" &&
+                    <Box sx={{ cursor: "pointer", display: "flex", justifyContent: "center", width: "100%" }} onClick={() => setExpanded(!expanded)}>
+                        <ExpandButton expanded={expanded} />
+                    </Box>
+                }
+            </CardActions>
+        </Card >
     );
 
-    function renderHeader() {
+    function renderHeader(match: Match) {
         return (
             <Box sx={{ opacity: 0.5, display: "flex" }} padding={spacingSmall}>
                 <Typography sx={{ flexGrow: 1 }}>{match.league.name}</Typography>
@@ -59,7 +68,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
         );
     }
 
-    function renderGames() {
+    function renderGames(match: Match) {
         // TODO Put displayed games in the state variable (with useEffect)
         let games = match.games;
         let liveGames = games.filter(g => g.state === "LIVE");
@@ -89,7 +98,7 @@ const MatchCard = ({ match }: MatchCardProps) => {
         )
     }
 
-    function onLinkGame() {
+    function onLinkGame(match: Match) {
         context.setMatchId(match.id);
         navigate("/live");
     }

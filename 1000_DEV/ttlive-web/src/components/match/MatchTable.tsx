@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { fetchMatches } from "../../rest/api/MatchApi";
 import { Match } from "../../rest/data/Match";
@@ -16,7 +16,7 @@ export interface MatchTableProps {
 const MatchTable = ({ sx, fetchDelay = 0, onError, onFetched }: MatchTableProps) => {
 
     const [t] = useTranslation();
-    const [matches, setMatches] = useState<Array<Match>>([]);
+    const [matches, setMatches] = useState<Array<Match> | null>(null);
 
     useEffect(() => {
         async function fetch() {
@@ -27,6 +27,7 @@ const MatchTable = ({ sx, fetchDelay = 0, onError, onFetched }: MatchTableProps)
             } else {
                 onError(response.error == null ? "" : t("Common.errorFetch"))
             }
+
         };
 
         let intervalId: NodeJS.Timer | null = null;
@@ -35,7 +36,6 @@ const MatchTable = ({ sx, fetchDelay = 0, onError, onFetched }: MatchTableProps)
                 fetch();
             }, fetchDelay);
         }
-
         fetch();
 
         return () => {
@@ -48,9 +48,14 @@ const MatchTable = ({ sx, fetchDelay = 0, onError, onFetched }: MatchTableProps)
     return (
 
         <Stack sx={{ gap: spacingNormal }}>
-            {matches.map(match =>
-                <MatchCard key={match.id} match={match} />
-            )}
+            {matches == null
+                ? <React.Fragment>
+                    <MatchCard match={null} />
+                    <MatchCard match={null} />
+                    <MatchCard match={null} />
+                </React.Fragment>
+                : matches.map(match => <MatchCard key={match.id} match={match} />)
+            }
         </Stack >
 
     );

@@ -1,4 +1,4 @@
-import { Button, Paper, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Button, Card, CardContent, Paper, Skeleton, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { render } from "@testing-library/react";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -49,17 +49,18 @@ const LiveView = () => {
             setMatch(null)
         else
             fetchData(context.matchId);
+
+
     }, [context.matchId, context.editorCode])
 
     if (context.matchId == null)
-        return renderNoMatch()
-
-    if (match == null)
-        return renderLoading();
-
+        return renderNoMatch();
 
     return (
-        <Box {...swipeHanlder} >
+        <Box {...swipeHanlder}>
+            {/* This is a quick fix to allow swiping on on outside the component */}
+            <Box {...swipeHanlder} className="test" position="absolute" top={"10%"} bottom={0} left={0} right={0} zIndex={-10} />
+
             <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} centered variant="fullWidth" sx={{ mb: 4 }}>
                 <Tab label={t("LiveView.settings")} />
                 <Tab label={t("LiveView.live")} />
@@ -72,27 +73,32 @@ const LiveView = () => {
         </Box>
     );
 
-    function renderSettings(){
-        return match && <MatchSettings match={match} editorCode={editorCode} />;
+    function renderSettings() {
+        return <MatchSettings match={match} editorCode={editorCode} onMatchChanged={match => setMatch(match)} />;
     }
 
     function renderLinup() {
-        return (match && <GameReport games={match.games} />);
+        return <GameReport games={match != null ? match.games : null} />;
     }
 
     function renderLive() {
         return (
-
             <Stack direction="column" gap={spacingNormal} ref={ref}>
                 <ErrorMessage msg={errorMsg} centered />
-                <Paper elevation={1} sx={{ pt: 4, pb: 4 }}>
-                    {match != null && <MatchScore match={match} />}
-                </Paper>
+                {match == null ? <Skeleton sx={{ height: { xs: "212px", sm: "200px" } }} variant="rectangular" />
+                    : <Card>
+                        <CardContent>
+                            <MatchScore match={match} />
+                        </CardContent>
+                    </Card>
+                }
 
                 {match?.games.filter(game => game.state === "LIVE").map(game =>
-                    <Paper key={game.id} elevation={1} sx={{ paddingTop: spacingNormal }}>
-                        <GameLiveScore game={game} />
-                    </Paper>
+                    <Card key={game.id}>
+                        <CardContent>
+                            <GameLiveScore game={game} />
+                        </CardContent>
+                    </Card>
                 )}
             </Stack>
         );
@@ -114,11 +120,6 @@ const LiveView = () => {
                 </Box>
             </Box>
         )
-    }
-
-    function renderLoading() {
-        // TODO render loading
-        return <h1>TODO Render loading</h1>
     }
 }
 

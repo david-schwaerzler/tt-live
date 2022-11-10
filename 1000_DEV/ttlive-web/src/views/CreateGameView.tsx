@@ -1,5 +1,5 @@
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, MobileStepper, Paper, Step, StepLabel, Stepper } from "@mui/material";
+import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Divider, MobileStepper, Paper, Step, StepLabel, Stepper } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -48,60 +48,61 @@ const CreateGameView = (props: CreateGameViewProps) => {
     const navigate = useNavigate();
 
     return (
-        <Paper sx={{ padding: spacingNormal }}>
+        <Card>
+            <CardContent>
 
-            <Dialog onClose={onErrorDialogClosed} open={errorDialogOpen} >
-                <DialogTitle>{t("Common.error")}</DialogTitle>
-                <DialogContent>
-                    {t("CreateGameView.createError")}
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={onErrorDialogClosed} variant="outlined">{t("Common.ok")}</Button>
-                </DialogActions>
-            </Dialog>
+                <Dialog onClose={onErrorDialogClosed} open={errorDialogOpen} >
+                    <DialogTitle>{t("Common.error")}</DialogTitle>
+                    <DialogContent>
+                        {t("CreateGameView.createError")}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={onErrorDialogClosed} variant="outlined">{t("Common.ok")}</Button>
+                    </DialogActions>
+                </Dialog>
 
-            <Box sx={{ display: { xs: "none", sm: "block" } }}>
-                <Stepper activeStep={currentStep} alternativeLabel >
-                    <Step><StepLabel>{t("CreateGameView.stepRegion")}</StepLabel></Step>
-                    <Step><StepLabel>{t("CreateGameView.stepLeague")}</StepLabel></Step>
-                    <Step><StepLabel>{t("CreateGameView.stepHomeTeam")}</StepLabel></Step>
-                    <Step><StepLabel>{t("CreateGameView.stepGuestTeam")}</StepLabel></Step>
-                    <Step><StepLabel>{t("CreateGameView.stepSummary")}</StepLabel></Step>
-                </Stepper>
-                <Divider orientation="horizontal" sx={{ paddingTop: spacingNormal }} />
-            </Box>
+                <Box sx={{ display: { xs: "none", sm: "block" } }}>
+                    <Stepper activeStep={currentStep} alternativeLabel >
+                        <Step><StepLabel>{t("CreateGameView.stepRegion")}</StepLabel></Step>
+                        <Step><StepLabel>{t("CreateGameView.stepLeague")}</StepLabel></Step>
+                        <Step><StepLabel>{t("CreateGameView.stepHomeTeam")}</StepLabel></Step>
+                        <Step><StepLabel>{t("CreateGameView.stepGuestTeam")}</StepLabel></Step>
+                        <Step><StepLabel>{t("CreateGameView.stepSummary")}</StepLabel></Step>
+                    </Stepper>
+                    <Divider orientation="horizontal" sx={{ paddingTop: spacingNormal }} />
+                </Box>
 
-            {renderState()}
+                {renderState()}
 
-            <Box sx={{ display: { xs: "block", sm: "none" }, paddingTop: spacingNormal }}>
-                <MobileStepper
-                    variant="text"
-                    steps={5}
-                    position="bottom"
-                    activeStep={currentStep}
-                    nextButton={
-                        <Button size="small" onClick={setNextStep} disabled={false}>
-                            {isLastStep() ? t("CreateGameView.submit") : t("CreateGameView.next")}
-                            <KeyboardArrowRight />
-                        </Button>
-                    }
-                    backButton={
-                        <Button size="small" onClick={setPreviousStep} disabled={false}>
-                            <KeyboardArrowLeft />
-                            {t("CreateGameView.back")}
-                        </Button>
-                    }
-                />
-            </Box>
+                <Box sx={{ display: { xs: "block", sm: "none" }, paddingTop: spacingNormal }}>
+                    <MobileStepper
+                        variant="text"
+                        steps={5}
+                        position="bottom"
+                        activeStep={currentStep}
+                        nextButton={
+                            <Button size="small" onClick={setNextStep} disabled={false}>
+                                {isLastStep() ? t("CreateGameView.submit") : t("CreateGameView.next")}
+                                <KeyboardArrowRight />
+                            </Button>
+                        }
+                        backButton={
+                            <Button size="small" onClick={setPreviousStep} disabled={false}>
+                                <KeyboardArrowLeft />
+                                {t("CreateGameView.back")}
+                            </Button>
+                        }
+                    />
+                </Box>
 
-            <Stack sx={{ display: { xs: "none", sm: "flex" }, paddingTop: spacingNormal }} direction="row" justifyContent="center" gap="2em">
-                <Button variant="outlined" disabled={currentStep === 0} onClick={setPreviousStep}>{t("CreateGameView.back")}</Button>
-                <Button variant="outlined" onClick={setNextStep}>
-                    {isLastStep() ? t("CreateGameView.submit") : t("CreateGameView.next")}
-                </Button>
-            </Stack>
-
-        </Paper>
+                <Stack sx={{ display: { xs: "none", sm: "flex" }, paddingTop: spacingNormal }} direction="row" justifyContent="center" gap="2em">
+                    <Button variant="outlined" disabled={currentStep === 0} onClick={setPreviousStep}>{t("CreateGameView.back")}</Button>
+                    <Button variant="outlined" onClick={setNextStep}>
+                        {isLastStep() ? t("CreateGameView.submit") : t("CreateGameView.next")}
+                    </Button>
+                </Stack>
+            </CardContent>
+        </Card>
     )
 
     function renderState() {

@@ -1,7 +1,8 @@
-import { Button, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
-import { Box, Container, Stack } from "@mui/system";
-import { useTranslation } from "react-i18next";
+import { Button, Typography } from "@mui/material";
+import { Box, Container } from "@mui/system";
+import { Trans, useTranslation } from "react-i18next";
 import { Link } from "react-router-dom"
+
 export interface HomeViewProps {
 
 }
@@ -9,40 +10,38 @@ export interface HomeViewProps {
 export function HomeView(props: HomeViewProps) {
     const [t] = useTranslation();
     return (
-        <Container sx={{ marginTop: "20px" }}>
-            <Stack direction="column" gap="20px">
-                <Typography variant="h5" sx={{ textAlign: "center" }} >
-                    {t("HomeView.welcomeText")}
+        <Container sx={{ height: "80vh" }}>
+            <Box m="auto">
+                <Typography variant="h1"  >
+                    <Trans i18nKey={"HomeView.welcomeText"} />
                 </Typography>
-                <Box sx={{ display: "flex", justifyContent: "center" }}>
+
+                <Typography variant="h2" mt={4}>
+                    Gehe Live mit deinem Ligaspiel<br />ohne Account und in nur wenigen Klicks.
+                </Typography>
+                <Box mt={2}>
                     <Link to="/create" style={{ textDecoration: "none" }}>
-                        <Button sx={{ flexGrow: 0 }} variant="outlined">{t("HomeView.createMatch")}</Button>
+                        <Button sx={{ flexGrow: 0 }} variant="outlined" size="large">
+                            <Typography variant="h3">
+                                <b>{t("HomeView.createMatch")}</b>
+                            </Typography>
+                        </Button>
                     </Link>
                 </Box>
 
-                <Typography variant="h6" sx={{ mt: "20px" }}>
-                    Laufende Spiele:
+                <Typography variant="h2" mt={4}>
+                    Oder finde ein Spiel über die Suche
                 </Typography>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Match</TableCell>
-                            <TableCell>Ergebniss</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell>TTSG Urania-Bramfeld - TTG 207 Ahrensburg</TableCell>
-                            <TableCell>7:2</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>SC Super Manshi - FC Fortran Batchelorarbeit</TableCell>
-                            <TableCell>7:6</TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </Stack>
-
+                <Box mt={2}>
+                    <Link to="/live_search" style={{ textDecoration: "none" }}>
+                        <Button sx={{ flexGrow: 0 }} variant="outlined" size="large">
+                            <Typography variant="h3">
+                                <b>{t("HomeView.search")}</b>
+                            </Typography>
+                        </Button>
+                    </Link>
+                </Box>
+            </Box>
         </Container>
 
     );

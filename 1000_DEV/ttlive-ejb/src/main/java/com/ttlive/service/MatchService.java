@@ -9,6 +9,9 @@ import javax.ejb.Stateless;
 
 import com.ttlive.bo.GameSet.InvalidGameSetFormat;
 import com.ttlive.bo.Match;
+import com.ttlive.bo.RequestLineup;
+import com.ttlive.bo.RequestLineup.RequestDoubles;
+import com.ttlive.bo.RequestLineup.RequestPlayer;
 import com.ttlive.bo.RequestMatch;
 import com.ttlive.persistence.dao.GameStyleDao;
 import com.ttlive.persistence.dao.LeagueDao;
@@ -44,18 +47,16 @@ public class MatchService {
 
 	@EJB
 	private TeamDao teamDao;
-	
-	
-	public LinkedList<Match> findAll() throws InvalidGameSetFormat{
+
+	public LinkedList<Match> findAll() throws InvalidGameSetFormat {
 		List<MatchEntity> entities = matchDao.findAll();
 		return getDefault(entities);
 	}
-	
-	public Match findById(long id) throws InvalidGameSetFormat{
+
+	public Match findById(long id) throws InvalidGameSetFormat {
 		MatchEntity match = matchDao.findById(id);
 		if (match == null)
-			throw new NullPointerException(
-					"Match with the given id='" + id + " doesn't exist");		
+			throw new NullPointerException("Match with the given id='" + id + " doesn't exist");
 		return getDefault(match);
 	}
 
@@ -109,7 +110,7 @@ public class MatchService {
 			guestTeamEntity.setNumber(requestMatch.getGuestTeam().getNumber());
 			guestTeamEntity.setLeague(leagueEntity);
 		}
-		
+
 		HashSet<String> existingCodes = matchDao.getAllCodes();
 
 		MatchEntity matchEntity = new MatchEntity();
@@ -124,7 +125,7 @@ public class MatchService {
 		matchEntity.setCode(CodeFactory.createCode(existingCodes));
 		matchEntity.setEditorCode(CodeFactory.createCode(existingCodes));
 		matchEntity.setStartDate(requestMatch.getStartDate());
-		matchEntity.setState(MatchState.NOT_STARTED); 
+		matchEntity.setState(MatchState.NOT_STARTED);
 
 		LinkedList<PlayerEntity> homePlayers = new LinkedList<PlayerEntity>();
 		LinkedList<PlayerEntity> guestPlayers = new LinkedList<PlayerEntity>();
@@ -176,23 +177,59 @@ public class MatchService {
 
 	}
 
-	public LinkedList<Match> getDefault(List<MatchEntity> entities) throws InvalidGameSetFormat{
+	public LinkedList<Match> getDefault(List<MatchEntity> entities) throws InvalidGameSetFormat {
 		LinkedList<Match> matches = new LinkedList<Match>();
-		for(MatchEntity entity: entities) {
+		for (MatchEntity entity : entities) {
 			matches.add(getDefault(entity));
 		}
 		return matches;
 	}
-	
+
 	public boolean isEditorCodeValid(long id, String editorCode) {
 		MatchEntity match = matchDao.findById(id);
 		if (match == null)
-			throw new NullPointerException(
-					"Match with the given id='" + id + " doesn't exist");		
-		
+			throw new NullPointerException("Match with the given id='" + id + " doesn't exist");
+
 		return match.getEditorCode().equals(editorCode);
 	}
-	
+
+	public Match updateLineup(long id, RequestLineup lineup) throws InvalidGameSetFormat {
+
+		MatchEntity match = matchDao.findById(id);
+		if (match == null)
+			throw new NullPointerException("Match with the given id='" + id + " doesn't exist");
+
+		for (RequestDoubles doubles : lineup.getDoubles()) {
+			DoublesEntity existing = null;
+			for (DoublesEntity entity : match.getDoubles()) {
+				if (entity.getId() == doubles.getId()) {
+					existing = entity;
+				}
+			}
+			if(existing == null)
+				throw new NullPointerException("Double with the given id='" + doubles.getId()+ " doesn't exist or doesn't belong to the match");
+			
+			existing.setPlayer1(doubles.getPlayer1());
+			existing.setPlayer2(doubles.getPlayer2());
+		}
+		
+		for (RequestPlayer player: lineup.getPlayers()) {
+			PlayerEntity existing = null;
+			for (PlayerEntity entity : match.getPlayers()) {
+				if (entity.getId() == player.getId()) {
+					existing = entity;
+				}
+			}
+			if(existing == null)
+				throw new NullPointerException("Player with the given id='" + player.getId()+ " doesn't exist or doesn't belong to the match");
+			
+			existing.setName(player.getName());
+		}
+		
+		return  getDefault(match);
+
+	}
+
 	public Match getDefault(MatchEntity entity) throws InvalidGameSetFormat {
 
 		return Match.builder() //

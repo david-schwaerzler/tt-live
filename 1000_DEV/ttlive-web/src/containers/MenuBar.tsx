@@ -32,7 +32,7 @@ const HoverButton = styled(Button)(({ theme }) => ({
 
 }))
 
-const padding = { xs: 1, md: 6 };
+const padding = { xs: 1, sm: 6 };
 
 const MenuBar = () => {
 
@@ -41,8 +41,8 @@ const MenuBar = () => {
     const location = useLocation();
 
     return (
-        <AppBar position="static" elevation={2}>
-            <Toolbar sx={{ paddingLeft: { xs: 1, md: 2 } }}>
+        <AppBar position="static" elevation={2} sx={{ p: 0 }}>
+            <Toolbar sx={{ paddingLeft: { xs: 1, sm: 2 }, p: 0 }}>
                 <Box sx={{ pr: padding }}>
                     <LogoIcon4 sx={{ mt: "5px" }} color={theme.palette.mode === "dark" ? theme.palette.primary.main : "#FFFFFF"} />
                 </Box>

@@ -54,14 +54,14 @@ const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
     const [t] = useTranslation();
     return (
         <Box sx={{ pl: padding }}>
-            <Box sx={{ display: { xs: "none", md: "flex" }, gap: "1em", flexGrow: 0 }}  >
+            <Box sx={{ display: { xs: "none", sm: "flex" }, gap: "1em", flexGrow: 0 }}  >
                 <WhiteTextField size="small" label={t("LoginForm.username")} variant="outlined" />
                 <WhiteTextField size="small" label={t("LoginForm.password")} variant="outlined" />
                 <WhiteButton size="small" variant="outlined">{t("LoginForm.login")}</WhiteButton>
                 <WhiteButton size="small" variant="outlined">{t("LoginForm.register")}</WhiteButton>
 
             </Box>
-            <Box sx={{ display: { xs: "flex", md: "none" }, flexGrow: 0 }}  >
+            <Box sx={{ display: { xs: "flex", sm: "none" }, flexGrow: 0 }}  >
                 <IconButton onClick={e => setLoginAnchor(e.currentTarget)} sx={{ p: 0 }}>
                     <AccountCircle sx={{ color: "white" }} />
                 </IconButton>

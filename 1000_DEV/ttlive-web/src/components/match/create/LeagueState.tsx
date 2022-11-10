@@ -110,7 +110,7 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
 
             <ErrorMessage msg={errorMsgs[ERROR_GENERAL]} centered sx={{ paddingBottom: spacingSmall }} />
 
-            <Stack sx={{ flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "center", md: "flex-start" }, gap: spacingNormal }} justifyContent="space-evenly" >
+            <Stack sx={{ flexDirection: { xs: "column", sm: "row" }, alignItems: { xs: "center", sm: "flex-start" }, gap: spacingNormal }} justifyContent="space-evenly" >
                 <FormControl sx={{ minWidth: "200px" }}  >
                     <LeagueSelector
                         matchStateObject={matchStateObject}

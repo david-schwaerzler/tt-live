@@ -5,3 +5,9 @@ export interface Doubles {
     player1: string;
     player2: string;
 }
+
+export interface RequestDouble {
+    id: number;
+    player1: string;
+    player2: string;
+}

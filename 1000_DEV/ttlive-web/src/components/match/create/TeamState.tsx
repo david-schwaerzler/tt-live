@@ -93,7 +93,7 @@ const TeamState = ({ matchStateObject, onUpdate, setValidate, isHomeTeam }: Team
                 {isHomeTeam ? t('CreateGameView.stepHomeTeam') : t('CreateGameView.stepGuestTeam')}
             </Typography>
             <ErrorMessage msg={errorMsgs[ERROR_GENERAL]} centered sx={{ paddingBottom: spacingNormal }} />
-            <Stack sx={{ flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "center", md: "flex-start" },  gap: spacingNormal  }} justifyContent="space-evenly" >
+            <Stack sx={{ flexDirection: { xs: "column", sm: "row" }, alignItems: { xs: "center", sm: "flex-start" },  gap: spacingNormal  }} justifyContent="space-evenly" >
                 <FormControl>
                     <ClubSelector
                         isHomeTeam={isHomeTeam}

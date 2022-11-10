@@ -14,7 +14,9 @@ const deDe = {
             "LoginForm.username": "Username",
             "LoginForm.password": "Passwort",
 
-            "HomeView.welcomeText": "Willkommen auf TT-Live, \ndem Tischtennis Liveticker",
+            "HomeView.welcomeText": "Willkommen auf <strong>TT-Live</strong>,\nder Tischtennis Liveticker App",
+            "HomeView.welcomeText2": "",
+
             "HomeView.createMatch": "Livegame Erstellen",
 
             "CreateGameView.stepRegion": "Region/Konkurenz",
@@ -96,8 +98,6 @@ const deDe = {
 
             "LineupSetting.double": "Doppel",
             "LineupSetting.player": "Spieler",
-            "LineupSetting.doubles": "Doppel",
-            "LineupSetting.singles": "Einzel",
             "LineupSetting.homeTeam": "Aufstellung Heimverein",
             "LineupSetting.guestTeam": "Aufstellung Gastverein",
 
