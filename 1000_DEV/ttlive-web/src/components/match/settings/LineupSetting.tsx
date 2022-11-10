@@ -26,8 +26,6 @@ const LineupSetting = ({ match, isHomeTeam, editorCode, onMatchChanged }: Lineup
     const [loading, setLoading] = useState<boolean>(false);
     const [errorMsg, setErrorMsg] = useState<string>(); const [t] = useTranslation();
 
-
-
     useEffect(() => {
 
         if (match == null) {

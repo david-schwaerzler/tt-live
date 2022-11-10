@@ -13,8 +13,9 @@ export interface MatchSettingsProps {
 
 const MatchSettings = ({ match, editorCode, onMatchChanged }: MatchSettingsProps) => {
 
+    
     if (editorCode == null)
-        return <Card><CardContent><NoCodeSetting match={match} /></CardContent></Card>;
+        return <NoCodeSetting match={match} />;
 
     return (
         <Stack gap={2}>

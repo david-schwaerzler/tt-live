@@ -10,16 +10,16 @@ export interface HomeViewProps {
 export function HomeView(props: HomeViewProps) {
     const [t] = useTranslation();
     return (
-        <Container sx={{ height: "80vh" }}>
+        <Container sx={{ width: "100%", mt: 4 }}>
             <Box m="auto">
                 <Typography variant="h1"  >
                     <Trans i18nKey={"HomeView.welcomeText"} />
-                </Typography>
+                </Typography>               
 
                 <Typography variant="h2" mt={4}>
                     Gehe Live mit deinem Ligaspiel<br />ohne Account und in nur wenigen Klicks.
                 </Typography>
-                <Box mt={2}>
+                <Box mt={1}>
                     <Link to="/create" style={{ textDecoration: "none" }}>
                         <Button sx={{ flexGrow: 0 }} variant="outlined" size="large">
                             <Typography variant="h3">
@@ -32,7 +32,7 @@ export function HomeView(props: HomeViewProps) {
                 <Typography variant="h2" mt={4}>
                     Oder finde ein Spiel über die Suche
                 </Typography>
-                <Box mt={2}>
+                <Box mt={1}>
                     <Link to="/live_search" style={{ textDecoration: "none" }}>
                         <Button sx={{ flexGrow: 0 }} variant="outlined" size="large">
                             <Typography variant="h3">

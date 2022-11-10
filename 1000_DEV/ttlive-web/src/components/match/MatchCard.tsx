@@ -1,6 +1,6 @@
-import { Button, Card, CardActions, CardContent, Collapse, Divider, Paper, Skeleton, Stack, Typography } from "@mui/material";
+import { Button, Card, CardActions, CardContent, Collapse, Divider, Skeleton, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { Match } from "../../rest/data/Match";
 import { spacingNormal, spacingSmall } from "../utils/StyleVars";
 import MatchStateLabel from "./MatchStateLabel";
@@ -25,26 +25,27 @@ const MatchCard = ({ match }: MatchCardProps) => {
     const navigate = useNavigate();
     const context = useContext(AppContext);
 
-    return (
-        <Card>
-            {match == null ? <Skeleton sx={{ height: { xs: "40px", sm: "56px" } }} variant="rectangular" /> : renderHeader(match)}
-            <Divider sx={{  }} />
+    return (match == null
+        ? <Box>
+            <Skeleton sx={{ height: { xs: "40px", sm: "56px" } }} variant="rectangular" />
+            <Divider sx={{}} />
+            <Skeleton sx={{ height: { xs: "248px", sm: "260px" } }} variant="rectangular" />
+        </Box>
+        : <Card>
+            {renderHeader(match)}
+            <Divider sx={{}} />
             <CardContent >
+                <MatchScore sx={{ pt: spacingNormal }} match={match} scoreSize={{ xs: "2rem", sm: "3rem" }} />
+                <Stack direction={{ xs: "column", sm: "column-reverse" }} gap={spacingNormal}>
+                    <Box sx={{ display: "flex", paddingLeft: spacingSmall, paddingRight: spacingSmall, justifyContent: "center" }} >
+                        <Button sx={{ flexGrow: 1, maxWidth: "300px" }} variant="outlined" onClick={() => onLinkGame(match)}>{t("MatchCard.linkGame")}</Button>
+                    </Box>
 
-                {match == null ? <Skeleton sx={{ height: { xs: "248px", sm: "260px" } }} variant="rectangular" /> :
-                    <React.Fragment>
-                        <MatchScore sx={{ pt: spacingNormal }} match={match} scoreSize={{ xs: "2rem", sm: "3rem" }} />
-                        <Stack direction={{ xs: "column", sm: "column-reverse" }} gap={spacingNormal}>
-                            <Box sx={{ display: "flex", paddingLeft: spacingSmall, paddingRight: spacingSmall, justifyContent: "center" }} >
-                                <Button sx={{ flexGrow: 1, maxWidth: "300px" }} variant="outlined" onClick={() => onLinkGame(match)}>{t("MatchCard.linkGame")}</Button>
-                            </Box>
+                    <Collapse in={expanded} timeout="auto" unmountOnExit>
+                        {renderGames(match)}
+                    </Collapse>
+                </Stack>
 
-                            <Collapse in={expanded} timeout="auto" unmountOnExit>
-                                {renderGames(match)}
-                            </Collapse>
-                        </Stack>
-                    </React.Fragment>
-                }
             </CardContent>
             <CardActions>
                 {match != null && match.state !== "NOT_STARTED" &&
@@ -53,8 +54,8 @@ const MatchCard = ({ match }: MatchCardProps) => {
                     </Box>
                 }
             </CardActions>
-        </Card >
-    );
+        </Card >);
+
 
     function renderHeader(match: Match) {
         return (

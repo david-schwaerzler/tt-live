@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, FormHelperText, Skeleton, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, FormControl, FormHelperText, Skeleton, TextField, Typography } from "@mui/material";
 import { useContext, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { AppContext } from "../../../AppContext";
@@ -26,24 +26,26 @@ const NoCodeSetting = ({ match }: NoCodeSettingProps) => {
         return <Skeleton sx={{ height: { xs: "304px", sm: "224px" } }} variant="rectangular" />;
 
     return (
-        <Box>
-            <ErrorMessage msg={errorMsgs[Errors.GENERAL]} />
-            <Typography variant="h4" textAlign="left" sx={[{ "strong": { color: (theme) => theme.palette.primary.main, fontSize: "2.5rem" } }]}>
-                <Trans i18nKey="MatchSettings.noCodeHeader" t={t} />
-            </Typography>
-            <Typography textAlign="left" mt={1}>
-                {t("MatchSettings.noCodeText")}
-            </Typography>
+        <Card>
+            <CardContent>
+                <ErrorMessage msg={errorMsgs[Errors.GENERAL]} />
+                <Typography variant="h4" textAlign="left" sx={[{ "strong": { color: (theme) => theme.palette.primary.main, fontSize: "2.5rem" } }]}>
+                    <Trans i18nKey="MatchSettings.noCodeHeader" t={t} />
+                </Typography>
+                <Typography textAlign="left" mt={1}>
+                    {t("MatchSettings.noCodeText")}
+                </Typography>
 
-            <FormControl error={errorMsgs[Errors.VALIDATE_CODE] != null && errorMsgs[Errors.VALIDATE_CODE] !== ""} >
-                <TextField sx={{ width: "200px", mt: 2, display: "block" }}
-                    label={t("MatchSettings.editorCodeInput")} value={newEditorCode}
-                    onChange={e => setNewEditorCode(e.target.value)}
-                />
-                <FormHelperText >{errorMsgs[Errors.VALIDATE_CODE]}</FormHelperText>
-            </FormControl>
-            <LoadingButton loading={loading} variant="outlined" sx={{ mt: 1 }} onClick={() => checkCode(match)}>{t("MatchSettings.noCodeButton")}</LoadingButton>
-        </Box>
+                <FormControl error={errorMsgs[Errors.VALIDATE_CODE] != null && errorMsgs[Errors.VALIDATE_CODE] !== ""} >
+                    <TextField sx={{ width: "200px", mt: 2, display: "block" }}
+                        label={t("MatchSettings.editorCodeInput")} value={newEditorCode}
+                        onChange={e => setNewEditorCode(e.target.value)}
+                    />
+                    <FormHelperText >{errorMsgs[Errors.VALIDATE_CODE]}</FormHelperText>
+                </FormControl>
+                <LoadingButton loading={loading} variant="outlined" sx={{ mt: 1 }} onClick={() => checkCode(match)}>{t("MatchSettings.noCodeButton")}</LoadingButton>
+            </CardContent>
+        </Card>
     );
 
 
