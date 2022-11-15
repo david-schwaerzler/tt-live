@@ -1,5 +1,5 @@
 import { Config } from "../../components/utils/Config";
-import { Match, RequestMatch } from "../data/Match";
+import { Match, RequestMatch, sortMatch } from "../data/Match";
 import { RequestLineup } from "../data/RequestLineup";
 import { ApiResponse, returnData, returnError } from "./ApiResponse";
 
@@ -95,17 +95,11 @@ export async function putLineup(id: number, editorCode: string, requestLineup: R
             return returnError(response.status.toString());
         }
 
-        let match: Match = await response.json();
+        let match: Match = await response.json();        
         return returnData(sortMatch(match));
 
     } catch (error) {
         console.log(`Error updating lineup on Server: ${error}`)
         return returnError(`${error}`);
     }
-}
-
-function sortMatch(match: Match) {
-    match.games = match.games.sort((a, b) => a.gameNumber - b.gameNumber);
-    match.games.forEach(g => g.sets.sort((a, b) => a.number - b.number));
-    return match;
 }

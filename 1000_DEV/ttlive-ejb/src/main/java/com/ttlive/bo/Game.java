@@ -69,7 +69,6 @@ public class Game {
 				if (homeScore >= 3 || guestScore >= 3)
 					isNotStarted = true;
 			}
-			System.out.println(sets);
 			return this;
 		}
 

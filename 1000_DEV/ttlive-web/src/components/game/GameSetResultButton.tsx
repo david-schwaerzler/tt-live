@@ -71,7 +71,7 @@ const GameSetResultButton = ({ disabled, won, set, game, isHome, editorCode, onU
         setLoading(true);
         let response = await putGameSet(game.id, editorCode, requestGameSet);
         if (response.data != null) {
-            onUpdate(response.data)
+            //onUpdate(response.data)
         } else {
             onError("Error while performing puGameSet request");
         }

@@ -1,3 +1,4 @@
+import { match } from "assert";
 import { Dayjs } from "dayjs";
 import { Doubles } from "./Doubles";
 import { Game } from "./Game";
@@ -38,4 +39,14 @@ export interface Match {
     guestPlayers: Array<Player>;
     homeDoubles: Array<Doubles>;
     guestDoubles: Array<Doubles>;
+}
+
+export function sortMatch(match: Match){
+    match.games = match.games.sort((a, b) => a.gameNumber - b.gameNumber);
+    match.games.forEach(g => g.sets.sort((a, b) => a.number - b.number));
+    match.homePlayers.sort((a, b) => a.position - b.position);
+    match.guestPlayers.sort((a, b) => a.position - b.position);
+    match.homeDoubles.sort((a, b) => a.position - b.position);
+    match.guestDoubles.sort((a, b) => a.position - b.position);
+    return match;
 }

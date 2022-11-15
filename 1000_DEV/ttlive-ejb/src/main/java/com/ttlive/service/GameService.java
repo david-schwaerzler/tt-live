@@ -12,6 +12,7 @@ import com.ttlive.bo.GameSet.InvalidGameSetFormat;
 import com.ttlive.bo.RequestGameSet;
 import com.ttlive.persistence.dao.GameDao;
 import com.ttlive.persistence.entity.GameEntity;
+import com.ttlive.session.MatchEventObserver;
 import com.ttlive.utils.BadRestRequestException;
 import com.ttlive.utils.MatchState;
 
@@ -20,6 +21,9 @@ public class GameService {
 
 	@EJB
 	private GameDao gameDao;
+	
+	@EJB
+	private MatchEventObserver eventObserver;
 
 	public Game updateSet(long gameId, RequestGameSet requestSet) throws BadRestRequestException, InvalidGameSetFormat {
 		GameEntity gameEntity = gameDao.findById(gameId);
@@ -72,8 +76,6 @@ public class GameService {
 			if(homeScore >= 3 || guestScore >= 3) 
 				break;
 		}
-		System.out.println("homeSets: " + homeScore);
-		System.out.println("guestSets: " + guestScore);
 		
 		MatchState state = MatchState.LIVE;
 		if(homeScore >= 3 || guestScore >= 3)
@@ -85,7 +87,9 @@ public class GameService {
 		gameEntity.setGuestSets(guestScore);
 		gameEntity.setState(state);		
 				
-		return getDefault(gameEntity);
+		Game game = getDefault(gameEntity);
+		eventObserver.fireGameEvent(gameEntity.getMatch().getId(), game);
+		return game;
 	}
 
 	public LinkedList<GameSet> createSets(GameEntity entity) throws InvalidGameSetFormat {

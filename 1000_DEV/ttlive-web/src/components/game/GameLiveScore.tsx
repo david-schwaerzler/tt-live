@@ -86,7 +86,7 @@ const GameLiveScore = ({ game }: GameLiveScoreProps) => {
                 </Collapse>
             </CardContent>
             <CardActions>
-                <Box sx={{ cursor: "pointer", width: "100%", left: 0 }} onClick={() => setExpanded(!expanded)}>
+                <Box sx={{ cursor: "pointer", width: "100%", left: 0, display: hiddenSets.length === 0 ? "none" : "block" }} onClick={() => setExpanded(!expanded)}>
                     <ExpandButton expanded={expanded} />
                 </Box>
             </CardActions>
@@ -128,28 +128,6 @@ const GameLiveScore = ({ game }: GameLiveScoreProps) => {
 
             </Stack>
         );
-        return (
-
-            <React.Fragment>
-                <Box sx={{ flexGrow: 1, display: { sm: "none" }, overflow: "hidden" }}>
-                    <Typography sx={{ flexGrow: 1, order: 1, fontSize: "0.8rem", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "noWrap" }}>
-                        {game.homeDoubles.player1}/{game.homeDoubles.player2}
-                    </Typography>
-                    <Typography sx={{ flexGrow: 1, order: 2, fontSize: "0.8rem", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "noWrap" }}>
-                        {game.guestDoubles.player1}/{game.guestDoubles.player2}
-                    </Typography>
-                </Box>
-                <Typography sx={{ flex: { sm: "1 1 0" }, order: 1, display: { xs: "none", sm: "block" }, textAlign: "right", }}>
-                    {game.homeDoubles.player1}/{game.homeDoubles.player2}
-                </Typography>
-                <Typography sx={{ flex: { sm: "1 1 0" }, order: 3, display: { xs: "none", sm: "block" } }}>
-                    {game.guestDoubles.player1}/{game.guestDoubles.player2}
-                </Typography>
-                <Typography sx={{ minWidth: "2em", display: "flex", alignItems: "center", textWeight: "bold", paddingRight: spacingSmall, paddingLeft: spacingSmall, order: { sm: 2 } }}>
-                    {game.state === "NOT_STARTED" ? <b>-:-</b> : <b>{game.homeSets}:{game.guestSets}</b>}
-                </Typography>
-            </React.Fragment >
-        )
     }
 }
 

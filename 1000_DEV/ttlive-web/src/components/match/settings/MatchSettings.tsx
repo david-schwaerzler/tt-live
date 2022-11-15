@@ -26,8 +26,8 @@ const MatchSettings = ({ match, editorCode, onMatchChanged }: MatchSettingsProps
                     </CardContent>
                 </Card>
             }
-            <LineupSetting match={match} editorCode={editorCode} isHomeTeam={true} onMatchChanged={onMatchChanged} />
-            <LineupSetting match={match} editorCode={editorCode} isHomeTeam={false} onMatchChanged={onMatchChanged} />
+            <LineupSetting match={match} editorCode={editorCode} isHomeTeam={true}  />
+            <LineupSetting match={match} editorCode={editorCode} isHomeTeam={false} />
 
         </Stack>
     );

@@ -1,4 +1,4 @@
-import { Button, Card, CardActions, CardContent, Collapse, Divider, FormControl, Paper, Skeleton, Stack, TextField, Typography } from "@mui/material";
+import { Button, Card, CardActions, CardContent, CardHeader, Collapse, Divider, FormControl, Paper, Skeleton, Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -15,10 +15,9 @@ export interface LineupSettingProps {
     match: Match | null,
     editorCode: string,
     isHomeTeam: boolean
-    onMatchChanged: (updated: Match) => void;
 }
 
-const LineupSetting = ({ match, isHomeTeam, editorCode, onMatchChanged }: LineupSettingProps) => {
+const LineupSetting = ({ match, isHomeTeam, editorCode }: LineupSettingProps) => {
 
     const [doubles, setDoubles] = useState<Array<Doubles>>([]);
     const [players, setPlayers] = useState<Array<Player>>([]);
@@ -46,13 +45,13 @@ const LineupSetting = ({ match, isHomeTeam, editorCode, onMatchChanged }: Lineup
 
     return (
         <Card >
-            <CardContent>
-                <Typography variant="h5">
-                    {isHomeTeam ? t('LineupSetting.homeTeam') : t('LineupSetting.guestTeam')}
-                </Typography>
+            <Typography variant="h5" p={2}>
+                {isHomeTeam ? t('LineupSetting.homeTeam') : t('LineupSetting.guestTeam')}
+            </Typography>
+            <Collapse in={expanded} timeout="auto" >
+                <Divider />
+                <CardContent>
 
-                <Collapse in={expanded} timeout="auto" >
-                    <Divider />
                     <Stack direction="column" sx={{ gap: 2, p: 2 }}>
                         <ErrorMessage msg={errorMsg} />
 
@@ -98,8 +97,8 @@ const LineupSetting = ({ match, isHomeTeam, editorCode, onMatchChanged }: Lineup
                     </Stack>
 
 
-                </Collapse>
-            </CardContent>
+                </CardContent>
+            </Collapse>
             <CardActions>
                 <Box sx={{ cursor: "pointer", display: "flex", justifyContent: "center", width: "100%" }} onClick={() => setExpanded(!expanded)}>
                     <ExpandButton expanded={expanded} />
@@ -139,7 +138,6 @@ const LineupSetting = ({ match, isHomeTeam, editorCode, onMatchChanged }: Lineup
         setLoading(true);
         let response = await putLineup(match.id, editorCode, requestLineUp);
         if (response.data != null) {
-            onMatchChanged(response.data)
             setExpanded(false);
         } else {
             setErrorMsg(t("LineupSetting.player"));

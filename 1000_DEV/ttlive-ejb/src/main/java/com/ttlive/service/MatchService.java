@@ -25,6 +25,7 @@ import com.ttlive.persistence.entity.MatchEntity;
 import com.ttlive.persistence.entity.PlayerEntity;
 import com.ttlive.persistence.entity.RegionEntity;
 import com.ttlive.persistence.entity.TeamEntity;
+import com.ttlive.session.MatchEventObserver;
 import com.ttlive.utils.BadRestRequestException;
 import com.ttlive.utils.MatchFactory;
 
@@ -45,6 +46,9 @@ public class MatchService {
 
 	@EJB
 	private TeamDao teamDao;
+	
+	@EJB
+	private MatchEventObserver eventObserver;
 
 	public LinkedList<Match> findAll() throws InvalidGameSetFormat {
 		List<MatchEntity> entities = matchDao.findAll();
@@ -153,7 +157,10 @@ public class MatchService {
 			existing.setName(player.getName());
 		}
 
-		return getDefault(match);
+		Match matchBo =  getDefault(match);
+		
+		eventObserver.fireMatchEvent(matchBo);
+		return matchBo;
 
 	}
 

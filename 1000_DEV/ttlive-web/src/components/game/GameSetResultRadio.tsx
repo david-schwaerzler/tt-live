@@ -55,7 +55,7 @@ const GameSetResultRadio = ({ disabled, selected, isHome, editorCode, setNumber,
         setLoading(true);
         let response = await putGameSet(gameId, editorCode, requestGameSet);
         if (response.data != null) {
-            onUpdate(response.data)
+            //onUpdate(response.data)
         } else {
             onError("Error while performing puGameSet request");
         }

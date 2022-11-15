@@ -1,6 +1,6 @@
 import { Button, Card, CardContent, Skeleton, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useSwipeable } from "react-swipeable";
@@ -11,9 +11,10 @@ import MatchScore from "../components/match/MatchScore";
 import MatchSettings from "../components/match/settings/MatchSettings";
 import ErrorMessage from "../components/utils/ErrorMessage";
 import { spacingNormal } from "../components/utils/StyleVars";
+import WebHookUtil from "../components/utils/WebHookUtil";
 import { fetchMatch } from "../rest/api/MatchApi";
 import { Game } from "../rest/data/Game";
-import { Match } from "../rest/data/Match";
+import { Match, sortMatch } from "../rest/data/Match";
 
 const LiveView = () => {
     const [match, setMatch] = useState<Match | null>(null);
@@ -24,8 +25,6 @@ const LiveView = () => {
 
     const context = useContext(AppContext)
     const [t] = useTranslation();
-    const ref = useRef(null);
-
 
     const swipeHanlder = useSwipeable({
         onSwipedRight: () => setActiveTab(activeTab - 1 < 0 ? 0 : activeTab - 1),
@@ -38,7 +37,7 @@ const LiveView = () => {
             if (response.data != null) {
                 setReversedGames([...response.data.games].reverse());
                 setMatch(response.data);
-               
+
                 if (context.editorCode[response.data?.id] != null)
                     setEditorCode(context.editorCode[response.data?.id]);
                 else
@@ -57,6 +56,7 @@ const LiveView = () => {
 
     return (
         <Box {...swipeHanlder}>
+            {match != null && <WebHookUtil match={match} onGameUpdated={onGameUpdated} onMatchUpdated={onMatchUpdated} />}
             {/* This is a quick fix to allow swiping on on outside the component */}
             <Box {...swipeHanlder} className="test" position="absolute" top={"10%"} bottom={0} left={0} right={0} zIndex={-10} />
 
@@ -82,7 +82,7 @@ const LiveView = () => {
 
     function renderLive() {
         return (
-            <Stack direction="column" gap={spacingNormal} ref={ref}>
+            <Stack direction="column" gap={spacingNormal}>
                 <ErrorMessage msg={errorMsg} centered />
                 {match == null ? <Skeleton sx={{ height: { xs: "212px", sm: "200px" } }} variant="rectangular" />
                     : <Card>
@@ -126,13 +126,18 @@ const LiveView = () => {
         let gamesCopy = [...matchCopy.games]; // create a copy of the game array
 
         gamesCopy = gamesCopy.filter(g => g.id !== game.id); // remove the given game from the array
-        gamesCopy.push(game); // add it to the copy
-        gamesCopy.sort((a, b) => a.gameNumber - b.gameNumber); // sort the game on the right place in the match
-        game.sets.sort((a, b) => a.number - b.number); // sort the sets of the newly added game
+        gamesCopy.push(game); // add it to the copy        
         matchCopy.games = gamesCopy // add the copies together
+        sortMatch(match);
 
         setReversedGames([...gamesCopy].reverse());
         setMatch(matchCopy);
+    }
+
+    function onMatchUpdated(match: Match) {
+        sortMatch(match)
+        setMatch(match);
+        setReversedGames([...match.games].reverse());
     }
 }
 
