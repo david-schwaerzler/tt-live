@@ -1,4 +1,4 @@
-import { AppBar, Button, styled, Toolbar } from "@mui/material";
+import { AppBar, Button, styled, Toolbar, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
@@ -6,7 +6,6 @@ import { Link, useLocation } from 'react-router-dom'
 import { AppContext } from "../AppContext";
 import MenuLoginForm from "../components/login/MenuLoginForm";
 import { LogoIcon, LogoIcon2, LogoIcon3, LogoIcon4 } from "../components/utils/Icons";
-import theme from "./CustomTheme";
 
 
 const HoverButton = styled(Button)(({ theme }) => ({
@@ -39,6 +38,7 @@ const MenuBar = () => {
     const [t] = useTranslation();
     const context = useContext(AppContext);
     const location = useLocation();
+    const theme = useTheme();
 
     return (
         <AppBar position="static" elevation={2} sx={{ p: 0 }}>

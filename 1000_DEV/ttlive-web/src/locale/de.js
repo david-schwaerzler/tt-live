@@ -88,6 +88,11 @@ const deDe = {
             "GameReport.singles": "Einzel",
             "GameReport.doubles": "Doubles",
             "GameReport.noPlayer": "Nicht eingegeben",
+            "GameReport.set": "Nur Sätze",
+            "GameReport.points": "Punkte",
+            "GameReport.edit": "Editieren?",
+            "GameReport.inputType": "Eingabeform",
+
 
             "MatchSettings.noCodeHeader": "Du bist <strong style='color=\"red\"'>kein</strong> Editor!",
             "MatchSettings.noCodeText": "Gib den Editor-Code ein um einer zu werden.\nAndere Editoren oder der Spielersteller besitzen den Code.",

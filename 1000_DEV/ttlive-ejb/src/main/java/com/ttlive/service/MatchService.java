@@ -19,16 +19,14 @@ import com.ttlive.persistence.dao.MatchDao;
 import com.ttlive.persistence.dao.RegionDao;
 import com.ttlive.persistence.dao.TeamDao;
 import com.ttlive.persistence.entity.DoublesEntity;
-import com.ttlive.persistence.entity.GameEntity;
 import com.ttlive.persistence.entity.GameStyleEntity;
 import com.ttlive.persistence.entity.LeagueEntity;
 import com.ttlive.persistence.entity.MatchEntity;
 import com.ttlive.persistence.entity.PlayerEntity;
 import com.ttlive.persistence.entity.RegionEntity;
 import com.ttlive.persistence.entity.TeamEntity;
-import com.ttlive.utils.CodeFactory;
-import com.ttlive.utils.GameFactory;
-import com.ttlive.utils.MatchState;
+import com.ttlive.utils.BadRestRequestException;
+import com.ttlive.utils.MatchFactory;
 
 @Stateless
 public class MatchService {
@@ -53,124 +51,51 @@ public class MatchService {
 		return getDefault(entities);
 	}
 
-	public Match findById(long id) throws InvalidGameSetFormat {
+	public Match findById(long id) throws InvalidGameSetFormat, BadRestRequestException {
 		MatchEntity match = matchDao.findById(id);
 		if (match == null)
-			throw new NullPointerException("Match with the given id='" + id + " doesn't exist");
+			throw new BadRestRequestException("id", "Match with the given id='" + id + " doesn't exist");
 		return getDefault(match);
 	}
 
-	public Match create(RequestMatch requestMatch) throws InvalidGameSetFormat {
+	public Match create(RequestMatch requestMatch) throws InvalidGameSetFormat, BadRestRequestException {
 
 		RegionEntity regionEntity = regionDao.findById(requestMatch.getRegionId());
 		if (regionEntity == null)
-			throw new NullPointerException(
+			throw new BadRestRequestException("regionId",
 					"Region with the given id='" + requestMatch.getRegionId() + " doesn't exist");
 
 		GameStyleEntity gameStyleEntity = gameStyleDao.findById(requestMatch.getGameStyleId());
 		if (gameStyleEntity == null)
-			throw new NullPointerException(
+			throw new BadRestRequestException("gameStyleId",
 					"GameStyle with the given id='" + requestMatch.getGameStyleId() + " doesn't exist");
 
 		LeagueEntity leagueEntity = null;
 		if (requestMatch.getLeague().getId() != -1) {
 			leagueEntity = leagueDao.findById(requestMatch.getLeague().getId());
 			if (leagueEntity == null)
-				throw new NullPointerException(
+				throw new BadRestRequestException("leagueId",
 						"League with the given id='" + requestMatch.getGameStyleId() + " doesn't exist");
-		} else {
-			leagueEntity = new LeagueEntity();
-			leagueEntity.setName(requestMatch.getLeague().getName());
-			leagueEntity.setContest(requestMatch.getLeague().getContest());
-			leagueEntity.setRegion(regionEntity);
 		}
-
 		TeamEntity homeTeamEntity = null;
 		if (requestMatch.getHomeTeam().getId() != -1) {
 			homeTeamEntity = teamDao.findById(requestMatch.getHomeTeam().getId());
 			if (homeTeamEntity == null)
-				throw new NullPointerException(
+				throw new BadRestRequestException("homeTeamId",
 						"HomeTeam with the given id='" + requestMatch.getHomeTeam().getId() + " doesn't exist");
-		} else {
-			homeTeamEntity = new TeamEntity();
-			homeTeamEntity.setClub(requestMatch.getHomeTeam().getClub());
-			homeTeamEntity.setNumber(requestMatch.getHomeTeam().getNumber());
-			homeTeamEntity.setLeague(leagueEntity);
 		}
 
 		TeamEntity guestTeamEntity = null;
 		if (requestMatch.getGuestTeam().getId() != -1) {
 			guestTeamEntity = teamDao.findById(requestMatch.getGuestTeam().getId());
 			if (guestTeamEntity == null)
-				throw new NullPointerException(
-						"HomeTeam with the given id='" + requestMatch.getHomeTeam().getId() + " doesn't exist");
-		} else {
-			guestTeamEntity = new TeamEntity();
-			guestTeamEntity.setClub(requestMatch.getGuestTeam().getClub());
-			guestTeamEntity.setNumber(requestMatch.getGuestTeam().getNumber());
-			guestTeamEntity.setLeague(leagueEntity);
+				throw new BadRestRequestException("guestTeamId",
+						"GuestTeam with the given id='" + requestMatch.getHomeTeam().getId() + " doesn't exist");
 		}
-
 		HashSet<String> existingCodes = matchDao.getAllCodes();
 
-		MatchEntity matchEntity = new MatchEntity();
-		matchEntity.setTitle("");
-		matchEntity.setDescription("");
-		matchEntity.setHomeTeamScore(0);
-		matchEntity.setGuestTeamScore(0);
-		matchEntity.setLeague(leagueEntity);
-		matchEntity.setHomeTeam(homeTeamEntity);
-		matchEntity.setGuestTeam(guestTeamEntity);
-		matchEntity.setGameStyle(gameStyleEntity);
-		matchEntity.setCode(CodeFactory.createCode(existingCodes));
-		matchEntity.setEditorCode(CodeFactory.createCode(existingCodes));
-		matchEntity.setStartDate(requestMatch.getStartDate());
-		matchEntity.setState(MatchState.NOT_STARTED);
-
-		LinkedList<PlayerEntity> homePlayers = new LinkedList<PlayerEntity>();
-		LinkedList<PlayerEntity> guestPlayers = new LinkedList<PlayerEntity>();
-		LinkedList<DoublesEntity> homeDoubles = new LinkedList<DoublesEntity>();
-		LinkedList<DoublesEntity> guestDoubles = new LinkedList<DoublesEntity>();
-
-		for (int i = 0; i < gameStyleEntity.getNumDoubles(); i++) {
-
-			DoublesEntity homeDouble = new DoublesEntity();
-			homeDouble.setPosition(i + 1);
-			homeDouble.setHomeTeam(true);
-			homeDouble.setPlayer1("");
-			homeDouble.setPlayer2("");
-			homeDouble.setMatch(matchEntity);
-			homeDoubles.add(homeDouble);
-
-			DoublesEntity guestDouble = new DoublesEntity();
-			guestDouble.setPosition(i + 1);
-			guestDouble.setHomeTeam(false);
-			guestDouble.setPlayer1("");
-			guestDouble.setPlayer2("");
-			guestDouble.setMatch(matchEntity);
-			guestDoubles.add(guestDouble);
-		}
-
-		for (int i = 0; i < gameStyleEntity.getNumPlayers(); i++) {
-			PlayerEntity homePlayer = new PlayerEntity();
-			homePlayer.setName("");
-			homePlayer.setPosition(i + 1);
-			homePlayer.setHomeTeam(true);
-			homePlayer.setMatch(matchEntity);
-			homePlayers.add(homePlayer);
-
-			PlayerEntity guestPlayer = new PlayerEntity();
-			guestPlayer.setName("");
-			guestPlayer.setPosition(i + 1);
-			guestPlayer.setHomeTeam(false);
-			guestPlayer.setMatch(matchEntity);
-			guestPlayers.add(guestPlayer);
-		}
-
-		LinkedList<GameEntity> games = GameFactory.createGames(gameStyleEntity, homePlayers, guestPlayers, homeDoubles,
-				guestDoubles);
-		games.forEach(g -> g.setMatch(matchEntity));
-
+		MatchEntity matchEntity = MatchFactory.createMatchEntity(requestMatch, regionEntity, gameStyleEntity, leagueEntity,
+				homeTeamEntity, guestTeamEntity, existingCodes);
 		matchDao.persist(matchEntity);
 
 		return getDefault(matchEntity);
@@ -185,20 +110,20 @@ public class MatchService {
 		return matches;
 	}
 
-	public boolean isEditorCodeValid(long id, String editorCode) {
+	public boolean isEditorCodeValid(long id, String editorCode) throws BadRestRequestException {
 		MatchEntity match = matchDao.findById(id);
 		if (match == null)
-			throw new NullPointerException("Match with the given id='" + id + " doesn't exist");
+			throw new BadRestRequestException("id", "Match with the given id='" + id + " doesn't exist");
 
 		return match.getEditorCode().equals(editorCode);
 	}
 
-	public Match updateLineup(long id, RequestLineup lineup) throws InvalidGameSetFormat {
+	public Match updateLineup(long id, RequestLineup lineup) throws InvalidGameSetFormat, BadRestRequestException {
 
 		MatchEntity match = matchDao.findById(id);
 		if (match == null)
-			throw new NullPointerException("Match with the given id='" + id + " doesn't exist");
-
+			throw new BadRestRequestException("id", "Match with the given id='" + id + " doesn't exist");
+		
 		for (RequestDoubles doubles : lineup.getDoubles()) {
 			DoublesEntity existing = null;
 			for (DoublesEntity entity : match.getDoubles()) {
@@ -206,27 +131,29 @@ public class MatchService {
 					existing = entity;
 				}
 			}
-			if(existing == null)
-				throw new NullPointerException("Double with the given id='" + doubles.getId()+ " doesn't exist or doesn't belong to the match");
-			
+			if (existing == null)
+				throw new BadRestRequestException("doubleId", "Double with the given id='" + doubles.getId()
+						+ " doesn't exist or doesn't belong to the match");
+
 			existing.setPlayer1(doubles.getPlayer1());
 			existing.setPlayer2(doubles.getPlayer2());
 		}
-		
-		for (RequestPlayer player: lineup.getPlayers()) {
+
+		for (RequestPlayer player : lineup.getPlayers()) {
 			PlayerEntity existing = null;
 			for (PlayerEntity entity : match.getPlayers()) {
 				if (entity.getId() == player.getId()) {
 					existing = entity;
 				}
 			}
-			if(existing == null)
-				throw new NullPointerException("Player with the given id='" + player.getId()+ " doesn't exist or doesn't belong to the match");
-			
+			if (existing == null)
+				throw new BadRestRequestException("playerId", "Player with the given id='" + player.getId()
+						+ " doesn't exist or doesn't belong to the match");
+
 			existing.setName(player.getName());
 		}
-		
-		return  getDefault(match);
+
+		return getDefault(match);
 
 	}
 

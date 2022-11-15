@@ -39,7 +39,7 @@ const LineupSetting = ({ match, isHomeTeam, editorCode, onMatchChanged }: Lineup
         setDoubles(doubles);
         setPlayers(players);
 
-    }, [match]);
+    }, [match, isHomeTeam]);
 
     if (match == null)
         return <Skeleton sx={{ height: { xs: "88px", sm: "88px" } }} variant="rectangular" />
@@ -61,7 +61,7 @@ const LineupSetting = ({ match, isHomeTeam, editorCode, onMatchChanged }: Lineup
                             <Button sx={{ float: "right" }} onClick={() => onResetPlayers(match)}>reset</Button>
                         </Typography>
                         {players.map((player, index) => (
-                            <FormControl>
+                            <FormControl key={player.id}>
                                 <TextField key={player.id} sx={{ minWidth: "100px" }}
                                     label={t("LineupSetting.player") + " " + player.position}
                                     variant="outlined"

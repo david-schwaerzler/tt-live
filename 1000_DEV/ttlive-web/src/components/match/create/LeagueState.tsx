@@ -127,7 +127,7 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
                         <Select
                             id="select-gameStyle"
                             labelId="select-gameStyle"
-                            label="select-gameStyle"
+                            label={t("LeagueState.gameStyle")}
                             value={matchStateObject.gameStyle == null || gameStyles.length === 0 ? "" : matchStateObject.gameStyle.id}
                             onChange={e => onGameStyleSelected(e.target.value)}>
                             {gameStyles.map((value, index) =>

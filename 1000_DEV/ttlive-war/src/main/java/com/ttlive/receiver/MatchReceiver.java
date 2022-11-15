@@ -27,12 +27,14 @@ import com.ttlive.bo.RequestLineup.RequestPlayer;
 import com.ttlive.bo.RequestMatch;
 import com.ttlive.bo.Team;
 import com.ttlive.dto.MatchDto;
+import com.ttlive.dto.RequestGametSetDto;
 import com.ttlive.dto.RequestLineupDto;
 import com.ttlive.dto.RequestMatchDto;
 import com.ttlive.rest.InvalidEditorCodeException;
 import com.ttlive.dto.RequestLineupDto.RequestDoublesDto;
 import com.ttlive.dto.RequestLineupDto.RequestPlayerDto;
 import com.ttlive.service.MatchService;
+import com.ttlive.utils.BadRestRequestException;
 import com.ttlive.utils.LeagueContest;
 
 @Stateless
@@ -55,7 +57,7 @@ public class MatchReceiver {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response findById(@PathParam("id") long id) throws InvalidGameSetFormat {
+	public Response findById(@PathParam("id") long id) throws InvalidGameSetFormat, BadRestRequestException {
 		Match match = matchService.findById(id);
 		return Response.ok(MatchDto.builder().bo(match).build()).build();
 	}
@@ -64,7 +66,7 @@ public class MatchReceiver {
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response create(RequestMatchDto requestMatchDto) throws InvalidGameSetFormat {
+	public Response create(RequestMatchDto requestMatchDto) throws InvalidGameSetFormat, BadRestRequestException {
 
 		if (requestMatchDto.getContest() == null
 				|| (!requestMatchDto.getContest().equals("WOMEN") && !requestMatchDto.getContest().equals("MEN"))) {
@@ -127,7 +129,7 @@ public class MatchReceiver {
 	@Path("/{id}/validate")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response isEditorCodeValid(@PathParam("id") long id, @QueryParam("editorCode") String editorCode) {
+	public Response isEditorCodeValid(@PathParam("id") long id, @QueryParam("editorCode") String editorCode) throws BadRestRequestException {
 		if (editorCode == null)
 			return Response.status(Status.BAD_REQUEST).entity("No editorCode was provided in the path").build();
 
@@ -142,11 +144,18 @@ public class MatchReceiver {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateLineup(@PathParam("id") long id, @QueryParam("editorCode") String editorCode,
-			RequestLineupDto lineupDto) throws InvalidGameSetFormat, InvalidEditorCodeException {
+			RequestLineupDto lineupDto) throws InvalidGameSetFormat, InvalidEditorCodeException, BadRestRequestException {
 
 		if (editorCode == null || !matchService.isEditorCodeValid(id, editorCode)) {
 			throw new InvalidEditorCodeException(editorCode, id);
 		}
+		
+		if(lineupDto.getDoubles() == null) 
+			return Response.status(Status.BAD_REQUEST).entity("doubles must be set").build();
+
+		if(lineupDto.getPlayers() == null) 
+			return Response.status(Status.BAD_REQUEST).entity("player must be set").build();
+		
 
 		LinkedList<RequestDoubles> doubles = new LinkedList<>();
 		for (RequestDoublesDto dto : lineupDto.getDoubles()) {
@@ -172,5 +181,16 @@ public class MatchReceiver {
 
 		Match match = matchService.updateLineup(id, requestLineup);
 		return Response.ok(MatchDto.builder().bo(match).build()).build();
+	}
+	
+	@PUT
+	@Path("/{id}/set")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateSet(@PathParam("id") long id, @QueryParam("editorCode") String editorCode,
+			RequestGametSetDto lineupDto) throws InvalidGameSetFormat, InvalidEditorCodeException {
+		
+		
+		return Response.ok().build();
 	}
 }

@@ -29,7 +29,7 @@ INSERT INTO ttlive.game (id, game_number, state, is_doubles, set1, set2, set3, s
 INSERT INTO ttlive.game (id, game_number, state, is_doubles, set1, set2, set3, set4, set5, home_sets, guest_sets, match_id, home_player_id, guest_player_id, home_doubles_id, guest_doubles_id, created_at, modified_at) VALUES 
 (3, 3, 'FINISHED', false, '9:11', '11:5', '13:11', '11:9', NULL,3, 1, 1, 1, 6, NULL, NULL, '2022-10-19 00:26:30.826632', '2022-10-19 00:26:30.8656');
 INSERT INTO ttlive.game (id, game_number, state, is_doubles, set1, set2, set3, set4, set5, home_sets, guest_sets, match_id, home_player_id, guest_player_id, home_doubles_id, guest_doubles_id, created_at, modified_at) VALUES 
-(4, 4, 'LIVE', false, '11:5', '11:9', '7:11', '6:11', '10:11', 2,3, 1, 2, 5, NULL, NULL, '2022-10-19 00:26:30.830755', '2022-10-19 00:26:30.86895');
+(4, 4, 'LIVE', false, '11:5', '11:9', '7:11', '6:11', '10:11', 2,2, 1, 2, 5, NULL, NULL, '2022-10-19 00:26:30.830755', '2022-10-19 00:26:30.86895');
 INSERT INTO ttlive.game (id, game_number, state, is_doubles, set1, set2, set3, set4, set5, home_sets, guest_sets, match_id, home_player_id, guest_player_id, home_doubles_id, guest_doubles_id, created_at, modified_at) VALUES 
 (5, 5, 'LIVE', false, '11:6', '11:6', '3:11', '11:2', NULL,3,1, 1, 3, 8, NULL, NULL, '2022-10-19 00:26:30.834396', '2022-10-19 00:26:30.870203');
 INSERT INTO ttlive.game (id, game_number, state, is_doubles, set1, set2, set3, set4, set5, home_sets, guest_sets, match_id, home_player_id, guest_player_id, home_doubles_id, guest_doubles_id, created_at, modified_at) VALUES 

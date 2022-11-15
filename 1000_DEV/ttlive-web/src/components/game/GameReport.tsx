@@ -1,13 +1,16 @@
-import { Box, Card, CardContent, Divider, Grid, Paper, Skeleton, styled, Typography } from "@mui/material";
+import { Box, Card, CardContent, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, Skeleton, styled, Switch, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Game } from "../../rest/data/Game";
 import { GameSet } from "../../rest/data/GameSet";
-import GameScore from "./GameScore";
+import GameSetScore, { InputType } from "./GameSetScore";
 
 export interface GameReportProps {
     games: Array<Game> | null;
+    /** Indicates if the user is an editor. Display all the editable Components when provided */
+    editorCode: string | null;
+    onUpdate: (game: Game) => void;
 }
 
 const PlayerCell = styled(Grid)({
@@ -18,11 +21,15 @@ const PlayerCell = styled(Grid)({
     fontSize: "0.9rem"
 })
 
-type GameScore = Game & { homeTeamScore: number, guestTeamScore: number };
+type GameScoreType = Game & { homeTeamScore: number, guestTeamScore: number };
 
-const GameReport = ({ games }: GameReportProps) => {
 
-    const [gameScores, setGameScores] = useState<Array<GameScore> | null>(null);
+const GameReport = ({ games, editorCode, onUpdate }: GameReportProps) => {
+
+    const [gameScores, setGameScores] = useState<Array<GameScoreType> | null>(null);
+    const [inputType, setInputType] = useState<InputType>(InputType.POINTS);
+    const [isEditMode, setEditMode] = useState<boolean>(editorCode != null);
+
     const [t] = useTranslation();
 
 
@@ -35,7 +42,7 @@ const GameReport = ({ games }: GameReportProps) => {
         let homeTeamScore = 0;
         let guestTeamScore = 0;
 
-        let gameScores = games.map<GameScore>(g => {
+        let gameScores = games.map<GameScoreType>(g => {
 
             if (g.homeSets >= 3)
                 homeTeamScore++;
@@ -54,6 +61,8 @@ const GameReport = ({ games }: GameReportProps) => {
 
     return (
         <React.Fragment>
+            {editorCode != null && renderHeader()}
+
             {gameScores == null
                 ? <Skeleton sx={{ height: { xs: "247px", sm: "247px" }, mb: 2 }} variant="rectangular" />
                 : <Card sx={{ mb: 2 }}>
@@ -79,57 +88,70 @@ const GameReport = ({ games }: GameReportProps) => {
         </React.Fragment>
     )
 
-    function renderDoubles(game: GameScore) {
+    function renderDoubles(game: GameScoreType) {
 
         let homeWon = game.state === "FINISHED" && game.homeSets > game.guestSets;
         let guestWon = game.state === "FINISHED" && game.guestSets > game.homeSets;
 
         return (
-            <Box key={game.gameNumber} sx={{ display: "flex" }}>
+            <Box key={game.gameNumber} sx={{ display: "flex" }} >
                 <Box sx={{ flexGrow: 1 }}>
                     <Grid container sx={{ textAlign: "center" }} columns={11}>
                         <PlayerCell item xs={5} sx={{ fontSize: "0.8rem", fontWeight: homeWon ? 500 : "normal" }}>{renderPlayer(game.homeDoubles.player1)}<br />{renderPlayer(game.homeDoubles.player2)}</PlayerCell>
-                        {game.sets.map(value => <Grid key={value.number} sx={{ opacity: 0.5 }} item xs={1} margin="auto">{renderSet(value, true)}</Grid>)}
+                        {game.sets.map(value =>
+                            <Grid key={value.number} sx={{ opacity: isEditMode ? "inherited" : 0.5 }} item xs={1} margin="auto">
+                                {renderGameSetScore(value, true, game)}
+                            </Grid>)
+                        }
                         <Grid item xs={1} sx={{ fontWeight: "bold", m: "auto" }}>{game.state !== "NOT_STARTED" ? game.homeSets : "-"}</Grid>
                     </Grid>
+
                     <Divider />
+
                     <Grid container sx={{ textAlign: "center" }} columns={11}>
                         <PlayerCell item xs={5} sx={{ fontSize: "0.8rem", fontWeight: guestWon ? 500 : "normal" }}>{renderPlayer(game.guestDoubles.player1)}<br />{renderPlayer(game.guestDoubles.player2)}</PlayerCell>
-                        {game.sets.map(value => <Grid key={value.number} sx={{ opacity: 0.5 }} item xs={1} margin="auto">{renderSet(value, false)}</Grid>)}
+                        {game.sets.map(value =>
+                            <Grid key={value.number} sx={{ opacity: isEditMode ? "inherited" : 0.5 }} item xs={1} margin="auto">
+                                {renderGameSetScore(value, false, game)}
+                            </Grid>
+                        )}
                         <Grid item xs={1} sx={{ fontWeight: "bold", m: "auto" }}>{game.state !== "NOT_STARTED" ? game.guestSets : "-"}</Grid>
                     </Grid>
                 </Box>
                 <Box margin="auto" minWidth="40px" textAlign="right" fontSize="1.1rem">
-                    {game.state !== "NOT_STARTED" && <i>{game.homeTeamScore}:{game.guestTeamScore}</i>}
+                    {game.state === "FINISHED" && <i>{game.homeTeamScore}:{game.guestTeamScore}</i>}
+                    {game.state === "LIVE" && <Typography color={theme => theme.palette.primary.main} fontWeight="bold" fontStyle="italic">LIVE</Typography>}
                 </Box>
             </Box>
         )
     }
 
-    function renderPlayer(player: string) {
-        if (player === "") {
-            return <i>{t("GameReport.noPlayer")}</i>;
-        }
-        return player;
-    }
 
 
-    function renderSingles(game: GameScore) {
+    function renderSingles(game: GameScoreType) {
         let homeWon = game.state === "FINISHED" && game.homeSets > game.guestSets;
         let guestWon = game.state === "FINISHED" && game.guestSets > game.homeSets;
 
         return (
             <Box key={game.gameNumber} sx={{ display: "flex" }}>
                 <Box sx={{ flexGrow: 1 }}>
-                    <Grid container sx={{ textAlign: "center" }} columns={11}>
+                    <Grid container sx={{ textAlign: "center", mb: "3px" }} columns={11} alignItems="center">
                         <PlayerCell item xs={5} sx={{ fontWeight: homeWon ? 500 : "normal" }}>{renderPlayer(game.homePlayer.name)}</PlayerCell>
-                        {game.sets.map(value => <Grid key={value.number} sx={{ opacity: 0.5 }} item xs={1}>{renderSet(value, true)}</Grid>)}
+                        {game.sets.map(value =>
+                            <Grid key={value.number} sx={{  opacity: isEditMode ? "inherited" : 0.5 }} item xs={1} >
+                                {renderGameSetScore(value, true, game)}
+                            </Grid>
+                        )}
                         <Grid item xs={1} sx={{ fontWeight: "bold" }}>{game.state !== "NOT_STARTED" ? game.homeSets : "-"}</Grid>
                     </Grid>
                     <Divider />
-                    <Grid container sx={{ textAlign: "center" }} columns={11}>
+                    <Grid container sx={{ textAlign: "center", mt: "3px" }} columns={11} alignItems="center">
                         <PlayerCell item xs={5} sx={{ fontWeight: guestWon ? 500 : "normal" }}>{renderPlayer(game.guestPlayer.name)}</PlayerCell>
-                        {game.sets.map(value => <Grid key={value.number} sx={{ opacity: 0.5 }} item xs={1}>{renderSet(value, false)}</Grid>)}
+                        {game.sets.map(value =>
+                            <Grid key={value.number} sx={{ opacity: isEditMode ? "inherited" : 0.5 }} item xs={1}>
+                                {renderGameSetScore(value, false, game)}
+                            </Grid>
+                        )}
                         <Grid item xs={1} sx={{ fontWeight: "bold" }}>{game.state !== "NOT_STARTED" ? game.guestSets : "-"}</Grid>
                     </Grid>
                 </Box>
@@ -140,24 +162,63 @@ const GameReport = ({ games }: GameReportProps) => {
         )
     }
 
-    function renderSet(set: GameSet, isHome: boolean) {
-
-        if (set.state === "NOT_STARTED")
-            return <Typography>-</Typography>
-
-
-        if (isHome) {
-            if (set.homeScore > set.guestScore)
-                return <Typography fontSize="0.9rem" sx={{ fontWeight: "bold" }}>{set.homeScore}</Typography>
-            return <Typography fontSize="0.9rem">{set.homeScore}</Typography>
-        } else {
-            if (set.guestScore > set.homeScore)
-                return <Typography fontSize="0.9rem" sx={{ fontWeight: "bold" }}>{set.guestScore}</Typography>
-            return <Typography fontSize="0.9rem">{set.guestScore}</Typography>
-        }
+    function renderHeader() {
+        return (
+            <Grid container spacing={1} mb={2} justifyContent="center" alignItems="center">
+                <Grid item xs={6}>
+                    <FormControl sx={{ width: "100%" }}>
+                        <InputLabel id="select-inputType">{t("GameReport.inputType")}</InputLabel>
+                        <Select
+                            id="select-inputType"
+                            labelId="select-inputType"
+                            label={t("GameReport.inputType")}
+                            value={inputType}
+                            onChange={(e: any) => setInputType(e.target.value)}>
+                            <MenuItem value={InputType.SET}>{t("GameReport.set")}</MenuItem>
+                            <MenuItem value={InputType.POINTS}>{t("GameReport.points")}</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6} >
+                    {/*<Button variant="outlined" sx={{ width: "100%", height: "100%" }}>{isEditMode ? t("GameReport.preview") : t("GameReport.edit")}</Button>*/}
+                    <FormControlLabel
+                        sx={{ width: "100%", ml: 0, mr: 0 }}
+                        control={
+                            <Switch
+                                checked={isEditMode}
+                                onChange={() => setEditMode(!isEditMode)}
+                                name="loading"
+                                color="primary"
+                            />
+                        }
+                        label={t("GameReport.edit")}
+                        labelPlacement="bottom"
+                    />
+                </Grid>
+            </Grid>
+        )
     }
 
+    function renderGameSetScore(set: GameSet, isHome: boolean, game: Game) {
+        return <GameSetScore
+            set={set}
+            isHome={isHome}
+            inputType={inputType}
+            isEditMode={isEditMode}
+            editorCode={editorCode}
+            game={game}
+            onError={(msg) => console.log("todo error")}
+            onUpdate={onUpdate}
+        />
 
+    }
+
+    function renderPlayer(player: string) {
+        if (player === "") {
+            return <i>{t("GameReport.noPlayer")}</i>;
+        }
+        return player;
+    }
 }
 
 export default GameReport;

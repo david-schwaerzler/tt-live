@@ -62,7 +62,7 @@ const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
 
             </Box>
             <Box sx={{ display: { xs: "flex", sm: "none" }, flexGrow: 0 }}  >
-                <IconButton onClick={e => setLoginAnchor(e.currentTarget)} sx={{ p: 0 }}>
+                <IconButton onClick={e => setLoginAnchor(e.currentTarget)} sx={{ p: 0, pr: 2 }}>
                     <AccountCircle sx={{ color: "white" }} />
                 </IconButton>
             </Box>

@@ -66,7 +66,7 @@ export async function fetchMatch(id: number): Promise<MatchResponse> {
 
 export async function fetchValidateErrorCode(id: number, editorCode: string) {
     try {
-        let response = await fetch(`Config.REST_URL / match / ${id} /validate?editorCode=${editorCode}`);
+        let response = await fetch(`${Config.REST_URL}/match/${id}/validate?editorCode=${editorCode}`);
         if (!response.ok) {
             console.log(`Error checking editorCode for match with id=${id} from the Server: ${response.status}`)
             return returnError(response.status.toString());

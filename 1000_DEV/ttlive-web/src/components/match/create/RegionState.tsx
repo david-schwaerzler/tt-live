@@ -96,7 +96,7 @@ const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
                         <Select
                             id="select-contest"
                             labelId="select-contest"
-                            label="select-contest"
+                            label={t('RegionState.contest')}
                             value={matchStateObject.contest == null ? '' : matchStateObject.contest}
                             onChange={e => onContestSelected(e.target.value)}>
                             <MenuItem value="WOMEN">{t('RegionState.contestWomen')}</MenuItem>

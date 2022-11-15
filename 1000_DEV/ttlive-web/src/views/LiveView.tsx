@@ -1,6 +1,5 @@
-import { Button, Card, CardContent, Paper, Skeleton, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Button, Card, CardContent, Skeleton, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { render } from "@testing-library/react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -13,13 +12,15 @@ import MatchSettings from "../components/match/settings/MatchSettings";
 import ErrorMessage from "../components/utils/ErrorMessage";
 import { spacingNormal } from "../components/utils/StyleVars";
 import { fetchMatch } from "../rest/api/MatchApi";
+import { Game } from "../rest/data/Game";
 import { Match } from "../rest/data/Match";
 
 const LiveView = () => {
     const [match, setMatch] = useState<Match | null>(null);
     const [errorMsg, setErrorMsg] = useState<string>("");
-    const [activeTab, setActiveTab] = useState(0);
+    const [activeTab, setActiveTab] = useState(2);
     const [editorCode, setEditorCode] = useState<string | null>(null)
+    const [reversedGames, setReversedGames] = useState<Array<Game>>([]); // games of the match in reversed order (higher game number is first)
 
     const context = useContext(AppContext)
     const [t] = useTranslation();
@@ -35,7 +36,9 @@ const LiveView = () => {
         async function fetchData(id: number) {
             let response = await fetchMatch(id);
             if (response.data != null) {
+                setReversedGames([...response.data.games].reverse());
                 setMatch(response.data);
+               
                 if (context.editorCode[response.data?.id] != null)
                     setEditorCode(context.editorCode[response.data?.id]);
                 else
@@ -45,12 +48,8 @@ const LiveView = () => {
             }
         }
 
-        if (context.matchId == null)
-            setMatch(null)
-        else
+        if (context.matchId != null)
             fetchData(context.matchId);
-
-
     }, [context.matchId, context.editorCode])
 
     if (context.matchId == null)
@@ -78,7 +77,7 @@ const LiveView = () => {
     }
 
     function renderLinup() {
-        return <GameReport games={match != null ? match.games : null} />;
+        return <GameReport games={match != null ? match.games : null} editorCode={editorCode} onUpdate={onGameUpdated} />;
     }
 
     function renderLive() {
@@ -93,17 +92,15 @@ const LiveView = () => {
                     </Card>
                 }
 
-                {match?.games.filter(game => game.state === "LIVE").map(game =>
-                    <Card key={game.id}>
-                        <CardContent>
-                            <GameLiveScore game={game} />
-                        </CardContent>
-                    </Card>
+                {reversedGames.filter(game => game.state === "LIVE").map(game =>
+                    <GameLiveScore key={game.id} game={game} />
+                )}
+                {reversedGames.filter(game => game.state === "FINISHED").map(game =>
+                    <GameLiveScore key={game.id} game={game} />
                 )}
             </Stack>
         );
     }
-
 
     function renderNoMatch() {
         return (
@@ -120,6 +117,22 @@ const LiveView = () => {
                 </Box>
             </Box>
         )
+    }
+
+    function onGameUpdated(game: Game) {
+        if (match == null)
+            return;
+        let matchCopy = { ...match }; // create a copy of the match
+        let gamesCopy = [...matchCopy.games]; // create a copy of the game array
+
+        gamesCopy = gamesCopy.filter(g => g.id !== game.id); // remove the given game from the array
+        gamesCopy.push(game); // add it to the copy
+        gamesCopy.sort((a, b) => a.gameNumber - b.gameNumber); // sort the game on the right place in the match
+        game.sets.sort((a, b) => a.number - b.number); // sort the sets of the newly added game
+        matchCopy.games = gamesCopy // add the copies together
+
+        setReversedGames([...gamesCopy].reverse());
+        setMatch(matchCopy);
     }
 }
 

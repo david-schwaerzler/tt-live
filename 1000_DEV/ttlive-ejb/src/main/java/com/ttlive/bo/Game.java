@@ -33,20 +33,43 @@ public class Game {
 		public GameBuilder entity(GameEntity entity) throws InvalidGameSetFormat {
 			this.id = entity.getId();
 			this.isDoubles = entity.isDoubles();
-			this.gameNumber = entity.getGameNumber();			
+			this.gameNumber = entity.getGameNumber();
 			this.homeSets = entity.getHomeSets();
 			this.guestSets = entity.getGuestSets();
 			this.state = entity.getState();
 			this.modifiedAt = entity.getModifiedAt();
 			this.createdAt = entity.getCreatedAt();
-			
+
 			this.sets = new LinkedList<GameSet>();
 			this.sets.add(GameSet.builder().set(entity.getSet1(), 1).build());
 			this.sets.add(GameSet.builder().set(entity.getSet2(), 2).build());
 			this.sets.add(GameSet.builder().set(entity.getSet3(), 3).build());
 			this.sets.add(GameSet.builder().set(entity.getSet4(), 4).build());
 			this.sets.add(GameSet.builder().set(entity.getSet5(), 5).build());
-					
+
+			// set all set to NOT_STARTED after a previous set has the state NOT_STARTED
+			// this happens when a set in the middle of a match is reverted.
+			boolean isNotStarted = false;
+			int homeScore = 0;
+			int guestScore = 0;
+
+			for (GameSet set : sets) {
+
+				if (set.getState() == MatchState.FINISHED) {
+					homeScore = set.getHomeScore() > set.getGuestScore() ? homeScore + 1 : homeScore;
+					guestScore = set.getGuestScore() > set.getHomeScore() ? guestScore + 1 : guestScore;
+				}
+
+				if (isNotStarted)
+					set.setState(MatchState.NOT_STARTED);
+
+				if (set.getState() == MatchState.NOT_STARTED)
+					isNotStarted = true;
+
+				if (homeScore >= 3 || guestScore >= 3)
+					isNotStarted = true;
+			}
+			System.out.println(sets);
 			return this;
 		}
 
@@ -66,5 +89,5 @@ public class Game {
 			return this;
 		}
 	}
-	
+
 }

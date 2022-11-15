@@ -1,4 +1,4 @@
-import { Box, Collapse, Grid, Stack, Typography } from "@mui/material";
+import { Box, Card, CardActions, CardContent, Collapse, Grid, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Game } from "../../rest/data/Game";
 import { GameSet } from "../../rest/data/GameSet";
@@ -44,9 +44,53 @@ const GameLiveScore = ({ game }: GameLiveScoreProps) => {
 
 
     return (
-        <Box >
-            {game.doubles ? renderDoubles(game) : renderSingles(game)}
-        </Box>
+        <Card>
+            <CardContent>
+                {(game.state === "LIVE" || game.state === "FINISHED") &&
+                    <Box width="100%" display="flex" mb={1}>
+                        <MatchStateLabel sx={{ margin: "auto" }} state={game.state} variant="border" />
+                    </Box>
+                }
+                {game.doubles ? renderDoubles(game) : renderSingles(game)}
+
+
+                {displayedSets.map(value =>
+                    <Grid key={value.number} container textAlign="center" justifyContent="center" sx={{ fontSize: value.state === "LIVE" ? "1.4rem" : "inherit", opacity: value.state !== "LIVE" ? 0.5 : 1 }}>
+                        <Grid item xs={1}>
+                            <Box fontWeight={value.homeScore > value.guestScore ? "bold" : "normal"}>{value.homeScore === -1 ? "?" : value.homeScore}</Box>
+                        </Grid>
+                        <Grid item xs={3}>
+                            {value.state === "LIVE" ? <MatchStateLabel state={value.state} /> : <Box>Satz {value.number}</Box>}
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Box fontWeight={value.guestScore > value.homeScore ? "bold" : "normal"}>{value.guestScore === -1 ? "?" : value.guestScore}</Box>
+                        </Grid>
+                    </Grid>
+                )}
+
+
+                <Collapse in={expanded} timeout="auto" unmountOnExit>
+                    {hiddenSets.map(value =>
+                        <Grid key={value.number} container textAlign="center" justifyContent="center" sx={{ fontSize: value.state === "LIVE" ? "1.4rem" : "inherit", opacity: value.state !== "LIVE" ? 0.5 : 1 }}  >
+                            <Grid item xs={1}>
+                                <Box fontWeight={value.homeScore > value.guestScore ? "bold" : "normal"}>{value.homeScore === -1 ? "?" : value.homeScore}</Box>
+                            </Grid>
+                            <Grid item xs={3}>
+                                {value.state === "LIVE" ? <MatchStateLabel state={value.state} /> : <Box>Satz {value.number}</Box>}
+                            </Grid>
+                            <Grid item xs={1}>
+                                <Box fontWeight={value.guestScore > value.homeScore ? "bold" : "normal"}>{value.guestScore === -1 ? "?" : value.guestScore}</Box>
+                            </Grid>
+                        </Grid>
+                    )}
+                </Collapse>
+            </CardContent>
+            <CardActions>
+                <Box sx={{ cursor: "pointer", width: "100%", left: 0 }} onClick={() => setExpanded(!expanded)}>
+                    <ExpandButton expanded={expanded} />
+                </Box>
+            </CardActions>
+        </Card>
     );
 
     function renderSingles(game: Game) {
@@ -63,47 +107,29 @@ const GameLiveScore = ({ game }: GameLiveScoreProps) => {
                     </Grid>
                 </Grid>
 
-                {displayedSets.map(value =>
-                    <Grid key={value.number} container textAlign="center" justifyContent="center" sx={{ fontSize: value.state === "LIVE" ? "1.4rem" : "inherit", opacity: value.state !== "LIVE" ? 0.5 : 1 }}>
-                        <Grid item xs={1}>
-                            <Box fontWeight={value.homeScore > value.guestScore ? "bold" : "normal"}>{value.homeScore}</Box>
-                        </Grid>
-                        <Grid item xs={3}>
-                            {value.state === "LIVE" ? <MatchStateLabel state={value.state} /> : <Box>Satz {value.number}</Box>}
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Box fontWeight={value.guestScore > value.homeScore ? "bold" : "normal"}>{value.guestScore}</Box>
-                        </Grid>
-                    </Grid>
-                )}
-
-
-                <Collapse in={expanded} timeout="auto" unmountOnExit>
-                    {hiddenSets.map(value =>
-                        <Grid key={value.number} container textAlign="center" justifyContent="center" sx={{ fontSize: value.state === "LIVE" ? "1.4rem" : "inherit", opacity: value.state !== "LIVE" ? 0.5 : 1 }}  >
-                            <Grid item xs={1}>
-                                <Box fontWeight={value.homeScore > value.guestScore ? "bold" : "normal"}>{value.homeScore}</Box>
-                            </Grid>
-                            <Grid item xs={3}>
-                                {value.state === "LIVE" ? <MatchStateLabel state={value.state} /> : <Box>Satz {value.number}</Box>}
-                            </Grid>
-                            <Grid item xs={1}>
-                                <Box fontWeight={value.guestScore > value.homeScore ? "bold" : "normal"}>{value.guestScore}</Box>
-                            </Grid>
-                        </Grid>
-                    )}
-                </Collapse>
-
-                <Box sx={{ cursor: "pointer", width: "100%", left: 0}} onClick={() => setExpanded(!expanded)}>
-                    <ExpandButton expanded={expanded} />
-                </Box>
-
             </Stack>
         );
-    }   
+    }
+
 
     function renderDoubles(game: Game) {
         return (
+            <Stack>
+                <Grid container sx={{ justifyContent: "center", textAlign: "center", paddingBottom: spacingSmall }}>
+                    <Grid item xs={6} >
+                        <Box sx={{ fontSize: { xs: "1.1rem", sm: "1.5rem" }, whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>{game.homeDoubles.player1}<br />{game.homeDoubles.player2}</Box>
+                        <Box sx={{ fontSize: { xs: "2rem", sm: "3rem" }, fontWeight: "bold" }}>{game.homeSets}</Box>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Box sx={{ fontSize: { xs: "1.1rem", sm: "1.5rem" }, whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>{game.guestDoubles.player1}<br />{game.guestDoubles.player2}</Box>
+                        <Box sx={{ fontSize: { xs: "2rem", sm: "3rem" }, fontWeight: "bold" }}>{game.guestSets}</Box>
+                    </Grid>
+                </Grid>
+
+            </Stack>
+        );
+        return (
+
             <React.Fragment>
                 <Box sx={{ flexGrow: 1, display: { sm: "none" }, overflow: "hidden" }}>
                     <Typography sx={{ flexGrow: 1, order: 1, fontSize: "0.8rem", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "noWrap" }}>
