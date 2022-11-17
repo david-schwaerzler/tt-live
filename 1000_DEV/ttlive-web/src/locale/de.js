@@ -108,6 +108,8 @@ const deDe = {
             "LineupSetting.guestTeam": "Aufstellung Gastverein",
 
             "ChatDrawer.send": "Senden",
+            "ChatDrawer.username": "Username",
+            "ChatDrawer.save": "OK"
 
         }
     }

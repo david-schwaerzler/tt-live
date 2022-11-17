@@ -1,12 +1,15 @@
-import { Box, Divider, Drawer, IconButton, List, ListItem, Paper, styled, TextField, useMediaQuery, useTheme } from "@mui/material";
+import { AccountCircle } from "@mui/icons-material";
+import { Box, Divider, Drawer, IconButton, List, ListItem, Paper, TextField, useMediaQuery, useTheme } from "@mui/material";
 import { Stack } from "@mui/system";
-import React, { createRef, MouseEvent, MouseEventHandler, useEffect, useState } from "react";
+import React, { createRef, useCallback, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { fetchChatMessages, postChatMessage } from "../../rest/api/ChatApi";
+import { AppContext } from "../../AppContext";
+import { postChatMessage } from "../../rest/api/ChatApi";
 import { ChatMessage, RequestChatMessage } from "../../rest/data/ChatMessage";
 import { Match } from "../../rest/data/Match";
 import ExpandButton from "../utils/ExpandButton";
 import LoadingButton from "../utils/LoadingButton";
+import ChatNameMenu from "./ChatNameMenu";
 
 export interface ChatDrawerProps {
     match: Match;
@@ -15,6 +18,7 @@ export interface ChatDrawerProps {
     messages: Array<ChatMessage>;
 }
 
+const CHAT_USERNAME_SETTING = "chatUsername";
 
 const ChatDrawer = ({ match, expanded, onExpanded, messages }: ChatDrawerProps) => {
 
@@ -23,20 +27,72 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages }: ChatDrawerProps) 
     const theme = useTheme();
     const isBig = useMediaQuery(theme.breakpoints.up('sm'));
     const chatRef = createRef<HTMLUListElement>();
+    const userRef = createRef<HTMLButtonElement>();
 
+    // anchor to attach the select name dialog
+    const [menueAnchor, setMenueAnchor] = useState<HTMLElement | null>(null);
 
+    const context = useContext(AppContext);
     const [t] = useTranslation();
 
+    const onSend = useCallback(async (anchor: HTMLElement) => {
+        if (inputValue.trim() === "") {
+            return;
+        }
+
+        let username = context.getSetting(CHAT_USERNAME_SETTING);
+        if (username == null || username === "") {
+            setMenueAnchor(anchor);
+            return;
+        }
+
+        let chatMessage: RequestChatMessage = {
+            username: username,
+            text: inputValue
+        };
+
+        setLoading(true);
+        let response = await postChatMessage(match.id, chatMessage)
+        if (response.data != null) {
+            setInputValue("");
+        }
+        setLoading(false)
+    }, [context, inputValue, match.id]);
+
+
+    const keyHandler = useCallback((e: KeyboardEvent) => {
+        if (e.code === "Enter" && userRef.current != null && isLoading === false) {
+            onSend(userRef.current);
+        }
+    }, [onSend, userRef, isLoading]);
+
     useEffect(() => {
-        if (expanded && chatRef.current)
-            chatRef.current.scrollTop = chatRef.current.scrollHeight;
-    }, [expanded])
+        if (expanded) {
+            if (chatRef.current)
+                chatRef.current.scrollTop = chatRef.current.scrollHeight;
+
+            document.addEventListener("keydown", keyHandler);
+        }
+
+        return () => {
+            document.removeEventListener("keydown", keyHandler);
+        }
+    }, [expanded, chatRef, keyHandler]);
 
     useEffect(() => {
         if (chatRef.current)
             chatRef.current.scrollTop = chatRef.current.scrollHeight;
-    }, [messages])
+    }, [messages, chatRef]);
 
+    useEffect(() => {
+        if (menueAnchor != null)
+            document.removeEventListener("keydown", keyHandler);
+        else
+            document.addEventListener("keydown", keyHandler);
+
+        return () => document.removeEventListener("keydown", keyHandler)
+
+    }, [menueAnchor, keyHandler]);
 
     return (
         <React.Fragment>
@@ -51,7 +107,7 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages }: ChatDrawerProps) 
                 open={expanded}
                 onClose={() => { }}
                 variant={isBig ? "permanent" : "persistent"}
-                PaperProps={{ sx: { bottom: 0, height: { xs: "50vh", sm: "70vh" }, position: "fixed", top: "auto", width: "20vw", right: 0,  }, elevation: 5 }}
+                PaperProps={{ sx: { bottom: 0, height: { xs: "50vh", sm: "70vh" }, position: "fixed", top: "auto", width: { xs: "auto", sm: "20vw" }, right: 0, }, elevation: 5 }}
                 ModalProps={{ keepMounted: true }}
 
             >
@@ -61,7 +117,7 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages }: ChatDrawerProps) 
 
                 <List sx={{ overflow: "scroll" }} ref={chatRef}>
                     {messages.map((value, index) =>
-                        <ListItem key={index} sx={{ overflowWrap: "break-word", width: "100%" }}>
+                        <ListItem key={index} sx={{ overflowWrap: "anywhere", width: "100%" }}>
                             <Box>
                                 <strong>{value.username}: </strong>
                                 {value.text}
@@ -71,20 +127,21 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages }: ChatDrawerProps) 
                 </List>
                 <Divider />
                 <Stack direction="row" gap={2} p={1}>
-                    <TextField value={inputValue} onChange={e => setInputValue(e.target.value)} size="small"
-                        onClick={onTextFieldFocus}
-                    />
+                    {/** TODO better validation for long strings (error Message)*/}
+                    <TextField value={inputValue} onChange={e => setInputValue(e.target.value.substring(0, 200))} size="small" onClick={onTextFieldFocus} />
 
-                    <LoadingButton loading={isLoading} onClick={onSend} variant="outlined" size="small">
+                    <LoadingButton loading={isLoading} onClick={e => onSend(e.currentTarget)} variant="outlined" size="small">
                         {t("ChatDrawer.send")}
                     </LoadingButton>
+                    <ChatNameMenu anchor={menueAnchor} onClose={() => setMenueAnchor(null)} />
+                    <IconButton onClick={e => setMenueAnchor(e.currentTarget)} sx={{}} ref={userRef} className="testtest">
+                        <AccountCircle sx={{ color: "white" }} />
+                    </IconButton>
 
                 </Stack>
             </Drawer>
         </React.Fragment >
     )
-
-
     function onTextFieldFocus() {
         if (isBig === false) {
             setTimeout(() => {
@@ -92,24 +149,6 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages }: ChatDrawerProps) 
                     chatRef.current.scrollTop = chatRef.current.scrollHeight
             }, 100);
         }
-    }
-
-    async function onSend() {
-        if (inputValue.trim() === "") {
-            return;
-        }
-
-        let chatMessage: RequestChatMessage = {
-            username: "test123",
-            text: inputValue
-        };
-
-        setLoading(true);
-        let response = await postChatMessage(match.id, chatMessage)
-        if (response.data != null) {
-            setInputValue("");
-        }
-        setLoading(false)
     }
 }
 
