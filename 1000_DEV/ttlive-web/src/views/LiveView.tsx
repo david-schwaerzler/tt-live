@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useSwipeable } from "react-swipeable";
 import { AppContext } from "../AppContext";
+import ChatDrawer from "../components/chat/ChatDrawer";
 import GameLiveScore from "../components/game/GameLiveScore";
 import GameReport from "../components/game/GameReport";
 import { InputType } from "../components/game/GameSetScore";
@@ -13,7 +14,9 @@ import MatchSettings from "../components/match/settings/MatchSettings";
 import ErrorMessage from "../components/utils/ErrorMessage";
 import { spacingNormal } from "../components/utils/StyleVars";
 import WebHookUtil from "../components/utils/WebHookUtil";
+import { fetchChatMessages, postChatMessage } from "../rest/api/ChatApi";
 import { fetchMatch } from "../rest/api/MatchApi";
+import { ChatMessage, sortChatMessages } from "../rest/data/ChatMessage";
 import { Game } from "../rest/data/Game";
 import { Match, sortMatch } from "../rest/data/Match";
 
@@ -25,18 +28,20 @@ const LiveView = () => {
     const [editorCode, setEditorCode] = useState<string | null>(null)
     const [reversedGames, setReversedGames] = useState<Array<Game>>([]); // games of the match in reversed order (higher game number is first)
     const [activeTab, setActiveTab] = useState<number>(1);
-    
+    const [chatDrawerExpanded, setChatDrawerExpanded] = useState(false);
+    const [messages, setMessages] = useState<Array<ChatMessage>>([])
+
     const context = useContext(AppContext)
     const [t] = useTranslation();
 
 
     const swipeHanlder = useSwipeable({
         onSwipedRight: () => setActiveTab(activeTab - 1 < 0 ? 0 : activeTab - 1),
-        onSwipedLeft: () => setActiveTab(activeTab + 1 > 2 ? 2 : activeTab + 1)
+        onSwipedLeft: () => setActiveTab(activeTab + 1 > 2 ? 2 : activeTab + 1),
     })
 
     useEffect(() => {
-        async function fetchData(id: number) {
+        async function fetchMatchLocal(id: number) {
             let response = await fetchMatch(id);
             if (response.data != null) {
                 setReversedGames([...response.data.games].reverse());
@@ -50,21 +55,42 @@ const LiveView = () => {
                 setErrorMsg(response.error == null ? "" : response.error);
             }
         }
+        async function fetchChatLocal(id: number) {
+            let response = await fetchChatMessages(id)
+            if (response.data)
+                setMessages(response.data)
+        }
 
-        if (context.matchId != null)
-            fetchData(context.matchId);
+
+        let intervalId : NodeJS.Timer | null = null;
+        if (context.matchId != null) {
+            fetchMatchLocal(context.matchId);
+            fetchChatLocal(context.matchId);
+
+            intervalId = setInterval(() => {
+                if (context.matchId != null) {
+                    fetchMatchLocal(context.matchId);
+                    fetchChatLocal(context.matchId);
+                }
+            }, 30000);
+        }
+
+        return () => {
+            if(intervalId != null)
+                clearInterval(intervalId);
+        }
     }, [context.matchId, context.editorCode])
 
     if (context.matchId == null)
         return renderNoMatch();
 
     return (
-        <Box {...swipeHanlder}>
-            {match != null && <WebHookUtil match={match} onGameUpdated={game => onGameUpdated(game, match)} onMatchUpdated={onMatchUpdated} />}
+        <Box {...swipeHanlder} sx={{ ...(chatDrawerExpanded && { height: "calc(50vh - 64px)" }), overflow: "auto", m: -2, p: 2 }}>
+            {match != null && <WebHookUtil match={match} onGameUpdated={game => onGameUpdated(game, match)} onMatchUpdated={onMatchUpdated} onAddChatMessage={onAddChatMessage} />}
             {/* This is a quick fix to allow swiping on on outside the component */}
             <Box {...swipeHanlder} className="test" position="absolute" top={"10%"} bottom={0} left={0} right={0} zIndex={-10} />
 
-            <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} centered variant="fullWidth" sx={{ mb: 4 }}>
+            <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} centered variant="fullWidth" sx={{ mb: 4, ...(chatDrawerExpanded && {}) }}>
                 <Tab label={t("LiveView.settings")} />
                 <Tab label={t("LiveView.live")} />
                 <Tab label={t("LiveView.lineup")} />
@@ -73,7 +99,11 @@ const LiveView = () => {
             <Box display={activeTab === 0 ? "block" : "none"}>{renderSettings()}</Box>
             <Box display={activeTab === 1 ? "block" : "none"}>{renderLive()}</Box>
             <Box display={activeTab === 2 ? "block" : "none"}>{renderLinup()}</Box>
+
+            {match != null &&
+                <ChatDrawer match={match} expanded={chatDrawerExpanded} onExpanded={expanded => setChatDrawerExpanded(expanded)} messages={messages} />}
         </Box>
+
     );
 
     function renderSettings() {
@@ -126,7 +156,7 @@ const LiveView = () => {
     function onGameUpdated(game: Game, match: Match) {
         if (match == null)
             return;
-      
+
         let matchCopy = { ...match }; // create a copy of the match        
         let gamesCopy = [...matchCopy.games];
 
@@ -143,6 +173,13 @@ const LiveView = () => {
         sortMatch(match)
         setMatch(match);
         setReversedGames([...match.games].reverse());
+    }
+
+    function onAddChatMessage(message: ChatMessage) {
+        let copy = [...messages];
+        copy.push(message);
+        sortChatMessages(copy);
+        setMessages(copy);
     }
 }
 

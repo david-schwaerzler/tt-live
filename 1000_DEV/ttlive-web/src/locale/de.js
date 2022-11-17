@@ -107,6 +107,8 @@ const deDe = {
             "LineupSetting.homeTeam": "Aufstellung Heimverein",
             "LineupSetting.guestTeam": "Aufstellung Gastverein",
 
+            "ChatDrawer.send": "Senden",
+
         }
     }
 }

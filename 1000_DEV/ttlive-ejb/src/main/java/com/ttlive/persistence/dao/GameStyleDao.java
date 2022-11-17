@@ -12,4 +12,5 @@ public class GameStyleDao extends BaseDao<GameStyleEntity>{
 		super(GameStyleEntity.class);
 	}
 
+	
 }

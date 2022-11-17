@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { ChatMessage } from "../../rest/data/ChatMessage";
 import { Game } from "../../rest/data/Game";
 import { Match } from "../../rest/data/Match";
 import { UpdateAction } from "../../rest/data/UpdateAction";
@@ -8,12 +9,13 @@ export interface WebHookUtilProps {
     match: Match;
     onGameUpdated: (game: Game) => void;
     onMatchUpdated: (match: Match) => void;
+    onAddChatMessage: (message : ChatMessage) => void;
 }
 
 // how often the socket is checked (in seconds)
 const RETRY_TIMOUT = 10;
 
-const WebHookUtil = ({ match, onGameUpdated, onMatchUpdated }: WebHookUtilProps) => {
+const WebHookUtil = ({ match, onGameUpdated, onMatchUpdated, onAddChatMessage }: WebHookUtilProps) => {
     const ws = useRef<WebSocket | null>(null);
 
     useEffect(() => {
@@ -60,10 +62,16 @@ const WebHookUtil = ({ match, onGameUpdated, onMatchUpdated }: WebHookUtilProps)
                     }
                     console.log(action.game)
                     onGameUpdated(action.game);
+                }else if(action.action === "CHAT"){
+                    if(action.chat == null){
+                        console.error("Received websocket event for update chat but no chat was provided")
+                        return;
+                    }
+                    onAddChatMessage(action.chat);
                 }
             }
         }
-    }, [onMatchUpdated, onGameUpdated])
+    }, [onMatchUpdated, onGameUpdated, onAddChatMessage])
 
     return (<div></div>);
 }

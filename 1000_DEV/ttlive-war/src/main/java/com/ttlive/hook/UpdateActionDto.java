@@ -1,7 +1,9 @@
 package com.ttlive.hook;
 
+import com.ttlive.bo.ChatMessage;
 import com.ttlive.bo.Game;
 import com.ttlive.bo.Match;
+import com.ttlive.dto.ChatMessageDto;
 import com.ttlive.dto.GameDto;
 import com.ttlive.dto.MatchDto;
 
@@ -15,9 +17,10 @@ public class UpdateActionDto {
 	private UpdateActions action;
 	private GameDto game;
 	private MatchDto match;
+	private ChatMessageDto chat;
 
 	public static enum UpdateActions {
-		MATCH, GAME;
+		MATCH, GAME, CHAT;
 	}
 
 	public static class UpdateActionDtoBuilder {
@@ -30,6 +33,11 @@ public class UpdateActionDto {
 		public UpdateActionDtoBuilder matchAction(Match match) {
 			this.match = MatchDto.builder().bo(match).build();
 			this.action = UpdateActions.MATCH;
+			return this;
+		}
+		public UpdateActionDtoBuilder chatAction(ChatMessage chat) {
+			this.action = UpdateActions.CHAT;
+			this.chat = ChatMessageDto.builder().bo(chat).build();
 			return this;
 		}
 	}

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.ttlive.session.ChatMessageEvent;
 import com.ttlive.session.GameUpdateEvent;
 import com.ttlive.session.MatchEventObserver;
 import com.ttlive.session.MatchUpdateEvent;
@@ -126,6 +127,23 @@ public class TTLiveWebSocket {
 	public void emitUpdateMatchEvent(@ObservesAsync MatchUpdateEvent event) {
 		try {
 			UpdateActionDto actionDto = UpdateActionDto.builder().matchAction(event.getMatch()).build();
+			String json = mapper.writeValueAsString(actionDto);
+			List<Session> sockets = sessions.get(event.getMatchId());
+			if (sockets == null)
+				return;
+			synchronized (sockets) {
+				for (Session socket : sockets) {
+					socket.getBasicRemote().sendObject(json);
+				}
+			}
+		} catch (Exception e) {
+			log.severe(e.toString());
+		}
+	}
+	
+	public void emitChatMessageEvent(@ObservesAsync ChatMessageEvent event) {
+		try {
+			UpdateActionDto actionDto = UpdateActionDto.builder().chatAction(event.getMessage()).build();
 			String json = mapper.writeValueAsString(actionDto);
 			List<Session> sockets = sessions.get(event.getMatchId());
 			if (sockets == null)

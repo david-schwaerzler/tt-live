@@ -41,7 +41,7 @@ const MenuBar = () => {
     const theme = useTheme();
 
     return (
-        <AppBar position="static" elevation={2} sx={{ p: 0 }}>
+        <AppBar position="sticky" elevation={2} sx={{ p: 0 }}>
             <Toolbar sx={{ paddingLeft: { xs: 1, sm: 2 }, p: 0 }}>
                 <Box sx={{ pr: padding }}>
                     <LogoIcon4 sx={{ mt: "5px" }} color={theme.palette.mode === "dark" ? theme.palette.primary.main : "#FFFFFF"} />

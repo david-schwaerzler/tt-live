@@ -126,5 +126,6 @@ CREATE TABLE chat_message (
 	text VARCHAR(256) NOT NULL,
 	username VARCHAR(64),
 	account_id BIGINT REFERENCES account(id),
-	match_id BIGINT REFERENCES match(id)	
+	match_id BIGINT NOT NULL REFERENCES match(id)	,
+	created_at TIMESTAMP NOT NULL DEFAULT now()
 );
