@@ -1,4 +1,3 @@
-import { execFile } from "child_process";
 import { useEffect, useRef } from "react";
 import { Game } from "../../rest/data/Game";
 import { Match } from "../../rest/data/Match";
@@ -11,26 +10,41 @@ export interface WebHookUtilProps {
     onMatchUpdated: (match: Match) => void;
 }
 
+// how often the socket is checked (in seconds)
+const RETRY_TIMOUT = 10;
 
 const WebHookUtil = ({ match, onGameUpdated, onMatchUpdated }: WebHookUtilProps) => {
     const ws = useRef<WebSocket | null>(null);
 
     useEffect(() => {
-
         function initWs() {
             ws.current = new WebSocket(`${Config.WS_URL}/${match?.id}`);
-            const wsCurrent = ws.current
+
             ws.current.onopen = () => console.log("Attached to websocket");
             ws.current.onclose = () => {
                 console.log("Detached from websocket");
             }
             ws.current.onerror = e => {
                 console.log("Error from websocket. Try to create new connection: ");
-                if (ws.current)
-                    ws.current.close();
-
-                setTimeout(() => ws.current = initWs(), 10000)
             }
+
+            return ws.current;
+        }
+        let wsCurrent = initWs();
+
+        const intevalId = setInterval(() => {
+            if (wsCurrent.readyState === WebSocket.CLOSED)
+                wsCurrent = initWs();
+        }, RETRY_TIMOUT * 1000);
+        return () => {
+            wsCurrent.close();
+            clearInterval(intevalId);
+        }
+
+    }, [match.id])
+
+    useEffect(() => {
+        if (ws.current) {
             ws.current.onmessage = (event: MessageEvent<any>) => {
                 let action: UpdateAction = JSON.parse(event.data);
                 if (action.action === "MATCH") {
@@ -48,14 +62,8 @@ const WebHookUtil = ({ match, onGameUpdated, onMatchUpdated }: WebHookUtilProps)
                     onGameUpdated(action.game);
                 }
             }
-            return ws.current;
         }
-        const wsCurrent = initWs();
-        return () => {
-            wsCurrent.close();
-        }
-
-    }, [match.id])
+    }, [onMatchUpdated, onGameUpdated])
 
     return (<div></div>);
 }

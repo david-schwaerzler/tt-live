@@ -15,9 +15,10 @@ const deDe = {
             "LoginForm.password": "Passwort",
 
             "HomeView.welcomeText": "<strong>TT-Live</strong>, die Tischtennis Liveticker App",
-            "HomeView.welcomeText2": "",
             "HomeView.search": "Spielsuche",
             "HomeView.createMatch": "Livegame Erstellen",
+            "HomeView.goLiveText": "Gehe Live mit deinem Ligaspiel\nohne Account und in nur wenigen Klicks.",
+            "HomeView.goSearchText": "... oder finde ein live Spiele über die Suche.",
 
             "CreateGameView.stepRegion": "Region/Konkurenz",
             "CreateGameView.stepLeague": "Liga/Spielsystem",

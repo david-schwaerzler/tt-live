@@ -1,12 +1,13 @@
 import { Button, Card, CardContent, Skeleton, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useSwipeable } from "react-swipeable";
 import { AppContext } from "../AppContext";
 import GameLiveScore from "../components/game/GameLiveScore";
 import GameReport from "../components/game/GameReport";
+import { InputType } from "../components/game/GameSetScore";
 import MatchScore from "../components/match/MatchScore";
 import MatchSettings from "../components/match/settings/MatchSettings";
 import ErrorMessage from "../components/utils/ErrorMessage";
@@ -16,15 +17,18 @@ import { fetchMatch } from "../rest/api/MatchApi";
 import { Game } from "../rest/data/Game";
 import { Match, sortMatch } from "../rest/data/Match";
 
+const ACTIVE_LIVE_TAB_SETTING = "activeLiveTab"
+
 const LiveView = () => {
     const [match, setMatch] = useState<Match | null>(null);
     const [errorMsg, setErrorMsg] = useState<string>("");
-    const [activeTab, setActiveTab] = useState(2);
     const [editorCode, setEditorCode] = useState<string | null>(null)
     const [reversedGames, setReversedGames] = useState<Array<Game>>([]); // games of the match in reversed order (higher game number is first)
-
+    const [activeTab, setActiveTab] = useState<number>(1);
+    
     const context = useContext(AppContext)
     const [t] = useTranslation();
+
 
     const swipeHanlder = useSwipeable({
         onSwipedRight: () => setActiveTab(activeTab - 1 < 0 ? 0 : activeTab - 1),
@@ -56,7 +60,7 @@ const LiveView = () => {
 
     return (
         <Box {...swipeHanlder}>
-            {match != null && <WebHookUtil match={match} onGameUpdated={onGameUpdated} onMatchUpdated={onMatchUpdated} />}
+            {match != null && <WebHookUtil match={match} onGameUpdated={game => onGameUpdated(game, match)} onMatchUpdated={onMatchUpdated} />}
             {/* This is a quick fix to allow swiping on on outside the component */}
             <Box {...swipeHanlder} className="test" position="absolute" top={"10%"} bottom={0} left={0} right={0} zIndex={-10} />
 
@@ -77,7 +81,7 @@ const LiveView = () => {
     }
 
     function renderLinup() {
-        return <GameReport games={match != null ? match.games : null} editorCode={editorCode} onUpdate={onGameUpdated} />;
+        return <GameReport games={match != null ? match.games : null} editorCode={editorCode} />;
     }
 
     function renderLive() {
@@ -119,16 +123,17 @@ const LiveView = () => {
         )
     }
 
-    function onGameUpdated(game: Game) {
+    function onGameUpdated(game: Game, match: Match) {
         if (match == null)
             return;
-        let matchCopy = { ...match }; // create a copy of the match
-        let gamesCopy = [...matchCopy.games]; // create a copy of the game array
+      
+        let matchCopy = { ...match }; // create a copy of the match        
+        let gamesCopy = [...matchCopy.games];
 
         gamesCopy = gamesCopy.filter(g => g.id !== game.id); // remove the given game from the array
-        gamesCopy.push(game); // add it to the copy        
+        gamesCopy.push(game); // add it to the copy
         matchCopy.games = gamesCopy // add the copies together
-        sortMatch(match);
+        sortMatch(matchCopy);
 
         setReversedGames([...gamesCopy].reverse());
         setMatch(matchCopy);

@@ -13,14 +13,13 @@ export interface GameSetScoreProps {
     inputType: InputType;
     editorCode: string | null;
     onError: (msg: string) => void;
-    onUpdate: (game: Game) => void;
 }
 
 export enum InputType {
     SET, POINTS
 }
 
-const GameSetScore = ({ set, isHome, isEditMode, inputType, editorCode, game, onError, onUpdate }: GameSetScoreProps) => {
+const GameSetScore = ({ set, isHome, isEditMode, inputType, editorCode, game, onError }: GameSetScoreProps) => {
 
     let won = isWon();
     let score = isHome ? set.homeScore : set.guestScore;
@@ -41,7 +40,6 @@ const GameSetScore = ({ set, isHome, isEditMode, inputType, editorCode, game, on
             selected={set.state === "FINISHED" && won}
             setNumber={set.number}
             onError={onError}
-            onUpdate={onUpdate}
         />
     } else if (inputType === InputType.POINTS) {
         return <GameSetResultButton
@@ -52,7 +50,6 @@ const GameSetScore = ({ set, isHome, isEditMode, inputType, editorCode, game, on
             set={set}
             won={won}
             onError={onError}
-            onUpdate={onUpdate}
         />
     }
 

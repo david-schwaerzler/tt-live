@@ -19,8 +19,8 @@ export async function putGameSet(id: number, editorCode: string, requestLineup: 
             return returnError(response.status.toString());
         }
 
-        let match: Game = await response.json();
-        return returnData(sortGame(match));
+        let game: Game = await response.json();
+        return returnData(sortGame(game));
 
     } catch (error) {
         console.log(`Error updating GameSet on Server: ${error}`)

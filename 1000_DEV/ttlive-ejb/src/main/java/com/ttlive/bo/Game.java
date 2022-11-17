@@ -47,14 +47,11 @@ public class Game {
 			this.sets.add(GameSet.builder().set(entity.getSet4(), 4).build());
 			this.sets.add(GameSet.builder().set(entity.getSet5(), 5).build());
 
-			// set all set to NOT_STARTED after a previous set has the state NOT_STARTED
-			// this happens when a set in the middle of a match is reverted.
 			boolean isNotStarted = false;
 			int homeScore = 0;
 			int guestScore = 0;
-
+			MatchState previousSetState = MatchState.NOT_STARTED;
 			for (GameSet set : sets) {
-
 				if (set.getState() == MatchState.FINISHED) {
 					homeScore = set.getHomeScore() > set.getGuestScore() ? homeScore + 1 : homeScore;
 					guestScore = set.getGuestScore() > set.getHomeScore() ? guestScore + 1 : guestScore;
@@ -62,12 +59,18 @@ public class Game {
 
 				if (isNotStarted)
 					set.setState(MatchState.NOT_STARTED);
+				else if(previousSetState == MatchState.FINISHED && set.getState() == MatchState.NOT_STARTED) {
+					// the first not started set sould be marked as live
+					set.setState(MatchState.LIVE);
+				}
 
 				if (set.getState() == MatchState.NOT_STARTED)
 					isNotStarted = true;
 
 				if (homeScore >= 3 || guestScore >= 3)
 					isNotStarted = true;
+				
+				previousSetState = set.getState();
 			}
 			return this;
 		}

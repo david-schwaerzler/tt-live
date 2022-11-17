@@ -1,7 +1,6 @@
 import { CircularProgress, Radio, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { putGameSet } from "../../rest/api/GameApi";
-import { Game } from "../../rest/data/Game";
 import { RequestGameSet } from "../../rest/data/RequestGameSet";
 
 export interface GameSetResultRadioProps {
@@ -10,12 +9,11 @@ export interface GameSetResultRadioProps {
     isHome: boolean;
     editorCode: string;
     onError: (msg: string) => void;
-    onUpdate: (game: Game) => void;
     setNumber: number
     gameId: number
 }
 
-const GameSetResultRadio = ({ disabled, selected, isHome, editorCode, setNumber, gameId, onError, onUpdate }: GameSetResultRadioProps) => {
+const GameSetResultRadio = ({ disabled, selected, isHome, editorCode, setNumber, gameId, onError }: GameSetResultRadioProps) => {
 
     const theme = useTheme();
     const isBig = useMediaQuery(theme.breakpoints.up('sm'));
@@ -51,6 +49,7 @@ const GameSetResultRadio = ({ disabled, selected, isHome, editorCode, setNumber,
             homeScore: homeScore,
             guestScore: guestScore
         }
+
 
         setLoading(true);
         let response = await putGameSet(gameId, editorCode, requestGameSet);

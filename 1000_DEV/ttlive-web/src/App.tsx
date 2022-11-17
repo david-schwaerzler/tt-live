@@ -26,6 +26,16 @@ function App() {
         }
 
     });
+    const [settings, setSettings] = useState<any>(() => {
+        let settingJson = localStorage.getItem("settings");
+        if (settingJson == null || settingJson === "")
+            return {};
+        try {
+            return JSON.parse(settingJson);
+        } catch (e) {
+            return {};
+        }
+    })
 
 
     const valueProvider: AppContextProps = useMemo(() => ({
@@ -37,8 +47,33 @@ function App() {
             copy[matchId] = newCode;
             setEditorCode(copy);
             localStorage.setItem("editorCode", JSON.stringify(copy));
+        },
+        setSetting: (key, value, persist) => {
+            let copy = {...settings};
+            copy[key] = value;
+            setSettings(copy);
+
+            if(persist){
+                let settingJson = localStorage.getItem("settings");
+                let storedSettings : any = {};
+                if (settingJson == null || settingJson === "")
+                    settingJson = "{}"
+                try {
+                    storedSettings = JSON.parse(settingJson);
+                    storedSettings[key] = value;
+                    localStorage.setItem("settings", JSON.stringify(storedSettings));
+                } catch (e) {                    
+                    storedSettings[key] = value;
+                    localStorage.setItem("settings", JSON.stringify(storedSettings));
+                }
+            }
+
+        },
+        getSetting: key => {
+            return settings[key]
         }
-    }), [matchId, setMatchId, editorCode]);
+
+    }), [matchId, setMatchId, editorCode, settings]);
 
     return (
         <React.StrictMode>

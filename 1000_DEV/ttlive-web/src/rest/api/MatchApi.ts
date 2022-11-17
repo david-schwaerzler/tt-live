@@ -55,6 +55,7 @@ export async function fetchMatch(id: number): Promise<MatchResponse> {
         }
 
         let match: Match = await response.json();
+
         return returnData(sortMatch(match));
 
     } catch (error) {
@@ -95,7 +96,7 @@ export async function putLineup(id: number, editorCode: string, requestLineup: R
             return returnError(response.status.toString());
         }
 
-        let match: Match = await response.json();        
+        let match: Match = await response.json();       
         return returnData(sortMatch(match));
 
     } catch (error) {

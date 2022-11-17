@@ -120,3 +120,11 @@ CREATE TABLE game (
 	created_at TIMESTAMP NOT NULL DEFAULT now(),
 	modified_at TIMESTAMP NOT NULL DEFAULT now()	
 );
+
+CREATE TABLE chat_message (
+	id BIGSERIAl PRIMARY KEY,
+	text VARCHAR(256) NOT NULL,
+	username VARCHAR(64),
+	account_id BIGINT REFERENCES account(id),
+	match_id BIGINT REFERENCES match(id)	
+);

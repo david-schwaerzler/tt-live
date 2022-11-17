@@ -1,7 +1,8 @@
 import { Box, Card, CardContent, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, Skeleton, styled, Switch, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { AppContext } from "../../AppContext";
 import { Game } from "../../rest/data/Game";
 import { GameSet } from "../../rest/data/GameSet";
 import GameSetScore, { InputType } from "./GameSetScore";
@@ -10,7 +11,6 @@ export interface GameReportProps {
     games: Array<Game> | null;
     /** Indicates if the user is an editor. Display all the editable Components when provided */
     editorCode: string | null;
-    onUpdate: (game: Game) => void;
 }
 
 const PlayerCell = styled(Grid)({
@@ -23,14 +23,16 @@ const PlayerCell = styled(Grid)({
 
 type GameScoreType = Game & { homeTeamScore: number, guestTeamScore: number };
 
+const GAME_INPUT_TYPE_SETTING = "gameInputType"
 
-const GameReport = ({ games, editorCode, onUpdate }: GameReportProps) => {
+
+const GameReport = ({ games, editorCode }: GameReportProps) => {
 
     const [gameScores, setGameScores] = useState<Array<GameScoreType> | null>(null);
-    const [inputType, setInputType] = useState<InputType>(InputType.POINTS);
     const [isEditMode, setEditMode] = useState<boolean>(editorCode != null);
 
     const [t] = useTranslation();
+    const context = useContext(AppContext);
 
 
     useEffect(() => {
@@ -163,6 +165,8 @@ const GameReport = ({ games, editorCode, onUpdate }: GameReportProps) => {
     }
 
     function renderHeader() {
+        let inputType = context.getSetting(GAME_INPUT_TYPE_SETTING);
+
         return (
             <Grid container spacing={1} mb={2} justifyContent="center" alignItems="center">
                 <Grid item xs={6}>
@@ -172,8 +176,8 @@ const GameReport = ({ games, editorCode, onUpdate }: GameReportProps) => {
                             id="select-inputType"
                             labelId="select-inputType"
                             label={t("GameReport.inputType")}
-                            value={inputType}
-                            onChange={(e: any) => setInputType(e.target.value)}>
+                            value={inputType == null ? InputType.SET : parseInt(inputType)}
+                            onChange={(e: any) => context.setSetting(GAME_INPUT_TYPE_SETTING, e.target.value, true)}>
                             <MenuItem value={InputType.SET}>{t("GameReport.set")}</MenuItem>
                             <MenuItem value={InputType.POINTS}>{t("GameReport.points")}</MenuItem>
                         </Select>
@@ -203,12 +207,11 @@ const GameReport = ({ games, editorCode, onUpdate }: GameReportProps) => {
         return <GameSetScore
             set={set}
             isHome={isHome}
-            inputType={inputType}
+            inputType={parseInt(context.getSetting(GAME_INPUT_TYPE_SETTING))}
             isEditMode={isEditMode}
             editorCode={editorCode}
             game={game}
             onError={(msg) => console.log("todo error")}
-            onUpdate={onUpdate}
         />
 
     }

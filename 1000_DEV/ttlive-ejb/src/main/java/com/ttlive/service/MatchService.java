@@ -19,6 +19,7 @@ import com.ttlive.persistence.dao.MatchDao;
 import com.ttlive.persistence.dao.RegionDao;
 import com.ttlive.persistence.dao.TeamDao;
 import com.ttlive.persistence.entity.DoublesEntity;
+import com.ttlive.persistence.entity.GameEntity;
 import com.ttlive.persistence.entity.GameStyleEntity;
 import com.ttlive.persistence.entity.LeagueEntity;
 import com.ttlive.persistence.entity.MatchEntity;
@@ -28,6 +29,7 @@ import com.ttlive.persistence.entity.TeamEntity;
 import com.ttlive.session.MatchEventObserver;
 import com.ttlive.utils.BadRestRequestException;
 import com.ttlive.utils.MatchFactory;
+import com.ttlive.utils.MatchState;
 
 @Stateless
 public class MatchService {
@@ -162,6 +164,29 @@ public class MatchService {
 		eventObserver.fireMatchEvent(matchBo);
 		return matchBo;
 
+	}
+	
+	public Match updateScore(MatchEntity matchEntity) throws InvalidGameSetFormat {
+		
+		int homeScore = 0;
+		int guestScore = 0;
+		
+		for(GameEntity game : matchEntity.getGames()) {
+			if(game.getState() == MatchState.FINISHED) {
+				if(game.getHomeSets() > game.getGuestSets()) {
+					homeScore++;
+				}else {
+					guestScore++;
+				}
+			}
+		}
+		
+		matchEntity.setHomeTeamScore(homeScore);
+		matchEntity.setGuestTeamScore(guestScore);
+		
+		Match match = getDefault(matchEntity);		
+		eventObserver.fireMatchEvent(match);
+		return match;		
 	}
 
 	public Match getDefault(MatchEntity entity) throws InvalidGameSetFormat {

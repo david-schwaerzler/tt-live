@@ -17,7 +17,7 @@ export function HomeView(props: HomeViewProps) {
                 </Typography>               
 
                 <Typography variant="h2" mt={4}>
-                    Gehe Live mit deinem Ligaspiel<br />ohne Account und in nur wenigen Klicks.
+                    {t("HomeView.goLiveText")}
                 </Typography>
                 <Box mt={1}>
                     <Link to="/create" style={{ textDecoration: "none" }}>
@@ -30,7 +30,7 @@ export function HomeView(props: HomeViewProps) {
                 </Box>
 
                 <Typography variant="h2" mt={4}>
-                    Oder finde ein Spiel über die Suche
+                {t("HomeView.goSearchText")}
                 </Typography>
                 <Box mt={1}>
                     <Link to="/live_search" style={{ textDecoration: "none" }}>
