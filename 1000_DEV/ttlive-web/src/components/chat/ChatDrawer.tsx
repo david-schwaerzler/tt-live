@@ -115,7 +115,7 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages }: ChatDrawerProps) 
                     <ExpandButton expanded={!expanded} />
                 </Box>
 
-                <List sx={{ overflow: "scroll" }} ref={chatRef}>
+                <List sx={{ overflow: "scroll", flexGrow: 1 }} ref={chatRef}>
                     {messages.map((value, index) =>
                         <ListItem key={index} sx={{ overflowWrap: "anywhere", width: "100%" }}>
                             <Box>
@@ -135,7 +135,7 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages }: ChatDrawerProps) 
                     </LoadingButton>
                     <ChatNameMenu anchor={menueAnchor} onClose={() => setMenueAnchor(null)} />
                     <IconButton onClick={e => setMenueAnchor(e.currentTarget)} sx={{}} ref={userRef} className="testtest">
-                        <AccountCircle sx={{ color: "white" }} />
+                        <AccountCircle sx={{ color: theme => theme.palette.primary.main }} />
                     </IconButton>
 
                 </Stack>
