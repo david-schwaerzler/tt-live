@@ -1,5 +1,5 @@
 import { AccountCircle } from "@mui/icons-material";
-import { Box, Divider, Drawer, IconButton, List, ListItem, Paper, TextField, useMediaQuery, useTheme } from "@mui/material";
+import { Badge, BadgeProps, Box, Divider, Drawer, IconButton, List, ListItem, Paper, styled, TextField, useMediaQuery, useTheme } from "@mui/material";
 import { Stack } from "@mui/system";
 import React, { createRef, useCallback, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -11,24 +11,35 @@ import ExpandButton from "../utils/ExpandButton";
 import LoadingButton from "../utils/LoadingButton";
 import ChatNameMenu from "./ChatNameMenu";
 
+const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+    '& .MuiBadge-badge': {
+      right: 5,
+      top: 10,
+      height: "16px",
+      minWidth: "16px",
+      padding: '0 0px',
+    },
+  }));
+
 export interface ChatDrawerProps {
     match: Match;
     onExpanded: (expanded: boolean) => void;
     expanded: boolean;
     messages: Array<ChatMessage>;
+    badgeCounter: number;
 }
 
 const CHAT_USERNAME_SETTING = "chatUsername";
 
-const ChatDrawer = ({ match, expanded, onExpanded, messages }: ChatDrawerProps) => {
+const ChatDrawer = ({ match, expanded, onExpanded, messages, badgeCounter }: ChatDrawerProps) => {
 
     const [inputValue, setInputValue] = useState<string>("");
     const [isLoading, setLoading] = useState<boolean>(false);
+
     const theme = useTheme();
     const isBig = useMediaQuery(theme.breakpoints.up('sm'));
     const chatRef = createRef<HTMLUListElement>();
     const userRef = createRef<HTMLButtonElement>();
-
     // anchor to attach the select name dialog
     const [menueAnchor, setMenueAnchor] = useState<HTMLElement | null>(null);
 
@@ -82,7 +93,7 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages }: ChatDrawerProps) 
     useEffect(() => {
         if (chatRef.current)
             chatRef.current.scrollTop = chatRef.current.scrollHeight;
-    }, [messages, chatRef]);
+    }, [messages.length, chatRef]);
 
     useEffect(() => {
         if (menueAnchor != null)
@@ -97,8 +108,10 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages }: ChatDrawerProps) 
     return (
         <React.Fragment>
             <Paper sx={{ position: "fixed", cursor: "pointer", width: "100%", left: 0, right: 0, bottom: 0 }} elevation={5}>
-                <Box sx={{ display: isBig || expanded ? "none" : "block" }} onClick={() => onExpanded(!expanded)}>
-                    <ExpandButton expanded={!expanded} />
+                <Box sx={{ display: isBig || expanded ? "none" : "flex", justifyContent:"center" }} onClick={() => onExpanded(!expanded)}>
+                    <StyledBadge color="primary" badgeContent={badgeCounter} >
+                        <ExpandButton expanded={!expanded} />
+                    </StyledBadge>
                 </Box>
             </Paper>
 
@@ -128,7 +141,7 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages }: ChatDrawerProps) 
                 <Divider />
                 <Stack direction="row" gap={2} p={1}>
                     {/** TODO better validation for long strings (error Message)*/}
-                    <TextField value={inputValue} onChange={e => setInputValue(e.target.value.substring(0, 200))} size="small" onClick={onTextFieldFocus} />
+                    <TextField value={inputValue} onChange={e => setInputValue(e.target.value.substring(0, 200))} size="small" onClick={onTextFieldFocus} autoComplete='off' />
 
                     <LoadingButton loading={isLoading} onClick={e => onSend(e.currentTarget)} variant="outlined" size="small">
                         {t("ChatDrawer.send")}

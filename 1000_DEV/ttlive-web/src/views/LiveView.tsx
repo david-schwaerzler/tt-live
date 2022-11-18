@@ -30,6 +30,7 @@ const LiveView = () => {
     const [activeTab, setActiveTab] = useState<number>(1);
     const [chatDrawerExpanded, setChatDrawerExpanded] = useState(false);
     const [messages, setMessages] = useState<Array<ChatMessage>>([])
+    const [badgeCounter, setBadgeCounter] = useState<number>(0);
 
     const context = useContext(AppContext)
     const [t] = useTranslation();
@@ -62,7 +63,7 @@ const LiveView = () => {
         }
 
 
-        let intervalId : NodeJS.Timer | null = null;
+        let intervalId: NodeJS.Timer | null = null;
         if (context.matchId != null) {
             fetchMatchLocal(context.matchId);
             fetchChatLocal(context.matchId);
@@ -76,7 +77,7 @@ const LiveView = () => {
         }
 
         return () => {
-            if(intervalId != null)
+            if (intervalId != null)
                 clearInterval(intervalId);
         }
     }, [context.matchId, context.editorCode])
@@ -101,10 +102,17 @@ const LiveView = () => {
             <Box display={activeTab === 2 ? "block" : "none"}>{renderLinup()}</Box>
 
             {match != null &&
-                <ChatDrawer match={match} expanded={chatDrawerExpanded} onExpanded={expanded => setChatDrawerExpanded(expanded)} messages={messages} />}
+                <ChatDrawer
+                    match={match}
+                    expanded={chatDrawerExpanded}
+                    onExpanded={onChatDrawerExpanded}
+                    messages={messages}
+                    badgeCounter={badgeCounter}
+                />
+            }
         </Box>
 
-    );
+    );    
 
     function renderSettings() {
         return <MatchSettings match={match} editorCode={editorCode} onMatchChanged={match => setMatch(match)} />;
@@ -153,6 +161,13 @@ const LiveView = () => {
         )
     }
 
+    function onChatDrawerExpanded(expanded : boolean){
+        setChatDrawerExpanded(expanded);
+        if(!expanded)
+            setBadgeCounter(0);
+
+    }
+
     function onGameUpdated(game: Game, match: Match) {
         if (match == null)
             return;
@@ -180,6 +195,8 @@ const LiveView = () => {
         copy.push(message);
         sortChatMessages(copy);
         setMessages(copy);
+        if (!chatDrawerExpanded)
+            setBadgeCounter(badgeCounter + 1);
     }
 }
 
