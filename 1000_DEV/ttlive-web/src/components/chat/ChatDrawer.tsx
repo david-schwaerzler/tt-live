@@ -13,13 +13,13 @@ import ChatNameMenu from "./ChatNameMenu";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
-      right: 5,
-      top: 10,
-      height: "16px",
-      minWidth: "16px",
-      padding: '0 0px',
+        right: 5,
+        top: 10,
+        height: "16px",
+        minWidth: "16px",
+        padding: '0 0px',
     },
-  }));
+}));
 
 export interface ChatDrawerProps {
     match: Match;
@@ -108,7 +108,7 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages, badgeCounter }: Cha
     return (
         <React.Fragment>
             <Paper sx={{ position: "fixed", cursor: "pointer", width: "100%", left: 0, right: 0, bottom: 0 }} elevation={5}>
-                <Box sx={{ display: isBig || expanded ? "none" : "flex", justifyContent:"center" }} onClick={() => onExpanded(!expanded)}>
+                <Box sx={{ display: isBig || expanded ? "none" : "flex", justifyContent: "center" }} onClick={() => onExpanded(!expanded)}>
                     <StyledBadge color="primary" badgeContent={badgeCounter} >
                         <ExpandButton expanded={!expanded} />
                     </StyledBadge>
@@ -141,7 +141,16 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages, badgeCounter }: Cha
                 <Divider />
                 <Stack direction="row" gap={2} p={1}>
                     {/** TODO better validation for long strings (error Message)*/}
-                    <TextField value={inputValue} onChange={e => setInputValue(e.target.value.substring(0, 200))} size="small" onClick={onTextFieldFocus} autoComplete='off' />
+                    <TextField
+                        value={inputValue}
+                        onChange={e => setInputValue(e.target.value.substring(0, 200))}
+                        size="small"
+                        onClick={onTextFieldFocus}
+                        autoComplete='off'
+                        maxRows={isBig ? 3: 2}
+                        multiline
+                        sx={{minWidth: "unset", flexGrow: 1}}
+                    />
 
                     <LoadingButton loading={isLoading} onClick={e => onSend(e.currentTarget)} variant="outlined" size="small">
                         {t("ChatDrawer.send")}
