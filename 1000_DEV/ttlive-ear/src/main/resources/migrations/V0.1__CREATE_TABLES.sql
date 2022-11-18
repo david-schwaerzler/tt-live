@@ -47,7 +47,9 @@ CREATE TABLE game_style (
 	description VARCHAR(1024) NOT NULL,
 	num_players INTEGER NOT NULL,
 	num_doubles INTEGER NOT NULL,
-	game_order VARCHAR(1024) NOT NULL
+	game_order VARCHAR(1024) NOT NULL,
+	games_to_finish INTEGER NOT NULL,
+	finish_early BOOLEAN NOT NULL
 );
 
 CREATE TABLE match (

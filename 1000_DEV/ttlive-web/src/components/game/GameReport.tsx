@@ -11,6 +11,7 @@ export interface GameReportProps {
     games: Array<Game> | null;
     /** Indicates if the user is an editor. Display all the editable Components when provided */
     editorCode: string | null;
+    matchState: "FINISHED" | "NOT_STARTED" | "LIVE"
 }
 
 const PlayerCell = styled(Grid)({
@@ -25,10 +26,11 @@ type GameScoreType = Game & { homeTeamScore: number, guestTeamScore: number };
 
 const GAME_INPUT_TYPE_SETTING = "gameInputType"
 
-
-const GameReport = ({ games, editorCode }: GameReportProps) => {
+// TODO fix Render performance Issues
+const GameReport = ({ games, editorCode, matchState }: GameReportProps) => {
 
     const [gameScores, setGameScores] = useState<Array<GameScoreType> | null>(null);
+    const [lastDouble, setLastDouble] = useState<GameScoreType | null>(null);
     const [isEditMode, setEditMode] = useState<boolean>(editorCode != null);
 
     const [t] = useTranslation();
@@ -57,6 +59,15 @@ const GameReport = ({ games, editorCode }: GameReportProps) => {
                 guestTeamScore: homeTeamScore
             }
         });
+
+        let lastDouble = gameScores[gameScores.length - 1];
+        if (lastDouble.doubles) {
+            gameScores = gameScores.filter(gc => gc.id != lastDouble.id)
+            setLastDouble(lastDouble)
+        } else {
+            setLastDouble(null);
+        }
+
         setGameScores(gameScores);
     }, [games]);
 
@@ -78,11 +89,23 @@ const GameReport = ({ games, editorCode }: GameReportProps) => {
             }
             {gameScores == null
                 ? <Skeleton sx={{ height: { xs: "556px", sm: "556px" } }} variant="rectangular" />
-                : <Card>
+                : <Card sx={{ mb: 2 }}>
                     <CardContent>
                         <Typography pb={2} variant="h5">{t("GameReport.singles")}</Typography>
                         <Stack gap={1.5}>
                             {gameScores.filter(game => !game.doubles).map(game => renderSingles(game))}
+                        </Stack>
+                    </CardContent>
+                </Card>
+            }
+
+            {lastDouble == null
+                ? <Skeleton sx={{ height: { xs: "100px", sm: "100px" } }} variant="rectangular" />
+                : <Card>
+                    <CardContent>
+                        <Typography pb={2} variant="h5">{t("GameReport.lastDouble")}</Typography>
+                        <Stack gap={1.5}>
+                            {renderDoubles(lastDouble)}
                         </Stack>
                     </CardContent>
                 </Card>
@@ -140,7 +163,7 @@ const GameReport = ({ games, editorCode }: GameReportProps) => {
                     <Grid container sx={{ textAlign: "center", mb: "3px" }} columns={11} alignItems="center">
                         <PlayerCell item xs={5} sx={{ fontWeight: homeWon ? 500 : "normal" }}>{renderPlayer(game.homePlayer.name)}</PlayerCell>
                         {game.sets.map(value =>
-                            <Grid key={value.number} sx={{  opacity: isEditMode ? "inherited" : 0.5 }} item xs={1} >
+                            <Grid key={value.number} sx={{ opacity: isEditMode ? "inherited" : 0.5 }} item xs={1} >
                                 {renderGameSetScore(value, true, game)}
                             </Grid>
                         )}
@@ -158,7 +181,8 @@ const GameReport = ({ games, editorCode }: GameReportProps) => {
                     </Grid>
                 </Box>
                 <Box margin="auto" minWidth="40px" textAlign="right" fontSize="1.1rem">
-                    {game.state !== "NOT_STARTED" && <i>{game.homeTeamScore}:{game.guestTeamScore}</i>}
+                    {game.state === "FINISHED" && <i>{game.homeTeamScore}:{game.guestTeamScore}</i>}
+                    {game.state === "LIVE" && <Typography color={theme => theme.palette.primary.main} fontWeight="bold" fontStyle="italic">LIVE</Typography>}
                 </Box>
             </Box>
         )
@@ -212,6 +236,7 @@ const GameReport = ({ games, editorCode }: GameReportProps) => {
             editorCode={editorCode}
             game={game}
             onError={(msg) => console.log("todo error")}
+            matchState={matchState}
         />
 
     }

@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from 'react-router-dom'
 import { AppContext } from "../AppContext";
 import MenuLoginForm from "../components/login/MenuLoginForm";
-import { LogoIcon, LogoIcon2, LogoIcon3, LogoIcon4 } from "../components/utils/Icons";
+import { LogoIcon4 } from "../components/utils/Icons";
 
 
 const HoverButton = styled(Button)(({ theme }) => ({

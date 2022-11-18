@@ -1,4 +1,4 @@
-import { Button, Card, CardActions, CardContent, CardHeader, Collapse, Divider, FormControl, Paper, Skeleton, Stack, TextField, Typography } from "@mui/material";
+import { Button, Card, CardActions, CardContent, Collapse, Divider, FormControl, Skeleton, Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -32,11 +32,14 @@ const LineupSetting = ({ match, isHomeTeam, editorCode }: LineupSettingProps) =>
             setPlayers([]);
             return;
         }
-        let doubles = isHomeTeam ? match.homeDoubles.map(d => ({ ...d })) : match.guestDoubles.map(d => ({ ...d }));
-        let players = isHomeTeam ? match.homePlayers.map(d => ({ ...d })) : match.guestPlayers.map(d => ({ ...d }));
 
-        setDoubles(doubles);
-        setPlayers(players);
+        if (expanded === false) {
+            let doubles = isHomeTeam ? match.homeDoubles.map(d => ({ ...d })) : match.guestDoubles.map(d => ({ ...d }));
+            let players = isHomeTeam ? match.homePlayers.map(d => ({ ...d })) : match.guestPlayers.map(d => ({ ...d }));
+
+            setDoubles(doubles);
+            setPlayers(players);
+        }
 
     }, [match, isHomeTeam]);
 

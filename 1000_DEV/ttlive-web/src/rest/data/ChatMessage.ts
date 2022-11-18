@@ -11,5 +11,5 @@ export interface RequestChatMessage {
 }
 
 export function sortChatMessages(messages: Array<ChatMessage>) {
-    return messages.sort((a, b) => a.createdAt == b.createdAt ? 0 : a.createdAt > b.createdAt ? 1 : -1);
+    return messages.sort((a, b) => a.createdAt === b.createdAt ? 0 : a.createdAt > b.createdAt ? 1 : -1);
 }

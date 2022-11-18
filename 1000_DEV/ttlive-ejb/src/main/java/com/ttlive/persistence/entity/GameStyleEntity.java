@@ -34,6 +34,12 @@ public class GameStyleEntity {
 
 	@Column(name = "num_doubles")
 	private int numDoubles;
+	
+	@Column(name ="games_to_finish")	
+	private int gamesToFinish;
+	
+	@Column(name ="finish_early")
+	private boolean isFinishingEarly;
 
 	@OneToMany(mappedBy = "gameStyle")
 	private List<MatchEntity> matches;

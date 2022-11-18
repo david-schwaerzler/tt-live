@@ -1,4 +1,3 @@
-import { Skeleton } from "@mui/material";
 import { Box } from "@mui/system";
 import { Match } from "../../rest/data/Match";
 import { spacingSmall } from "../utils/StyleVars";

@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, Paper, Stack, TextField } from "@mui/material";
+import { Box, Button, Card, CardContent, Stack, TextField } from "@mui/material";
 import { Container } from "@mui/system";
 import { useTranslation } from "react-i18next";
 import { spacingNormal } from "../utils/StyleVars";

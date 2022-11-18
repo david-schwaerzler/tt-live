@@ -52,7 +52,7 @@ const deDe = {
 
             "TeamState.homeTeam": "Heimverein",
             "TeamState.guestTeam": "Gastverein",
-            "TeamState.number": "Mannschaft",
+            "TeamState.number": "Mannschaft Nr.",
             "TeamState.errorGameStyle": "Es muss zunächst ein Spielsystem ausgewählt werden",
             "TeamState.errorLeague": "Es muss zunächst eine Liga ausgewählt werden",
             "TeamState.errorEmptyClub": "Verein muss gesetzt werden",
@@ -88,6 +88,7 @@ const deDe = {
 
             "GameReport.singles": "Einzel",
             "GameReport.doubles": "Doubles",
+            "GameReport.lastDouble": "Schlussdoppel",
             "GameReport.noPlayer": "Nicht eingegeben",
             "GameReport.set": "Nur Sätze",
             "GameReport.points": "Punkte",

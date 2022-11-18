@@ -1,6 +1,6 @@
 import { Button, Card, CardContent, Skeleton, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useSwipeable } from "react-swipeable";
@@ -8,19 +8,16 @@ import { AppContext } from "../AppContext";
 import ChatDrawer from "../components/chat/ChatDrawer";
 import GameLiveScore from "../components/game/GameLiveScore";
 import GameReport from "../components/game/GameReport";
-import { InputType } from "../components/game/GameSetScore";
 import MatchScore from "../components/match/MatchScore";
 import MatchSettings from "../components/match/settings/MatchSettings";
 import ErrorMessage from "../components/utils/ErrorMessage";
 import { spacingNormal } from "../components/utils/StyleVars";
 import WebHookUtil from "../components/utils/WebHookUtil";
-import { fetchChatMessages, postChatMessage } from "../rest/api/ChatApi";
+import { fetchChatMessages } from "../rest/api/ChatApi";
 import { fetchMatch } from "../rest/api/MatchApi";
 import { ChatMessage, sortChatMessages } from "../rest/data/ChatMessage";
 import { Game } from "../rest/data/Game";
 import { Match, sortMatch } from "../rest/data/Match";
-
-const ACTIVE_LIVE_TAB_SETTING = "activeLiveTab"
 
 const LiveView = () => {
     const [match, setMatch] = useState<Match | null>(null);
@@ -119,7 +116,7 @@ const LiveView = () => {
     }
 
     function renderLinup() {
-        return <GameReport games={match != null ? match.games : null} editorCode={editorCode} />;
+        return <GameReport games={match != null ? match.games : null} editorCode={editorCode} matchState={match != null ? match.state : "NOT_STARTED"} />;
     }
 
     function renderLive() {

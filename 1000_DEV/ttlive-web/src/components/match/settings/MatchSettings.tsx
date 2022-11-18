@@ -1,7 +1,6 @@
-import { Box, Card, CardContent, Paper, Skeleton, Stack, Typography } from "@mui/material";
+import { Box, Card, CardContent, Skeleton, Stack, Typography } from "@mui/material";
 
 import { Match } from "../../../rest/data/Match";
-import { spacingNormal } from "../../utils/StyleVars";
 import LineupSetting from "./LineupSetting";
 import NoCodeSetting from "./NoCodeSetting";
 

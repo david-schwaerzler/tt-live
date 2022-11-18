@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, FormControl, FormHelperText, Skeleton, TextField, Typography } from "@mui/material";
+import { Card, CardContent, FormControl, FormHelperText, Skeleton, TextField, Typography } from "@mui/material";
 import { useContext, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { AppContext } from "../../../AppContext";
@@ -40,6 +40,7 @@ const NoCodeSetting = ({ match }: NoCodeSettingProps) => {
                     <TextField sx={{ width: "200px", mt: 2, display: "block" }}
                         label={t("MatchSettings.editorCodeInput")} value={newEditorCode}
                         onChange={e => setNewEditorCode(e.target.value)}
+                        autoComplete="off"
                     />
                     <FormHelperText >{errorMsgs[Errors.VALIDATE_CODE]}</FormHelperText>
                 </FormControl>

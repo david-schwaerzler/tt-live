@@ -24,7 +24,7 @@ public class GameService {
 
 	@EJB
 	private MatchEventObserver eventObserver;
-	
+
 	@EJB
 	private MatchService matchService;
 
@@ -110,19 +110,30 @@ public class GameService {
 
 		Game game = getDefault(gameEntity);
 
-		
 		// the score of the match should be recalculated when:
 		// 1. the match moved to the finished state
 		boolean scoreChanged = oldState == MatchState.FINISHED && state != MatchState.FINISHED;
-		// 2. moved away from the finished state 
+		// 2. moved away from the finished state
 		scoreChanged = scoreChanged || (oldState != MatchState.FINISHED && state == MatchState.FINISHED);
-		// 3. Changed the result of the last set (this might or might not change the result) 
-		scoreChanged = scoreChanged || (oldState == MatchState.FINISHED && state == MatchState.FINISHED && requestSet.getNumber() == 5);
-		
-		if (scoreChanged) {			
-			// this will fire a game update event. Therefore the gameEvent don't need to be fired
-			matchService.updateScore(gameEntity.getMatch());
-		}else {
+		// 3. Changed the result of the last set (this might or might not change the
+		// result)
+		scoreChanged = scoreChanged
+				|| (oldState == MatchState.FINISHED && state == MatchState.FINISHED && requestSet.getNumber() == 5);
+
+		// update the match when:
+		// - The game result changed -> this will cause a recalculation of the match
+		// score
+		// - The match is not started yet and a game has been modified -> this will
+		// cause the game state to be live
+		// - The game has been reverted to NOT_STARTED. There could be a chance that
+		// this was the only game modified and the state of the game will be NOT_STARTED
+		// again
+		if (scoreChanged || gameEntity.getMatch().getState() == MatchState.NOT_STARTED
+				|| gameEntity.getState() == MatchState.NOT_STARTED) {
+			// this will fire a game update event. Therefore the gameEvent don't need to be
+			// fired
+			matchService.updateScoreAndState(gameEntity.getMatch());
+		} else {
 			eventObserver.fireGameEvent(gameEntity.getMatch().getId(), game);
 		}
 

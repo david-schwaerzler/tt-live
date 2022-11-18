@@ -1,4 +1,4 @@
-import { Box, Card, CardActions, CardContent, Collapse, Grid, Stack, Typography } from "@mui/material";
+import { Box, Card, CardActions, CardContent, Collapse, Grid, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Game } from "../../rest/data/Game";
 import { GameSet } from "../../rest/data/GameSet";

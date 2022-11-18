@@ -1,15 +1,9 @@
-import { AccountCircle } from "@mui/icons-material";
-import { Badge, BadgeProps, Box, Divider, Drawer, IconButton, List, ListItem, Paper, styled, TextField, useMediaQuery, useTheme } from "@mui/material";
-import { Stack } from "@mui/system";
-import React, { createRef, useCallback, useContext, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { AppContext } from "../../AppContext";
-import { postChatMessage } from "../../rest/api/ChatApi";
-import { ChatMessage, RequestChatMessage } from "../../rest/data/ChatMessage";
+import { Badge, BadgeProps, Box, Drawer, List, ListItem, Paper, styled, useMediaQuery, useTheme } from "@mui/material";
+import React, { createRef, useEffect } from "react";
+import { ChatMessage } from "../../rest/data/ChatMessage";
 import { Match } from "../../rest/data/Match";
 import ExpandButton from "../utils/ExpandButton";
-import LoadingButton from "../utils/LoadingButton";
-import ChatNameMenu from "./ChatNameMenu";
+import ChatAction from "./ChatActions";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -29,81 +23,16 @@ export interface ChatDrawerProps {
     badgeCounter: number;
 }
 
-const CHAT_USERNAME_SETTING = "chatUsername";
-
 const ChatDrawer = ({ match, expanded, onExpanded, messages, badgeCounter }: ChatDrawerProps) => {
-
-    const [inputValue, setInputValue] = useState<string>("");
-    const [isLoading, setLoading] = useState<boolean>(false);
 
     const theme = useTheme();
     const isBig = useMediaQuery(theme.breakpoints.up('sm'));
     const chatRef = createRef<HTMLUListElement>();
-    const userRef = createRef<HTMLButtonElement>();
-    // anchor to attach the select name dialog
-    const [menueAnchor, setMenueAnchor] = useState<HTMLElement | null>(null);
-
-    const context = useContext(AppContext);
-    const [t] = useTranslation();
-
-    const onSend = useCallback(async (anchor: HTMLElement) => {
-        if (inputValue.trim() === "") {
-            return;
-        }
-
-        let username = context.getSetting(CHAT_USERNAME_SETTING);
-        if (username == null || username === "") {
-            setMenueAnchor(anchor);
-            return;
-        }
-
-        let chatMessage: RequestChatMessage = {
-            username: username,
-            text: inputValue
-        };
-
-        setLoading(true);
-        let response = await postChatMessage(match.id, chatMessage)
-        if (response.data != null) {
-            setInputValue("");
-        }
-        setLoading(false)
-    }, [context, inputValue, match.id]);
-
-
-    const keyHandler = useCallback((e: KeyboardEvent) => {
-        if (e.code === "Enter" && userRef.current != null && isLoading === false) {
-            onSend(userRef.current);
-        }
-    }, [onSend, userRef, isLoading]);
-
-    useEffect(() => {
-        if (expanded) {
-            if (chatRef.current)
-                chatRef.current.scrollTop = chatRef.current.scrollHeight;
-
-            document.addEventListener("keydown", keyHandler);
-        }
-
-        return () => {
-            document.removeEventListener("keydown", keyHandler);
-        }
-    }, [expanded, chatRef, keyHandler]);
 
     useEffect(() => {
         if (chatRef.current)
             chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }, [messages.length, chatRef]);
-
-    useEffect(() => {
-        if (menueAnchor != null)
-            document.removeEventListener("keydown", keyHandler);
-        else
-            document.addEventListener("keydown", keyHandler);
-
-        return () => document.removeEventListener("keydown", keyHandler)
-
-    }, [menueAnchor, keyHandler]);
 
     return (
         <React.Fragment>
@@ -138,29 +67,7 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages, badgeCounter }: Cha
                         </ListItem>
                     )}
                 </List>
-                <Divider />
-                <Stack direction="row" gap={2} p={1}>
-                    {/** TODO better validation for long strings (error Message)*/}
-                    <TextField
-                        value={inputValue}
-                        onChange={e => setInputValue(e.target.value.substring(0, 200))}
-                        size="small"
-                        onClick={onTextFieldFocus}
-                        autoComplete='off'
-                        maxRows={isBig ? 3: 2}
-                        multiline
-                        sx={{minWidth: "unset", flexGrow: 1}}
-                    />
-
-                    <LoadingButton loading={isLoading} onClick={e => onSend(e.currentTarget)} variant="outlined" size="small">
-                        {t("ChatDrawer.send")}
-                    </LoadingButton>
-                    <ChatNameMenu anchor={menueAnchor} onClose={() => setMenueAnchor(null)} />
-                    <IconButton onClick={e => setMenueAnchor(e.currentTarget)} sx={{}} ref={userRef} className="testtest">
-                        <AccountCircle sx={{ color: theme => theme.palette.primary.main }} />
-                    </IconButton>
-
-                </Stack>
+                <ChatAction matchId={match.id} onTextFieldFocused={onTextFieldFocus} />
             </Drawer>
         </React.Fragment >
     )

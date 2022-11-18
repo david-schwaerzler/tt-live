@@ -48,7 +48,7 @@ public class MatchService {
 
 	@EJB
 	private TeamDao teamDao;
-	
+
 	@EJB
 	private MatchEventObserver eventObserver;
 
@@ -100,8 +100,8 @@ public class MatchService {
 		}
 		HashSet<String> existingCodes = matchDao.getAllCodes();
 
-		MatchEntity matchEntity = MatchFactory.createMatchEntity(requestMatch, regionEntity, gameStyleEntity, leagueEntity,
-				homeTeamEntity, guestTeamEntity, existingCodes);
+		MatchEntity matchEntity = MatchFactory.createMatchEntity(requestMatch, regionEntity, gameStyleEntity,
+				leagueEntity, homeTeamEntity, guestTeamEntity, existingCodes);
 		matchDao.persist(matchEntity);
 
 		return getDefault(matchEntity);
@@ -129,7 +129,7 @@ public class MatchService {
 		MatchEntity match = matchDao.findById(id);
 		if (match == null)
 			throw new BadRestRequestException("id", "Match with the given id='" + id + " doesn't exist");
-		
+
 		for (RequestDoubles doubles : lineup.getDoubles()) {
 			DoublesEntity existing = null;
 			for (DoublesEntity entity : match.getDoubles()) {
@@ -159,34 +159,67 @@ public class MatchService {
 			existing.setName(player.getName());
 		}
 
-		Match matchBo =  getDefault(match);
-		
+		Match matchBo = getDefault(match);
+
 		eventObserver.fireMatchEvent(matchBo);
 		return matchBo;
 
 	}
-	
-	public Match updateScore(MatchEntity matchEntity) throws InvalidGameSetFormat {
-		
+
+	public Match updateScoreAndState(MatchEntity matchEntity) throws InvalidGameSetFormat {
+
 		int homeScore = 0;
 		int guestScore = 0;
-		
-		for(GameEntity game : matchEntity.getGames()) {
-			if(game.getState() == MatchState.FINISHED) {
-				if(game.getHomeSets() > game.getGuestSets()) {
+
+		for (GameEntity game : matchEntity.getGames()) {
+			if (game.getState() == MatchState.FINISHED) {
+				if (game.getHomeSets() > game.getGuestSets()) {
 					homeScore++;
-				}else {
+				} else {
 					guestScore++;
 				}
 			}
 		}
-		
+
 		matchEntity.setHomeTeamScore(homeScore);
 		matchEntity.setGuestTeamScore(guestScore);
+
+		GameStyleEntity gameStyleEntity = matchEntity.getGameStyle();
+		if (gameStyleEntity == null)
+			throw new NullPointerException("The match(id='" + matchEntity.getId()
+					+ "') doesn't have a gameStyle. This is illegal and should never happen");
+
+		MatchState state = MatchState.NOT_STARTED;
+
+		if (gameStyleEntity.isFinishingEarly()) {
+			if (homeScore == gameStyleEntity.getGamesToFinish() || guestScore == gameStyleEntity.getGamesToFinish()) {
+				state = MatchState.FINISHED;
+			} else if (homeScore == guestScore && homeScore == gameStyleEntity.getGamesToFinish() - 1) {
+				state = MatchState.FINISHED;
+			}
+		} else {
+			if (homeScore + guestScore >= gameStyleEntity.getGamesToFinish())
+				state = MatchState.FINISHED;
+		}
+
+		if (state != MatchState.FINISHED) {
+			if (homeScore != 0 || guestScore != 0) {
+				state = MatchState.LIVE;
+			} else {
+				// only this when score is 0:0
+				for (GameEntity game : matchEntity.getGames()) {
+					if (game.getState() != MatchState.NOT_STARTED) {
+						state = MatchState.LIVE;
+						break;
+					}
+				}
+			}
+		}
+		matchEntity.setState(state);
 		
-		Match match = getDefault(matchEntity);		
+		Match match = getDefault(matchEntity);
 		eventObserver.fireMatchEvent(match);
-		return match;		
+		return match;
 	}
 
 	public Match getDefault(MatchEntity entity) throws InvalidGameSetFormat {

@@ -1,5 +1,6 @@
 import {  Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import React, { useMemo } from "react";
 import { Game } from "../../rest/data/Game";
 import { GameSet } from "../../rest/data/GameSet";
 import GameSetResultButton from "./GameSetResultButton";
@@ -8,6 +9,7 @@ import GameSetResultRadio from "./GameSetResultRadio";
 export interface GameSetScoreProps {
     set: GameSet;
     game: Game;
+    matchState: "NOT_STARTED" | "LIVE" | "FINISHED";
     isHome: boolean;
     isEditMode: boolean;
     inputType: InputType;
@@ -19,7 +21,7 @@ export enum InputType {
     SET, POINTS
 }
 
-const GameSetScore = ({ set, isHome, isEditMode, inputType, editorCode, game, onError }: GameSetScoreProps) => {
+const GameSetScore = ({ set, isHome, isEditMode, inputType, editorCode, game, onError, matchState }: GameSetScoreProps) => {
 
     let won = isWon();
     let score = isHome ? set.homeScore : set.guestScore;
@@ -81,6 +83,10 @@ const GameSetScore = ({ set, isHome, isEditMode, inputType, editorCode, game, on
     }
 
     function isDisabled(): boolean {
+
+        if(matchState === "FINISHED" && game.state === "NOT_STARTED")
+            return true;
+
         if (set.state === "NOT_STARTED") {
             if (game.homeSets >= 3 || game.guestSets >= 3)
                 return (game.homeSets + game.guestSets) < set.number;
