@@ -62,6 +62,7 @@ const ClubSelector = ({ onUpdate, updateError, isHomeTeam, matchStateObject, tea
         if (club != null && club.startsWith("Add \"")) {
             club = club.replace("Add \"", "");
             club = club.replace("\"", "");
+            club = club.trim();
 
             let newClubs = clubs.filter(c => c !== tmpClub);
             newClubs.push(club);

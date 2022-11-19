@@ -10,6 +10,7 @@ import { MatchStateObject } from "../components/match/create/MatchStateObject";
 import RegionState from "../components/match/create/RegionState";
 import SummaryState from "../components/match/create/SummaryState";
 import TeamState from "../components/match/create/TeamState";
+import LoadingButton from "../components/utils/LoadingButton";
 import { spacingNormal } from "../components/utils/StyleVars";
 import { postMatch } from "../rest/api/MatchApi";
 import { RequestMatch } from "../rest/data/Match";
@@ -46,6 +47,7 @@ const CreateGameView = (props: CreateGameViewProps) => {
     const [errorDialogOpen, setErrorDialogOpen] = useState(false);
     const [t] = useTranslation();
     const navigate = useNavigate();
+    const [isLoading, setLoading] = useState(false);
 
     return (
         <Card>
@@ -96,10 +98,10 @@ const CreateGameView = (props: CreateGameViewProps) => {
                 </Box>
 
                 <Stack sx={{ display: { xs: "none", sm: "flex" }, paddingTop: spacingNormal }} direction="row" justifyContent="center" gap="2em">
-                    <Button variant="outlined" disabled={currentStep === 0} onClick={setPreviousStep}>{t("CreateGameView.back")}</Button>
-                    <Button variant="outlined" onClick={setNextStep}>
+                    <Button  variant="outlined" disabled={currentStep === 0} onClick={setPreviousStep}>{t("CreateGameView.back")}</Button>
+                    <LoadingButton loading={isLoading} variant="outlined" onClick={setNextStep}>
                         {isLastStep() ? t("CreateGameView.submit") : t("CreateGameView.next")}
-                    </Button>
+                    </LoadingButton>
                 </Stack>
             </CardContent>
         </Card>
@@ -185,6 +187,7 @@ const CreateGameView = (props: CreateGameViewProps) => {
             setErrorDialogOpen(true);
             return;
         }
+        setLoading(true);
 
         let requestMatch: RequestMatch = {
             contest: matchStateObject.contest,
@@ -204,6 +207,7 @@ const CreateGameView = (props: CreateGameViewProps) => {
         } else {
             setErrorDialogOpen(true);
         }
+        setLoading(false);
     }
 }
 

@@ -11,6 +11,8 @@ import { AppContext } from "../../AppContext";
 import GameScore from "../game/GameScore";
 import MatchScore from "./MatchScore";
 import ExpandButton from "../utils/ExpandButton";
+import FemaleIcon from '@mui/icons-material/Female';
+import MaleIcon from '@mui/icons-material/Male';
 
 export interface MatchCardProps {
     match: Match | null
@@ -27,16 +29,17 @@ const MatchCard = ({ match }: MatchCardProps) => {
 
     return (match == null
         ? <Box>
-            <Skeleton sx={{ height: { xs: "40px", sm: "56px" } }} variant="rectangular" />
+            <Skeleton sx={{ height: { xs: "40px", md: "56px" } }} variant="rectangular" />
             <Divider sx={{}} />
-            <Skeleton sx={{ height: { xs: "248px", sm: "260px" } }} variant="rectangular" />
+            <Skeleton sx={{ height: { xs: "248px", md: "260px" } }} variant="rectangular" />
         </Box>
         : <Card>
             {renderHeader(match)}
             <Divider sx={{}} />
             <CardContent >
-                <MatchScore sx={{ pt: spacingNormal }} match={match} scoreSize={{ xs: "2rem", sm: "3rem" }} />
-                <Stack direction={{ xs: "column", sm: "column-reverse" }} gap={spacingNormal}>
+
+                <MatchScore sx={{ pt: spacingNormal }} match={match} scoreSize={{ xs: "2rem", md: "3rem" }} />
+                <Stack direction={{ xs: "column", md: "column-reverse" }} gap={spacingNormal} sx={{ mt: 2 }}>
                     <Box sx={{ display: "flex", paddingLeft: spacingSmall, paddingRight: spacingSmall, justifyContent: "center" }} >
                         <Button sx={{ flexGrow: 1, maxWidth: "300px" }} variant="outlined" onClick={() => onLinkGame(match)}>{t("MatchCard.linkGame")}</Button>
                     </Box>
@@ -60,11 +63,13 @@ const MatchCard = ({ match }: MatchCardProps) => {
     function renderHeader(match: Match) {
         return (
             <Box sx={{ opacity: 0.5, display: "flex" }} padding={spacingSmall}>
+
                 <Typography sx={{ flexGrow: 1 }}>{match.league.name}</Typography>
                 <Box sx={{ opacity: 1, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
                     <MatchStateLabel variant="border" state={match.state} startDate={match.startDate} />
                 </Box>
-                <Typography>{match.league.region}</Typography>
+                <Typography sx={{}}>{match.league.region}</Typography>
+                {match.league.contest === "MEN" ? <MaleIcon sx={{ ml: 1 }} /> : <FemaleIcon sx={{ ml: 1 }} />}
             </Box>
         );
     }

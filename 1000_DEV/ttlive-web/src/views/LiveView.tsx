@@ -1,8 +1,8 @@
 import { Button, Card, CardContent, Skeleton, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useSwipeable } from "react-swipeable";
 import { AppContext } from "../AppContext";
 import ChatDrawer from "../components/chat/ChatDrawer";
@@ -11,6 +11,7 @@ import GameReport from "../components/game/GameReport";
 import MatchScore from "../components/match/MatchScore";
 import MatchSettings from "../components/match/settings/MatchSettings";
 import ErrorMessage from "../components/utils/ErrorMessage";
+import ShareButton from "../components/utils/ShareButton";
 import { spacingNormal } from "../components/utils/StyleVars";
 import WebHookUtil from "../components/utils/WebHookUtil";
 import { fetchChatMessages } from "../rest/api/ChatApi";
@@ -18,6 +19,7 @@ import { fetchMatch } from "../rest/api/MatchApi";
 import { ChatMessage, sortChatMessages } from "../rest/data/ChatMessage";
 import { Game } from "../rest/data/Game";
 import { Match, sortMatch } from "../rest/data/Match";
+
 
 const LiveView = () => {
     const [match, setMatch] = useState<Match | null>(null);
@@ -31,12 +33,22 @@ const LiveView = () => {
 
     const context = useContext(AppContext)
     const [t] = useTranslation();
+    const [searchParams] = useSearchParams();
 
 
     const swipeHanlder = useSwipeable({
         onSwipedRight: () => setActiveTab(activeTab - 1 < 0 ? 0 : activeTab - 1),
         onSwipedLeft: () => setActiveTab(activeTab + 1 > 2 ? 2 : activeTab + 1),
     })
+
+    useEffect(() => {
+        const matchIdStr = searchParams.get("id");
+        if (matchIdStr != null) {
+            const matchId = parseInt(matchIdStr);
+            context.setMatchId(matchId);
+        }
+    }, [searchParams, context])
+
 
     useEffect(() => {
         async function fetchMatchLocal(id: number) {
@@ -83,7 +95,7 @@ const LiveView = () => {
         return renderNoMatch();
 
     return (
-        <Box {...swipeHanlder} sx={{ ...(chatDrawerExpanded && { height: "calc(50vh - 64px)" }), overflow: "auto", m: -2, p: 2 }}>
+        <Box {...swipeHanlder} sx={{ ...(chatDrawerExpanded && { height: { xs: "calc(50vh - 64px)", md: "100%" } }), overflow: "auto", m: -2, p: 2 }}>
             {match != null && <WebHookUtil match={match} onGameUpdated={game => onGameUpdated(game, match)} onMatchUpdated={onMatchUpdated} onAddChatMessage={onAddChatMessage} />}
             {/* This is a quick fix to allow swiping on on outside the component */}
             <Box {...swipeHanlder} className="test" position="absolute" top={"10%"} bottom={0} left={0} right={0} zIndex={-10} />
@@ -98,6 +110,9 @@ const LiveView = () => {
             <Box display={activeTab === 1 ? "block" : "none"}>{renderLive()}</Box>
             <Box display={activeTab === 2 ? "block" : "none"}>{renderLinup()}</Box>
 
+            {match && <ShareButton matchId={match.id} />}
+
+
             {match != null &&
                 <ChatDrawer
                     match={match}
@@ -109,7 +124,7 @@ const LiveView = () => {
             }
         </Box>
 
-    );    
+    );
 
     function renderSettings() {
         return <MatchSettings match={match} editorCode={editorCode} onMatchChanged={match => setMatch(match)} />;
@@ -124,20 +139,51 @@ const LiveView = () => {
             <Stack direction="column" gap={spacingNormal}>
                 <ErrorMessage msg={errorMsg} centered />
                 {match == null ? <Skeleton sx={{ height: { xs: "212px", sm: "200px" } }} variant="rectangular" />
-                    : <Card>
+                    : <React.Fragment><Card>
                         <CardContent>
                             <MatchScore match={match} />
                         </CardContent>
                     </Card>
+
+                        {match.state === "NOT_STARTED" && renderNotStarted(match)}
+                    </React.Fragment>
                 }
 
+
                 {reversedGames.filter(game => game.state === "LIVE").map(game =>
-                    <GameLiveScore key={game.id} game={game} />
+                    <GameLiveScore key={game.id} game={game} editorCode={editorCode} />
                 )}
                 {reversedGames.filter(game => game.state === "FINISHED").map(game =>
-                    <GameLiveScore key={game.id} game={game} />
+                    <GameLiveScore key={game.id} game={game} editorCode={editorCode} />
                 )}
             </Stack>
+        );
+    }
+
+    function renderNotStarted(match: Match) {
+
+        let matchDate = new Date(match.startDate);
+        let today = new Date();
+
+
+        let startDate: string | null = null;
+        if (today.toDateString !== matchDate.toDateString) {
+            startDate = matchDate.toLocaleDateString();
+        }
+
+        let startTime = matchDate.toLocaleTimeString();
+
+        return (
+            <Card>
+                <CardContent>
+                    <Stack sx={{ textAlign: "center", gap: 2 }}>
+                        <Typography variant="h3">{t("LiveView.notStartedText")}</Typography>
+
+                        {startDate && <Typography variant="h2">{startDate}</Typography>}
+                        {startTime && <Typography variant="h2" color="primary" fontWeight="bold">{startTime}</Typography>}
+                    </Stack>
+                </CardContent>
+            </Card>
         );
     }
 
@@ -158,9 +204,9 @@ const LiveView = () => {
         )
     }
 
-    function onChatDrawerExpanded(expanded : boolean){
+    function onChatDrawerExpanded(expanded: boolean) {
         setChatDrawerExpanded(expanded);
-        if(!expanded)
+        if (!expanded)
             setBadgeCounter(0);
 
     }

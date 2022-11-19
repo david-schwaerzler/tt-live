@@ -26,7 +26,7 @@ export interface ChatDrawerProps {
 const ChatDrawer = ({ match, expanded, onExpanded, messages, badgeCounter }: ChatDrawerProps) => {
 
     const theme = useTheme();
-    const isBig = useMediaQuery(theme.breakpoints.up('sm'));
+    const isBig = useMediaQuery(theme.breakpoints.up('md'));
     const chatRef = createRef<HTMLUListElement>();
 
     useEffect(() => {
@@ -49,11 +49,11 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages, badgeCounter }: Cha
                 open={expanded}
                 onClose={() => { }}
                 variant={isBig ? "permanent" : "persistent"}
-                PaperProps={{ sx: { bottom: 0, height: { xs: "50vh", sm: "70vh" }, position: "fixed", top: "auto", width: { xs: "auto", sm: "20vw" }, right: 0, }, elevation: 5 }}
+                PaperProps={{ sx: { bottom: 0, height: { xs: "50vh", md: expanded? "70vh" : "30vh" }, position: "fixed", top: "auto", width: { xs: "auto", md: "25em" }, right: 0, }, elevation: 5 }}
                 ModalProps={{ keepMounted: true }}
 
             >
-                <Box sx={{ cursor: "pointer", width: "100%", display: { xs: "block", sm: "none" } }} onClick={() => onExpanded(!expanded)}>
+                <Box sx={{ cursor: "pointer", width: "100%", display: { xs: "block", md: "block" } }} onClick={() => onExpanded(!expanded)}>
                     <ExpandButton expanded={!expanded} />
                 </Box>
 

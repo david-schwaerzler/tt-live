@@ -5,16 +5,18 @@ import { GameSet } from "../../rest/data/GameSet";
 import MatchStateLabel from "../match/MatchStateLabel";
 import ExpandButton from "../utils/ExpandButton";
 import { spacingSmall } from "../utils/StyleVars";
+import GameLiveEdit from "./GameLiveEdit";
 
 
 export interface GameLiveScoreProps {
     game: Game;
+    editorCode: string | null;
 }
 
 const NUM_DISPLAYED_SETS = 2;
 
 // TODO Refactore this (especially the games)
-const GameLiveScore = ({ game }: GameLiveScoreProps) => {
+const GameLiveScore = ({ game, editorCode }: GameLiveScoreProps) => {
 
     const [expanded, setExpanded] = useState<boolean>(false);
     const [displayedSets, setDisplayedSets] = useState<Array<GameSet>>([]);
@@ -42,10 +44,10 @@ const GameLiveScore = ({ game }: GameLiveScoreProps) => {
         setHiddenSets(hiddenSets);
     }, [game.sets])
 
-
     return (
         <Card>
             <CardContent>
+                {/*editorCode && <Box sx={{float: "right"}}><GameLiveEdit game={game}/></Box>*/}
                 {(game.state === "LIVE" || game.state === "FINISHED") &&
                     <Box width="100%" display="flex" mb={1}>
                         <MatchStateLabel sx={{ margin: "auto" }} state={game.state} variant="border" />

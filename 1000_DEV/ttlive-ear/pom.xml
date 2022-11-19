@@ -107,7 +107,7 @@
 						<goals>
 							<goal>add-resource</goal>
 						</goals>
-					</execution>
+					</execution>					
 					<execution>
 						<id>add-cors</id>
 						<phase>install</phase>
@@ -118,7 +118,6 @@
 							<scripts>src/main/resources/cors.cli</scripts>
 						</configuration>
 					</execution>
-
 				</executions>
 			</plugin>
 			<plugin>

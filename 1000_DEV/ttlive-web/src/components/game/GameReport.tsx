@@ -1,5 +1,6 @@
-import { Box, Card, CardContent, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, Skeleton, styled, Switch, Typography } from "@mui/material";
+import { Box, Card, CardContent, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Skeleton, styled, Switch, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
+import { off } from "process";
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AppContext } from "../../AppContext";
@@ -29,13 +30,28 @@ const GAME_INPUT_TYPE_SETTING = "gameInputType"
 // TODO fix Render performance Issues
 const GameReport = ({ games, editorCode, matchState }: GameReportProps) => {
 
-    const [gameScores, setGameScores] = useState<Array<GameScoreType> | null>(null);
-    const [lastDouble, setLastDouble] = useState<GameScoreType | null>(null);
-    const [isEditMode, setEditMode] = useState<boolean>(editorCode != null);
-
     const [t] = useTranslation();
     const context = useContext(AppContext);
 
+
+    const [gameScores, setGameScores] = useState<Array<GameScoreType> | null>(null);
+    // TODO fix final double (this should be in gamestyle somehow)
+    const [lastDouble, setLastDouble] = useState<GameScoreType | null>(null);
+    const [isEditMode, setEditMode] = useState<boolean>(editorCode != null);
+
+    const [inputType, setInputType] = useState(() => {
+        let inputTypeStr = context.getSetting(GAME_INPUT_TYPE_SETTING); 
+        if(inputTypeStr == null)
+            return InputType.SET;
+        
+        let inputType = parseInt(inputTypeStr);
+        if(isNaN(inputType))
+            return InputType.SET;
+        
+        return inputType;
+    });
+
+   
 
     useEffect(() => {
         if (games == null) {
@@ -62,7 +78,7 @@ const GameReport = ({ games, editorCode, matchState }: GameReportProps) => {
 
         let lastDouble = gameScores[gameScores.length - 1];
         if (lastDouble.doubles) {
-            gameScores = gameScores.filter(gc => gc.id != lastDouble.id)
+            gameScores = gameScores.filter(gc => gc.id !== lastDouble.id)
             setLastDouble(lastDouble)
         } else {
             setLastDouble(null);
@@ -189,8 +205,6 @@ const GameReport = ({ games, editorCode, matchState }: GameReportProps) => {
     }
 
     function renderHeader() {
-        let inputType = context.getSetting(GAME_INPUT_TYPE_SETTING);
-
         return (
             <Grid container spacing={1} mb={2} justifyContent="center" alignItems="center">
                 <Grid item xs={6}>
@@ -200,8 +214,8 @@ const GameReport = ({ games, editorCode, matchState }: GameReportProps) => {
                             id="select-inputType"
                             labelId="select-inputType"
                             label={t("GameReport.inputType")}
-                            value={inputType == null ? InputType.SET : parseInt(inputType)}
-                            onChange={(e: any) => context.setSetting(GAME_INPUT_TYPE_SETTING, e.target.value, true)}>
+                            value={inputType.toString()}
+                            onChange={onInputTypeChanged}>
                             <MenuItem value={InputType.SET}>{t("GameReport.set")}</MenuItem>
                             <MenuItem value={InputType.POINTS}>{t("GameReport.points")}</MenuItem>
                         </Select>
@@ -226,12 +240,17 @@ const GameReport = ({ games, editorCode, matchState }: GameReportProps) => {
             </Grid>
         )
     }
+    
+    function onInputTypeChanged(e: SelectChangeEvent){
+        context.setSetting(GAME_INPUT_TYPE_SETTING, e.target.value, true);
+        setInputType(parseInt(e.target.value as string));
+    }
 
     function renderGameSetScore(set: GameSet, isHome: boolean, game: Game) {
         return <GameSetScore
             set={set}
             isHome={isHome}
-            inputType={parseInt(context.getSetting(GAME_INPUT_TYPE_SETTING))}
+            inputType={inputType}
             isEditMode={isEditMode}
             editorCode={editorCode}
             game={game}

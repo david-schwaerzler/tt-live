@@ -41,7 +41,7 @@ const LineupSetting = ({ match, isHomeTeam, editorCode }: LineupSettingProps) =>
             setPlayers(players);
         }
 
-    }, [match, isHomeTeam]);
+    }, [match, isHomeTeam, expanded]);
 
     if (match == null)
         return <Skeleton sx={{ height: { xs: "88px", sm: "88px" } }} variant="rectangular" />

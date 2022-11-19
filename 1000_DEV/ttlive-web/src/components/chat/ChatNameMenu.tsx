@@ -34,7 +34,7 @@ const ChatNameMenu = ({ onClose, anchor }: ChatNameMenuProps) => {
     useEffect(() => {
         function keyHandler(e: KeyboardEvent) {
             if (e.code === "Enter")
-                onSave();
+                setTimeout(() => onSave(), 1);
         }
         if (anchor != null) {
             document.addEventListener("keyup", keyHandler)

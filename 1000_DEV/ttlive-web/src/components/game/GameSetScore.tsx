@@ -1,6 +1,5 @@
 import {  Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useMemo } from "react";
 import { Game } from "../../rest/data/Game";
 import { GameSet } from "../../rest/data/GameSet";
 import GameSetResultButton from "./GameSetResultButton";

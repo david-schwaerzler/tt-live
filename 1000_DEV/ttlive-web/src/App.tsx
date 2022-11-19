@@ -1,6 +1,6 @@
 
 import { HomeView } from './views/HomeView';
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, HashRouter } from "react-router-dom";
 import CreateGameView from './views/CreateGameView';
 import React, { useMemo, useState } from 'react';
 import MainView from './containers/MainView';
@@ -81,7 +81,7 @@ function App() {
 
                 <div className="App">
                     <AppContext.Provider value={valueProvider}>
-                        <BrowserRouter>
+                        <HashRouter>
                             <Routes>
                                 <Route path="/" element={renderContent(<HomeView />)} />
                                 <Route path="create" element={renderContent(<CreateGameView />)} />
@@ -90,7 +90,7 @@ function App() {
                                 <Route path="live" element={renderContent(<LiveView />)} />
                                 <Route path="*" element={<Navigate to="/" />} />
                             </Routes>
-                        </BrowserRouter>
+                        </HashRouter>
                     </AppContext.Provider>
                 </div>
             </LocalizationProvider>

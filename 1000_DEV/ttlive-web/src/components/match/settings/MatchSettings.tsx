@@ -12,20 +12,27 @@ export interface MatchSettingsProps {
 
 const MatchSettings = ({ match, editorCode, onMatchChanged }: MatchSettingsProps) => {
 
-    
+
     if (editorCode == null)
         return <NoCodeSetting match={match} />;
 
     return (
         <Stack gap={2}>
             {match == null ? <Skeleton sx={{ height: { xs: "64px", sm: "96px" } }} variant="rectangular" />
-                : <Card>
-                    <CardContent>
-                        <Typography variant="h5">Editor-Code: <Box sx={{ display: "inline", fontWeight: "bold", color: theme => theme.palette.primary.main }}>{editorCode}</Box></Typography>
-                    </CardContent>
-                </Card>
+                : <Box>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h5">Editor-Code: <Box sx={{ display: "inline", fontWeight: "bold", color: theme => theme.palette.primary.main }}>{editorCode}</Box></Typography>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h5">Editor-Code: <Box sx={{ display: "inline", fontWeight: "bold", color: theme => theme.palette.primary.main }}>{editorCode}</Box></Typography>
+                        </CardContent>
+                    </Card>
+                </Box>
             }
-            <LineupSetting match={match} editorCode={editorCode} isHomeTeam={true}  />
+            <LineupSetting match={match} editorCode={editorCode} isHomeTeam={true} />
             <LineupSetting match={match} editorCode={editorCode} isHomeTeam={false} />
 
         </Stack>

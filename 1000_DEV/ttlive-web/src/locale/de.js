@@ -79,6 +79,7 @@ const deDe = {
             "LiveView.live": "Live",
             "LiveView.lineup": "Spielbericht",
             "LiveView.settings": "Settings",
+            "LiveView.notStartedText": "Spielbeginn",
 
             "MatchStateLabel.live": "Live",
             "MatchStateLabel.notStarted": "Bald",
@@ -110,7 +111,9 @@ const deDe = {
 
             "ChatDrawer.send": "Senden",
             "ChatDrawer.username": "Username",
-            "ChatDrawer.save": "OK"
+            "ChatDrawer.save": "OK",
+
+            "ShareButton.copyLink": "Link zum Spiel kopiert"
 
         }
     }

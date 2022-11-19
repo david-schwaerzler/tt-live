@@ -1,6 +1,8 @@
 import { Box } from "@mui/system";
 import { Match } from "../../rest/data/Match";
 import { spacingSmall } from "../utils/StyleVars";
+import ShareIcon from '@mui/icons-material/Share';
+import { IconButton } from "@mui/material";
 
 export interface MatchScoreProps {
     match: Match;
@@ -13,7 +15,7 @@ const MatchScore = ({ match, scoreSize = "3rem", sx }: MatchScoreProps) => {
         <Box sx={{
             display: "grid",
             justifyContent: "center",
-            fontSize: { xs: "1.25rem", sm: "2rem" },
+            fontSize: { xs: "1.25rem", sm: "1.25rem ", md: "2rem" },
             textAlign: "center",
             alignItems: "center",
             gridAutoColumns: "1fr",
@@ -28,8 +30,8 @@ const MatchScore = ({ match, scoreSize = "3rem", sx }: MatchScoreProps) => {
                 <Box sx={{ flex: { sm: "1 1 0" } }}>{match.homeTeamScore}</Box>
                 <Box sx={{ display: { sm: "none" }, minWidth: "20px" }}>:</Box >
                 <Box sx={{ flex: { sm: "1 1 0" } }}>{match.guestTeamScore}</Box >
-            </Box>
 
+            </Box>
             <Box sx={{ gridRow: { xs: 3, sm: 1 }, gridColumn: { xs: 1, sm: 2 } }}>{match.guestTeam.club} {match.guestTeam.number}</Box>
         </Box >
     );
