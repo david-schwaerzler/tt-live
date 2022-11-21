@@ -6,6 +6,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { useSwipeable } from "react-swipeable";
 import { AppContext } from "../AppContext";
 import ChatDrawer from "../components/chat/ChatDrawer";
+import GameLiveEdit from "../components/game/GameLiveEdit";
 import GameLiveScore from "../components/game/GameLiveScore";
 import GameReport from "../components/game/GameReport";
 import MatchScore from "../components/match/MatchScore";
@@ -151,10 +152,11 @@ const LiveView = () => {
 
 
                 {reversedGames.filter(game => game.state === "LIVE").map(game =>
-                    <GameLiveScore key={game.id} game={game} editorCode={editorCode} />
+                    <GameLiveScore key={game.id} game={game} editButton={() => editorCode && match && <GameLiveEdit matchId={match.id} game={game} messages={messages} editorCode={editorCode} />} />
                 )}
                 {reversedGames.filter(game => game.state === "FINISHED").map(game =>
-                    <GameLiveScore key={game.id} game={game} editorCode={editorCode} />
+                    <GameLiveScore key={game.id} game={game} editButton={() => editorCode && match && <GameLiveEdit matchId={match.id} game={game} messages={messages} editorCode={editorCode} />} />
+
                 )}
             </Stack>
         );

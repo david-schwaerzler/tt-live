@@ -44,7 +44,7 @@ const MenuBar = () => {
         <AppBar position="sticky" elevation={2} sx={{ p: 0 }}>
             <Toolbar sx={{ paddingLeft: { xs: 1, sm: 2 }, p: 0 }}>
                 <Box sx={{ pr: padding }}>
-                    <LogoIcon4 sx={{ mt: "5px" }} color={theme.palette.mode === "dark" ? "#FFFFFF" : "#FFFFFF"} />
+                    <LogoIcon4 sx={{ mt: "5px" }} color={theme.palette.mode === "dark" ? theme.palette.primary.main : "#FFFFFF"} />
                 </Box>
                 <Box sx={{ flexGrow: 1, display: 'flex', gap: padding }} >
                     <Link to="/" style={{ textDecoration: 'none' }} tabIndex={-1}>

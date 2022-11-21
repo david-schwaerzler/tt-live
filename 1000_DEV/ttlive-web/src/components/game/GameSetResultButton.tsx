@@ -32,7 +32,7 @@ const GameSetResultButton = ({ disabled, won, set, game, isHome, editorCode, onE
     const [isLoading, setLoading] = useState(false);
 
     useEffect(() => {
-        setHomeState(isHome)
+        setHomeState(!isHome)
     }, [isHome]);
 
     useEffect(() => {
@@ -124,8 +124,8 @@ const GameSetResultButton = ({ disabled, won, set, game, isHome, editorCode, onE
     }
 
     async function onNumberSelected() {
-        let homeScore = isHomeState ? selectedNumber : otherScore;
-        let guestScore = isHomeState ? otherScore : selectedNumber;
+        let homeScore = isHomeState ? otherScore : selectedNumber;
+        let guestScore = isHomeState ? selectedNumber : otherScore ;
 
         let requestGameSet: RequestGameSet = {
             number: set.number,

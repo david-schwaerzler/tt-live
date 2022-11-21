@@ -40,18 +40,18 @@ const GameReport = ({ games, editorCode, matchState }: GameReportProps) => {
     const [isEditMode, setEditMode] = useState<boolean>(editorCode != null);
 
     const [inputType, setInputType] = useState(() => {
-        let inputTypeStr = context.getSetting(GAME_INPUT_TYPE_SETTING); 
-        if(inputTypeStr == null)
+        let inputTypeStr = context.getSetting(GAME_INPUT_TYPE_SETTING);
+        if (inputTypeStr == null)
             return InputType.SET;
-        
+
         let inputType = parseInt(inputTypeStr);
-        if(isNaN(inputType))
+        if (isNaN(inputType))
             return InputType.SET;
-        
+
         return inputType;
     });
 
-   
+
 
     useEffect(() => {
         if (games == null) {
@@ -115,9 +115,8 @@ const GameReport = ({ games, editorCode, matchState }: GameReportProps) => {
                 </Card>
             }
 
-            {lastDouble == null
-                ? <Skeleton sx={{ height: { xs: "100px", sm: "100px" } }} variant="rectangular" />
-                : <Card>
+            {lastDouble != null &&
+                <Card>
                     <CardContent>
                         <Typography pb={2} variant="h5">{t("GameReport.lastDouble")}</Typography>
                         <Stack gap={1.5}>
@@ -222,7 +221,6 @@ const GameReport = ({ games, editorCode, matchState }: GameReportProps) => {
                     </FormControl>
                 </Grid>
                 <Grid item xs={6} >
-                    {/*<Button variant="outlined" sx={{ width: "100%", height: "100%" }}>{isEditMode ? t("GameReport.preview") : t("GameReport.edit")}</Button>*/}
                     <FormControlLabel
                         sx={{ width: "100%", ml: 0, mr: 0 }}
                         control={
@@ -240,8 +238,8 @@ const GameReport = ({ games, editorCode, matchState }: GameReportProps) => {
             </Grid>
         )
     }
-    
-    function onInputTypeChanged(e: SelectChangeEvent){
+
+    function onInputTypeChanged(e: SelectChangeEvent) {
         context.setSetting(GAME_INPUT_TYPE_SETTING, e.target.value, true);
         setInputType(parseInt(e.target.value as string));
     }

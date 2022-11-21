@@ -1,9 +1,10 @@
-import { Badge, BadgeProps, Box, Drawer, List, ListItem, Paper, styled, useMediaQuery, useTheme } from "@mui/material";
+import { Badge, BadgeProps, Box, Drawer, Paper, styled, useMediaQuery, useTheme } from "@mui/material";
 import React, { createRef, useEffect } from "react";
 import { ChatMessage } from "../../rest/data/ChatMessage";
 import { Match } from "../../rest/data/Match";
 import ExpandButton from "../utils/ExpandButton";
 import ChatAction from "./ChatActions";
+import ChatMessageList from "./ChatMessageList";
 
 const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -49,7 +50,7 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages, badgeCounter }: Cha
                 open={expanded}
                 onClose={() => { }}
                 variant={isBig ? "permanent" : "persistent"}
-                PaperProps={{ sx: { bottom: 0, height: { xs: "50vh", md: expanded? "70vh" : "30vh" }, position: "fixed", top: "auto", width: { xs: "auto", md: "25em" }, right: 0, }, elevation: 5 }}
+                PaperProps={{ sx: { transition: "height ease-in 0.1s", bottom: 0, height: { xs: "50vh", md: expanded ? "70vh" : "30vh" }, position: "fixed", top: "auto", width: { xs: "auto", md: "25em" }, right: 0, }, elevation: 5 }}
                 ModalProps={{ keepMounted: true }}
 
             >
@@ -57,21 +58,13 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages, badgeCounter }: Cha
                     <ExpandButton expanded={!expanded} />
                 </Box>
 
-                <List sx={{ overflow: "scroll", flexGrow: 1 }} ref={chatRef}>
-                    {messages.map((value, index) =>
-                        <ListItem key={index} sx={{ overflowWrap: "anywhere", width: "100%" }}>
-                            <Box>
-                                <strong>{value.username}: </strong>
-                                {value.text}
-                            </Box>
-                        </ListItem>
-                    )}
-                </List>
+                <ChatMessageList ref={chatRef} messages={messages} />
                 <ChatAction matchId={match.id} onTextFieldFocused={onTextFieldFocus} />
             </Drawer>
         </React.Fragment >
     )
     function onTextFieldFocus() {
+        console.log(chatRef)
         if (isBig === false) {
             setTimeout(() => {
                 if (chatRef.current)

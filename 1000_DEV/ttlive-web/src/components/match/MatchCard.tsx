@@ -62,9 +62,9 @@ const MatchCard = ({ match }: MatchCardProps) => {
 
     function renderHeader(match: Match) {
         return (
-            <Box sx={{ opacity: 0.5, display: "flex" }} padding={spacingSmall}>
+            <Box sx={{ opacity: 0.5, display: "flex", alignItems: "center" }} padding={spacingSmall}>
 
-                <Typography sx={{ flexGrow: 1 }}>{match.league.name}</Typography>
+                <Typography sx={{ flexGrow: 1, fontSize: "0.8rem" }}>{match.league.name}</Typography>
                 <Box sx={{ opacity: 1, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
                     <MatchStateLabel variant="border" state={match.state} startDate={match.startDate} />
                 </Box>
@@ -77,22 +77,15 @@ const MatchCard = ({ match }: MatchCardProps) => {
     function renderGames(match: Match) {
         // TODO Put displayed games in the state variable (with useEffect)
         let games = match.games;
-        let liveGames = games.filter(g => g.state === "LIVE");
-        let displayGames: Array<Game> = [];
+        let displayGames = games.filter(g => g.state === "LIVE" || g.state === "FINISHED");
 
-        if (liveGames.length === 0) {
-            for (let i = 0; i < Math.min(NUMBER_MATCHES, games.length); i++) {
-                displayGames.push(games[i]);
-            }
-        } else {
-            let maxNumber = Number.MIN_VALUE;
+        let notStartedGames = games.filter(g => g.state === "NOT_STARTED");
 
-            liveGames.forEach(g => {
-                maxNumber = g.gameNumber > maxNumber ? g.gameNumber : maxNumber;
-            })
-            maxNumber = maxNumber + 1 >= games.length ? games.length - 1 : maxNumber + 1;
-
-            displayGames = games.filter(g => g.gameNumber <= maxNumber);
+        if (notStartedGames.length >= 2) {
+            displayGames.push(notStartedGames[0])
+            displayGames.push(notStartedGames[1])
+        } else if (notStartedGames.length >= 1) {
+            displayGames.push(notStartedGames[1])
         }
 
         return (

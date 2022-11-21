@@ -1,22 +1,21 @@
 import { Box, Card, CardActions, CardContent, Collapse, Grid, Stack } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { Game } from "../../rest/data/Game";
 import { GameSet } from "../../rest/data/GameSet";
 import MatchStateLabel from "../match/MatchStateLabel";
 import ExpandButton from "../utils/ExpandButton";
 import { spacingSmall } from "../utils/StyleVars";
-import GameLiveEdit from "./GameLiveEdit";
 
 
 export interface GameLiveScoreProps {
     game: Game;
-    editorCode: string | null;
+    editButton: () => (ReactNode);
 }
 
 const NUM_DISPLAYED_SETS = 2;
 
 // TODO Refactore this (especially the games)
-const GameLiveScore = ({ game, editorCode }: GameLiveScoreProps) => {
+const GameLiveScore = ({ game, editButton }: GameLiveScoreProps) => {
 
     const [expanded, setExpanded] = useState<boolean>(false);
     const [displayedSets, setDisplayedSets] = useState<Array<GameSet>>([]);
@@ -47,13 +46,16 @@ const GameLiveScore = ({ game, editorCode }: GameLiveScoreProps) => {
     return (
         <Card>
             <CardContent>
-                {/*editorCode && <Box sx={{float: "right"}}><GameLiveEdit game={game}/></Box>*/}
-                {(game.state === "LIVE" || game.state === "FINISHED") &&
-                    <Box width="100%" display="flex" mb={1}>
-                        <MatchStateLabel sx={{ margin: "auto" }} state={game.state} variant="border" />
-                    </Box>
-                }
-                {game.doubles ? renderDoubles(game) : renderSingles(game)}
+
+                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "right", mb: 1 }} >
+                    {(game.state === "LIVE" || game.state === "FINISHED") &&
+                        <Box sx={{ opacity: 1, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
+                            <MatchStateLabel sx={{ margin: "auto" }} state={game.state} variant="border" />
+                        </Box>
+                    }
+                    {editButton()}
+                </Box>
+                {/*renderScore(game)*/}
 
 
                 {displayedSets.map(value =>
@@ -95,36 +97,33 @@ const GameLiveScore = ({ game, editorCode }: GameLiveScoreProps) => {
         </Card>
     );
 
-    function renderSingles(game: Game) {
+    function renderScore(game: Game) {
         return (
             <Stack>
                 <Grid container sx={{ justifyContent: "center", textAlign: "center", paddingBottom: spacingSmall }}>
                     <Grid item xs={6} >
-                        <Box sx={{ fontSize: { xs: "1.1rem", sm: "1.5rem" }, whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>{game.homePlayer.name}</Box>
-                        <Box sx={{ fontSize: { xs: "2rem", sm: "3rem" }, fontWeight: "bold" }}>{game.homeSets}</Box>
+                        <Box sx={{ fontSize: { xs: "1.1rem", sm: "1.5rem" }, whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>
+                            {game.doubles ?
+                                <React.Fragment>{game.homeDoubles.player1}<br />{game.homeDoubles.player2}</React.Fragment>
+                                : game.homePlayer.name
+                            }
+                        </Box>
+                        <Box sx={{ fontSize: { xs: "2rem", sm: "3rem" }, fontWeight: "bold" }}>
+                            {game.homeSets}
+                        </Box>
                     </Grid>
                     <Grid item xs={6}>
-                        <Box sx={{ fontSize: { xs: "1.1rem", sm: "1.5rem" }, whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>{game.guestPlayer.name}</Box>
-                        <Box sx={{ fontSize: { xs: "2rem", sm: "3rem" }, fontWeight: "bold" }}>{game.guestSets}</Box>
-                    </Grid>
-                </Grid>
+                        <Box sx={{ fontSize: { xs: "1.1rem", sm: "1.5rem" }, whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>
+                            {game.doubles ?
+                                <React.Fragment>{game.guestDoubles.player1}<br />{game.guestDoubles.player2}</React.Fragment>
+                                : game.guestPlayer.name
+                            }
+                        </Box>
+                        <Box sx={{ fontSize: { xs: "2rem", sm: "3rem" }, fontWeight: "bold" }}>
 
-            </Stack>
-        );
-    }
+                            {game.guestSets}
 
-
-    function renderDoubles(game: Game) {
-        return (
-            <Stack>
-                <Grid container sx={{ justifyContent: "center", textAlign: "center", paddingBottom: spacingSmall }}>
-                    <Grid item xs={6} >
-                        <Box sx={{ fontSize: { xs: "1.1rem", sm: "1.5rem" }, whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>{game.homeDoubles.player1}<br />{game.homeDoubles.player2}</Box>
-                        <Box sx={{ fontSize: { xs: "2rem", sm: "3rem" }, fontWeight: "bold" }}>{game.homeSets}</Box>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Box sx={{ fontSize: { xs: "1.1rem", sm: "1.5rem" }, whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>{game.guestDoubles.player1}<br />{game.guestDoubles.player2}</Box>
-                        <Box sx={{ fontSize: { xs: "2rem", sm: "3rem" }, fontWeight: "bold" }}>{game.guestSets}</Box>
+                        </Box>
                     </Grid>
                 </Grid>
 
@@ -132,5 +131,4 @@ const GameLiveScore = ({ game, editorCode }: GameLiveScoreProps) => {
         );
     }
 }
-
 export default GameLiveScore;

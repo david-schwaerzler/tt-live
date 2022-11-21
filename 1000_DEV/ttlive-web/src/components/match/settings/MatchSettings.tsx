@@ -24,12 +24,7 @@ const MatchSettings = ({ match, editorCode, onMatchChanged }: MatchSettingsProps
                         <CardContent>
                             <Typography variant="h5">Editor-Code: <Box sx={{ display: "inline", fontWeight: "bold", color: theme => theme.palette.primary.main }}>{editorCode}</Box></Typography>
                         </CardContent>
-                    </Card>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h5">Editor-Code: <Box sx={{ display: "inline", fontWeight: "bold", color: theme => theme.palette.primary.main }}>{editorCode}</Box></Typography>
-                        </CardContent>
-                    </Card>
+                    </Card>                 
                 </Box>
             }
             <LineupSetting match={match} editorCode={editorCode} isHomeTeam={true} />
