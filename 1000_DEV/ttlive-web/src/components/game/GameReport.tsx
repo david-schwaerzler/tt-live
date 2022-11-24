@@ -1,11 +1,12 @@
 import { Box, Card, CardContent, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Skeleton, styled, Switch, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import { off } from "process";
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AppContext } from "../../AppContext";
+import { ChatMessage } from "../../rest/data/ChatMessage";
 import { Game } from "../../rest/data/Game";
 import { GameSet } from "../../rest/data/GameSet";
+import GameLiveEdit from "./GameLiveEdit";
 import GameSetScore, { InputType } from "./GameSetScore";
 
 export interface GameReportProps {
@@ -13,6 +14,8 @@ export interface GameReportProps {
     /** Indicates if the user is an editor. Display all the editable Components when provided */
     editorCode: string | null;
     matchState: "FINISHED" | "NOT_STARTED" | "LIVE"
+    messages: Array<ChatMessage>;
+    matchId: number | null;
 }
 
 const PlayerCell = styled(Grid)({
@@ -28,7 +31,7 @@ type GameScoreType = Game & { homeTeamScore: number, guestTeamScore: number };
 const GAME_INPUT_TYPE_SETTING = "gameInputType"
 
 // TODO fix Render performance Issues
-const GameReport = ({ games, editorCode, matchState }: GameReportProps) => {
+const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameReportProps) => {
 
     const [t] = useTranslation();
     const context = useContext(AppContext);
@@ -158,10 +161,13 @@ const GameReport = ({ games, editorCode, matchState }: GameReportProps) => {
                         <Grid item xs={1} sx={{ fontWeight: "bold", m: "auto" }}>{game.state !== "NOT_STARTED" ? game.guestSets : "-"}</Grid>
                     </Grid>
                 </Box>
-                <Box margin="auto" minWidth="40px" textAlign="right" fontSize="1.1rem">
+                <Stack minWidth="40px" textAlign="right" fontSize="1.1rem">
                     {game.state === "FINISHED" && <i>{game.homeTeamScore}:{game.guestTeamScore}</i>}
                     {game.state === "LIVE" && <Typography color={theme => theme.palette.primary.main} fontWeight="bold" fontStyle="italic">LIVE</Typography>}
-                </Box>
+                    {isEditMode === true && editorCode != null && matchId != null &&
+                        <GameLiveEdit editorCode={editorCode} messages={messages} game={game} matchId={matchId} />
+                    }
+                </Stack>
             </Box>
         )
     }
@@ -195,10 +201,13 @@ const GameReport = ({ games, editorCode, matchState }: GameReportProps) => {
                         <Grid item xs={1} sx={{ fontWeight: "bold" }}>{game.state !== "NOT_STARTED" ? game.guestSets : "-"}</Grid>
                     </Grid>
                 </Box>
-                <Box margin="auto" minWidth="40px" textAlign="right" fontSize="1.1rem">
+                <Stack minWidth="40px" textAlign="right" fontSize="1.1rem">
                     {game.state === "FINISHED" && <i>{game.homeTeamScore}:{game.guestTeamScore}</i>}
                     {game.state === "LIVE" && <Typography color={theme => theme.palette.primary.main} fontWeight="bold" fontStyle="italic">LIVE</Typography>}
-                </Box>
+                    {isEditMode === true && editorCode != null && matchId != null &&
+                        <GameLiveEdit editorCode={editorCode} messages={messages} game={game} matchId={matchId} />
+                    }
+                </Stack>
             </Box>
         )
     }

@@ -12,7 +12,7 @@ export interface ChatNameMenuProps {
 const CHAT_USERNAME_SETTING = "chatUsername";
 
 const ChatNameMenu = ({ onClose, anchor }: ChatNameMenuProps) => {
-    let context = useContext(AppContext);
+    const context = useContext(AppContext);
 
     const [username, setUsername] = useState<string>(() => {
         let username = context.getSetting(CHAT_USERNAME_SETTING);
@@ -48,8 +48,6 @@ const ChatNameMenu = ({ onClose, anchor }: ChatNameMenuProps) => {
         }
     }, [anchor, context, onSave])
 
-
-
     const [t] = useTranslation();
     return <Menu
         id="name-select"
@@ -68,7 +66,14 @@ const ChatNameMenu = ({ onClose, anchor }: ChatNameMenuProps) => {
         onClose={onClose}>
         <Stack direction="row" sx={{ paddingTop: 1, paddingLeft: 1, paddingRight: 1 }} spacing={1}>
             {/** TODO better validation for long strings (error Message)*/}
-            <TextField size="small" label={t("ChatDrawer.username")} variant="outlined" value={username} onChange={e => setUsername(e.target.value.substring(0, 60))} />
+            <TextField
+                size="small"
+                label={t("ChatDrawer.username")}
+                variant="outlined"
+                value={username}
+                onChange={e => setUsername(e.target.value.substring(0, 60))}
+                autoFocus
+            />
             <Button variant="outlined" size="small" onClick={onSave} >{t("ChatDrawer.save")}</Button>
         </Stack>
     </Menu>

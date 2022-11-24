@@ -11,7 +11,8 @@ import lombok.Data;
 @Builder
 public class ChatMessage {
 	private long id;	
-	private String text;	
+	private String text;
+	private boolean isEditor;
 	private String username;
 	private LocalDateTime createdAt;
 	
@@ -19,6 +20,7 @@ public class ChatMessage {
 		public ChatMessageBuilder entity(ChatMessageEntity entity) {
 			this.id = entity.getId();
 			this.text = entity.getText();
+			this.isEditor = entity.isEditor();
 			this.username = entity.getUsername();
 			this.createdAt = entity.getCreatedAt();
 			return this;

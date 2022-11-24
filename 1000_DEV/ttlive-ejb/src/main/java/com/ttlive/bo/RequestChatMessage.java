@@ -7,5 +7,6 @@ import lombok.Data;
 @Builder
 public class RequestChatMessage {
 	private String username;
+	private boolean isEditor;
 	private String text;
 }

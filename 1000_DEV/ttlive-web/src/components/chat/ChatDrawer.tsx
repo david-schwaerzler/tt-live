@@ -22,9 +22,10 @@ export interface ChatDrawerProps {
     expanded: boolean;
     messages: Array<ChatMessage>;
     badgeCounter: number;
+    isEditor: boolean;
 }
 
-const ChatDrawer = ({ match, expanded, onExpanded, messages, badgeCounter }: ChatDrawerProps) => {
+const ChatDrawer = ({ match, expanded, isEditor, messages, badgeCounter, onExpanded }: ChatDrawerProps) => {
 
     const theme = useTheme();
     const isBig = useMediaQuery(theme.breakpoints.up('md'));
@@ -59,7 +60,7 @@ const ChatDrawer = ({ match, expanded, onExpanded, messages, badgeCounter }: Cha
                 </Box>
 
                 <ChatMessageList ref={chatRef} messages={messages} />
-                <ChatAction matchId={match.id} onTextFieldFocused={onTextFieldFocus} />
+                <ChatAction matchId={match.id} onTextFieldFocused={onTextFieldFocus} isEditor={isEditor} />
             </Drawer>
         </React.Fragment >
     )

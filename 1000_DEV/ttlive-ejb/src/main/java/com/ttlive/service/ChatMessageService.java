@@ -57,6 +57,7 @@ public class ChatMessageService {
 		entity.setUsername(requestMessage.getUsername());
 		entity.setText(requestMessage.getText());
 		entity.setMatch(match);	
+		entity.setEditor(requestMessage.isEditor());
 		
 		messageDao.persist(entity);
 		

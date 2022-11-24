@@ -228,5 +228,19 @@ const LogoIcon4 = (props: DefaultComponentProps<OverridableTypeMap>) => {
   );
 }
 
+const BackgroundIcon = (props: DefaultComponentProps<OverridableTypeMap>) => {
 
-export { LogoIcon, LogoIcon2, LogoIcon3, LogoIcon4 };
+  return (
+    <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+      width="501.000000pt" height="585.000000pt" viewBox="0 0 501.000000 585.000000"
+      preserveAspectRatio="xMidYMid meet">
+
+      <g transform="translate(0.000000,585.000000) scale(0.100000,-0.100000)"
+        fill={props.color} stroke="none">
+        <path d="M0 2925 l0 -2925 2505 0 2505 0 0 2925 0 2925 -2505 0 -2505 0 0 -2925z"/>
+      </g>
+    </svg>
+  )
+};
+
+export { LogoIcon, LogoIcon2, LogoIcon3, LogoIcon4, BackgroundIcon };

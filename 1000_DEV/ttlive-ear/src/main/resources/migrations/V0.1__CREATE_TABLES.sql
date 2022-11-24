@@ -127,6 +127,7 @@ CREATE TABLE chat_message (
 	id BIGSERIAl PRIMARY KEY,
 	text VARCHAR(256) NOT NULL,
 	username VARCHAR(64),
+	is_editor BOOLEAN NOT NULL DEFAULT false,
 	account_id BIGINT REFERENCES account(id),
 	match_id BIGINT NOT NULL REFERENCES match(id)	,
 	created_at TIMESTAMP NOT NULL DEFAULT now()

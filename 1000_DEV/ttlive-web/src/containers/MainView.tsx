@@ -13,7 +13,7 @@ const MainView = (props: MainViewProps) => {
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <MenuBar />
-            <Container sx={{ padding: spacingNormal, whiteSpace: "pre-wrap" }}>
+            <Container sx={{ padding: spacingNormal, whiteSpace: "pre-wrap"}} >
                 {props.content}
             </Container>
         </ThemeProvider>

@@ -64,7 +64,7 @@ public class Game {
 					set.setState(MatchState.LIVE);
 				}
 
-				if (set.getState() == MatchState.NOT_STARTED)
+				if (set.getState() == MatchState.NOT_STARTED || set.getState() == MatchState.LIVE)
 					isNotStarted = true;
 
 				if (homeScore >= 3 || guestScore >= 3)

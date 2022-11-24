@@ -45,6 +45,7 @@ public class ChatMessageReceiver {
 		RequestChatMessage bo = RequestChatMessage.builder() //
 				.username(dto.getUsername()) //
 				.text(dto.getText()) //
+				.isEditor(dto.isEditor())
 				.build();
 
 		ChatMessage messages = messageService.create(matchId, bo);

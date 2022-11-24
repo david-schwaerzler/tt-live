@@ -3,11 +3,13 @@ export interface ChatMessage {
     username: string;
     text: string;
     createdAt: string;
+    editor: boolean;
 }
 
 export interface RequestChatMessage {
     username: string;
     text: string;
+    editor: boolean;
 }
 
 export function sortChatMessages(messages: Array<ChatMessage>) {

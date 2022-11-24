@@ -34,6 +34,9 @@ public class ChatMessageEntity {
 	@Column(name = "username")
 	private String username;
 	
+	@Column(name = "is_editor")
+	private boolean isEditor;
+	
 	@ManyToOne
 	@JoinColumn(name="account_id", referencedColumnName = "id")
 	private AccountEntity account;

@@ -11,11 +11,12 @@ import ChatNameMenu from "./ChatNameMenu";
 export interface ChatActionProps {
     matchId: number;
     onTextFieldFocused: () => void;
+    isEditor: boolean;
 }
 
 const CHAT_USERNAME_SETTING = "chatUsername";
 
-const ChatAction = ({ matchId, onTextFieldFocused }: ChatActionProps) => {
+const ChatAction = ({ matchId, isEditor, onTextFieldFocused }: ChatActionProps) => {
 
     const theme = useTheme();
     const isBig = useMediaQuery(theme.breakpoints.up('sm'));
@@ -43,7 +44,8 @@ const ChatAction = ({ matchId, onTextFieldFocused }: ChatActionProps) => {
 
         let chatMessage: RequestChatMessage = {
             username: username,
-            text: inputValue
+            text: inputValue,
+            editor: isEditor
         };
 
         setLoading(true);
@@ -52,7 +54,7 @@ const ChatAction = ({ matchId, onTextFieldFocused }: ChatActionProps) => {
             setInputValue("");
         }
         setLoading(false)
-    }, [context, inputValue, matchId]);
+    }, [context, inputValue, matchId, isEditor]);
 
     const keyHandler = useCallback((e: KeyboardEvent) => {
         if (e.code === "Enter" && !e.shiftKey) {

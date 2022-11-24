@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class RequestChatMessageDto {
 	private String text;
 	private String username;
+	private boolean isEditor;
 }

@@ -14,6 +14,7 @@ import lombok.Data;
 public class ChatMessageDto {
 	private long id;	
 	private String text;	
+	private boolean isEditor;
 	private String username;
 	private LocalDateTime createdAt;
 	
@@ -21,6 +22,7 @@ public class ChatMessageDto {
 		public ChatMessageDtoBuilder bo(ChatMessage bo) {
 			this.id = bo.getId();
 			this.text = bo.getText();
+			this.isEditor = bo.isEditor();
 			this.username = bo.getUsername();
 			this.createdAt = bo.getCreatedAt();
 			return this;

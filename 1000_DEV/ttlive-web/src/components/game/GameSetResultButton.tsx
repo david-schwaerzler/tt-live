@@ -25,22 +25,20 @@ const GameSetResultButton = ({ disabled, won, set, game, isHome, editorCode, onE
         if (set.homeScore === 0 && set.guestScore === 0) {
             return 6;
         }
-        return isHome ? set.guestScore : set.homeScore;
+        return isHome ? set.homeScore : set.guestScore;
     });
     const [isHomeState, setHomeState] = useState<boolean>(isHome);
     const [otherScore, setOtherScore] = useState<number>(11);
     const [isLoading, setLoading] = useState(false);
+    const [isUnset, setUnset] = useState(false);
 
     useEffect(() => {
         setHomeState(!isHome)
-    }, [isHome]);
+    }, [isHome, show]);
 
     useEffect(() => {
-        if (selectedNumber > 9)
-            setOtherScore(selectedNumber + 2);
-        else {
-            setOtherScore(11);
-        }
+        setOtherScore(selectedNumber > 9 ? selectedNumber + 2 : 11);
+        setUnset(false)
     }, [selectedNumber])
 
     useEffect(() => {
@@ -50,14 +48,13 @@ const GameSetResultButton = ({ disabled, won, set, game, isHome, editorCode, onE
                 return;
             }
 
-            setSelectedNumber(isHome ? set.guestScore : set.homeScore);
+            setSelectedNumber(isHome ? set.homeScore : set.guestScore);
         }
     }, [show, isHome, set.guestScore, set.homeScore])
 
     const [t] = useTranslation();
 
     let buttonScore = isHome ? set.homeScore : set.guestScore;
-
     return (
         <Box sx={{}}>
             <Button disabled={disabled} variant="outlined" sx={{ pt: "3px", pb: "3px", pl: "0px", pr: "0px", minWidth: "95%" }} onClick={() => setShow(true)}>
@@ -69,29 +66,34 @@ const GameSetResultButton = ({ disabled, won, set, game, isHome, editorCode, onE
             </Button>
             <Dialog open={show} onClose={() => setShow(false)} fullWidth maxWidth="md" PaperProps={{ sx: { position: "fixed", top: theme => theme.spacing(5) } }} >
                 <DialogTitle>Set backup account</DialogTitle>
+
+                <Stack direction="row" gap={2} alignItems="center" justifyContent="center">
+                    <FormControlLabel value="female" control={<Radio checked={isHomeState} onClick={() => setHomeState(!isHomeState)} />} label="Switch?" />
+                    <FormControlLabel value="reset" control={<Radio checked={isUnset} onClick={() => setUnset(!isUnset)} />} label="Unset?" />
+                </Stack>
+
+
                 <DialogContent sx={{ mt: 1 }}>
                     <Stack gap={2}>
-                        <Grid container rowSpacing={2}>
+                        <Grid container rowSpacing={2} columnSpacing={1}>
                             <Grid item xs={6} textAlign="center"><Typography fontSize={{ xs: game.doubles ? "0.9rem" : "1rem", sm: "2rem" }}>{renderPlayer(true)}</Typography></Grid>
                             <Grid item xs={6} textAlign="center"><Typography fontSize={{ xs: game.doubles ? "0.9rem" : "1rem", sm: "2rem" }}>{renderPlayer(false)}</Typography></Grid>
                             <Grid item xs={6} textAlign="center">
                                 {isHomeState
-                                    ? <Typography fontSize="2rem" fontWeight="bold">{otherScore}</Typography>
+                                    ? <Typography fontSize="2rem" fontWeight="bold">{isUnset ? 0 : otherScore}</Typography>
                                     : renderInput()
                                 }
                             </Grid>
                             <Grid item xs={6} textAlign="center">
                                 {isHomeState
                                     ? renderInput()
-                                    : <Typography fontSize="2rem" fontWeight="bold">{otherScore}</Typography>
+                                    : <Typography fontSize="2rem" fontWeight="bold">{isUnset ? 0 : otherScore}</Typography>
                                 }
                             </Grid>
                         </Grid>
 
-                        <Stack direction="row" gap={2} alignItems="center">
-                            <Slider min={0} max={11} value={selectedNumber} onChange={(e, value) => setSelectedNumber(value as number)} sx={{ mr: 2 }} />
-                            <FormControlLabel value="female" control={<Radio checked={isHomeState} onClick={() => setHomeState(!isHomeState)} />} label="Heim?" />
-                        </Stack>
+                        <Slider min={0} max={11} value={isUnset ? 0 : selectedNumber} onChange={(e, value) => setSelectedNumber(value as number)} sx={{ mr: 2 }} />
+
                         <LoadingButton loading={isLoading} variant="outlined" onClick={() => onNumberSelected()}>{t("Common.ok")}</LoadingButton>
                     </Stack>
 
@@ -108,7 +110,8 @@ const GameSetResultButton = ({ disabled, won, set, game, isHome, editorCode, onE
             else
                 setSelectedNumber(number)
         }
-        return <TextField autoFocus value={selectedNumber === -1 ? "" : selectedNumber} onChange={onChange} type="number" />;
+
+        return <TextField autoFocus value={isUnset ? "0" : selectedNumber === -1 ? "" : selectedNumber} onChange={onChange} type="number" />;
     }
 
     function renderPlayer(isHome: boolean) {
@@ -125,7 +128,12 @@ const GameSetResultButton = ({ disabled, won, set, game, isHome, editorCode, onE
 
     async function onNumberSelected() {
         let homeScore = isHomeState ? otherScore : selectedNumber;
-        let guestScore = isHomeState ? selectedNumber : otherScore ;
+        let guestScore = isHomeState ? selectedNumber : otherScore;
+
+        if(isUnset){
+            homeScore = 0;
+            guestScore = 0;
+        }
 
         let requestGameSet: RequestGameSet = {
             number: set.number,

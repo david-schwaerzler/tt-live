@@ -1,5 +1,5 @@
 import { Box, Card, CardActions, CardContent, Collapse, Grid, Stack } from "@mui/material";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Game } from "../../rest/data/Game";
 import { GameSet } from "../../rest/data/GameSet";
 import MatchStateLabel from "../match/MatchStateLabel";
@@ -9,13 +9,12 @@ import { spacingSmall } from "../utils/StyleVars";
 
 export interface GameLiveScoreProps {
     game: Game;
-    editButton: () => (ReactNode);
 }
 
 const NUM_DISPLAYED_SETS = 2;
 
 // TODO Refactore this (especially the games)
-const GameLiveScore = ({ game, editButton }: GameLiveScoreProps) => {
+const GameLiveScore = ({ game }: GameLiveScoreProps) => {
 
     const [expanded, setExpanded] = useState<boolean>(false);
     const [displayedSets, setDisplayedSets] = useState<Array<GameSet>>([]);
@@ -46,16 +45,13 @@ const GameLiveScore = ({ game, editButton }: GameLiveScoreProps) => {
     return (
         <Card>
             <CardContent>
-
-                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "right", mb: 1 }} >
+                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", mb: 1 }} >
                     {(game.state === "LIVE" || game.state === "FINISHED") &&
-                        <Box sx={{ opacity: 1, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
-                            <MatchStateLabel sx={{ margin: "auto" }} state={game.state} variant="border" />
-                        </Box>
+                        <MatchStateLabel sx={{ margin: "auto" }} state={game.state} variant="border" />
                     }
-                    {editButton()}
                 </Box>
-                {/*renderScore(game)*/}
+
+                {renderScore(game)}
 
 
                 {displayedSets.map(value =>
