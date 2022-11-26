@@ -101,7 +101,7 @@ public class GameService {
 		MatchState oldState = gameEntity.getState();
 		if (homeScore >= 3 || guestScore >= 3)
 			state = MatchState.FINISHED;
-		else if (homeScore == 0 && guestScore == 0)
+		else if (homeScore == 0 && guestScore == 0 && sets.get(0).getHomeScore() == 0 && sets.get(0).getGuestScore() == 0)
 			state = MatchState.NOT_STARTED;
 
 		gameEntity.setHomeSets(homeScore);

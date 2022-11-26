@@ -37,6 +37,7 @@ export async function fetchMatches(): Promise<MatchesReponse> {
         }
 
         let matches: Array<Match> = await response.json();
+        matches.sort((a, b) => a.startDate === b.startDate ? 0 : a.startDate < b.startDate ? 1 : -1);        
         matches = matches.map(m => sortMatch(m));
         return returnData(matches);
 
@@ -96,7 +97,7 @@ export async function putLineup(id: number, editorCode: string, requestLineup: R
             return returnError(response.status.toString());
         }
 
-        let match: Match = await response.json();       
+        let match: Match = await response.json();
         return returnData(sortMatch(match));
 
     } catch (error) {

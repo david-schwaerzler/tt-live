@@ -1,8 +1,6 @@
 import { Box } from "@mui/system";
 import { Match } from "../../rest/data/Match";
 import { spacingSmall } from "../utils/StyleVars";
-import ShareIcon from '@mui/icons-material/Share';
-import { IconButton } from "@mui/material";
 
 export interface MatchScoreProps {
     match: Match;

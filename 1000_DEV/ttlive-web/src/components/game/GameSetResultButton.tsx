@@ -68,8 +68,8 @@ const GameSetResultButton = ({ disabled, won, set, game, isHome, editorCode, onE
                 <DialogTitle>Set backup account</DialogTitle>
 
                 <Stack direction="row" gap={2} alignItems="center" justifyContent="center">
-                    <FormControlLabel value="female" control={<Radio checked={isHomeState} onClick={() => setHomeState(!isHomeState)} />} label="Switch?" />
-                    <FormControlLabel value="reset" control={<Radio checked={isUnset} onClick={() => setUnset(!isUnset)} />} label="Unset?" />
+                    <FormControlLabel value="female" control={<Radio checked={!isHomeState} onClick={() => setHomeState(!isHomeState)} />} label={t("GameSetResult.isHome")} />
+                    <FormControlLabel value="reset" control={<Radio checked={isUnset} onClick={() => setUnset(!isUnset)} />} label={t("GameSetResult.unset")} />
                 </Stack>
 
 

@@ -4,7 +4,6 @@ import { useContext, useState } from "react";
 import { Match } from "../../rest/data/Match";
 import { spacingNormal, spacingSmall } from "../utils/StyleVars";
 import MatchStateLabel from "./MatchStateLabel";
-import { Game } from "../../rest/data/Game";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { AppContext } from "../../AppContext";
@@ -17,8 +16,6 @@ import MaleIcon from '@mui/icons-material/Male';
 export interface MatchCardProps {
     match: Match | null
 }
-
-const NUMBER_MATCHES = 4;
 
 const MatchCard = ({ match }: MatchCardProps) => {
 

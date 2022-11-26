@@ -60,7 +60,6 @@ const WebHookUtil = ({ match, onGameUpdated, onMatchUpdated, onAddChatMessage }:
                         console.error("Received websocket event for update game but no game was provided")
                         return;
                     }
-                    console.log(action.game)
                     onGameUpdated(action.game);
                 }else if(action.action === "CHAT"){
                     if(action.chat == null){

@@ -17,7 +17,6 @@ const ChatMessageList = React.forwardRef<HTMLUListElement, ChatMessageListProps>
     const context = useContext(AppContext);
 
     let username = context.getSetting(CHAT_USERNAME_SETTING);
-    console.log(username)
 
     useEffect(() => {
         let lastMessage: ChatMessage | null = null;

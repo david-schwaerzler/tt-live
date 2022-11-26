@@ -1,6 +1,6 @@
 
 import { HomeView } from './views/HomeView';
-import { BrowserRouter, Routes, Route, Navigate, HashRouter } from "react-router-dom";
+import { Routes, Route, Navigate, HashRouter } from "react-router-dom";
 import CreateGameView from './views/CreateGameView';
 import React, { useMemo, useState } from 'react';
 import MainView from './containers/MainView';

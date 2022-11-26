@@ -60,12 +60,11 @@ const ChatDrawer = ({ match, expanded, isEditor, messages, badgeCounter, onExpan
                 </Box>
 
                 <ChatMessageList ref={chatRef} messages={messages} />
-                <ChatAction matchId={match.id} onTextFieldFocused={onTextFieldFocus} isEditor={isEditor} />
+                <ChatAction matchId={match.id} onScrollEvent={onScrollEvent} isEditor={isEditor} />
             </Drawer>
         </React.Fragment >
     )
-    function onTextFieldFocus() {
-        console.log(chatRef)
+    function onScrollEvent() {
         if (isBig === false) {
             setTimeout(() => {
                 if (chatRef.current)

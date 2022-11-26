@@ -128,6 +128,8 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
                     </CardContent>
                 </Card>
             }
+
+            <Box height="50px" width="100%"/>
         </React.Fragment>
     )
 
@@ -171,8 +173,6 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
             </Box>
         )
     }
-
-
 
     function renderSingles(game: GameScoreType) {
         let homeWon = game.state === "FINISHED" && game.homeSets > game.guestSets;

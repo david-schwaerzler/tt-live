@@ -10,13 +10,14 @@ import ChatNameMenu from "./ChatNameMenu";
 
 export interface ChatActionProps {
     matchId: number;
-    onTextFieldFocused: () => void;
+    onScrollEvent: () => void;
     isEditor: boolean;
+    showAvatar?: boolean
 }
 
 const CHAT_USERNAME_SETTING = "chatUsername";
 
-const ChatAction = ({ matchId, isEditor, onTextFieldFocused }: ChatActionProps) => {
+const ChatAction = ({ matchId, isEditor, onScrollEvent, showAvatar = true }: ChatActionProps) => {
 
     const theme = useTheme();
     const isBig = useMediaQuery(theme.breakpoints.up('sm'));
@@ -31,6 +32,8 @@ const ChatAction = ({ matchId, isEditor, onTextFieldFocused }: ChatActionProps) 
     const context = useContext(AppContext);
     const [t] = useTranslation();
 
+
+    
     const onSend = useCallback(async (anchor: HTMLElement) => {
         if (inputValue.trim() === "") {
             return;
@@ -52,9 +55,10 @@ const ChatAction = ({ matchId, isEditor, onTextFieldFocused }: ChatActionProps) 
         let response = await postChatMessage(matchId, chatMessage)
         if (response.data != null) {
             setInputValue("");
+            onScrollEvent();
         }
         setLoading(false)
-    }, [context, inputValue, matchId, isEditor]);
+    }, [context, inputValue, matchId, isEditor, onScrollEvent]);
 
     const keyHandler = useCallback((e: KeyboardEvent) => {
         if (e.code === "Enter" && !e.shiftKey) {
@@ -82,7 +86,7 @@ const ChatAction = ({ matchId, isEditor, onTextFieldFocused }: ChatActionProps) 
                     value={inputValue}
                     onChange={e => setInputValue(e.target.value.substring(0, 200))}
                     size="small"
-                    onClick={onTextFieldFocused}
+                    onClick={onScrollEvent}
                     autoComplete="off"
                     maxRows={isBig ? 3 : 2}
                     multiline
@@ -94,7 +98,7 @@ const ChatAction = ({ matchId, isEditor, onTextFieldFocused }: ChatActionProps) 
                     {t("ChatDrawer.send")}
                 </LoadingButton>
                 <ChatNameMenu anchor={menueAnchor} onClose={() => setMenueAnchor(null)} />
-                <IconButton onClick={e => setMenueAnchor(e.currentTarget)} sx={{}} ref={userRef} className="testtest">
+                <IconButton onClick={e => setMenueAnchor(e.currentTarget)} sx={{ display: showAvatar ? "block" : "none" }} ref={userRef} >
                     <AccountCircle sx={{ color: theme => theme.palette.primary.main }} />
                 </IconButton>
             </Stack>

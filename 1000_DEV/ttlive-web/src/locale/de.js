@@ -88,7 +88,7 @@ const deDe = {
             "MatchCard.linkGame": "zum Spiel",
 
             "GameReport.singles": "Einzel",
-            "GameReport.doubles": "Doubles",
+            "GameReport.doubles": "Doppel",
             "GameReport.lastDouble": "Schlussdoppel",
             "GameReport.noPlayer": "Nicht eingegeben",
             "GameReport.set": "Nur Sätze",
@@ -113,7 +113,12 @@ const deDe = {
             "ChatDrawer.username": "Username",
             "ChatDrawer.save": "OK",
 
-            "ShareButton.copyLink": "Link zum Spiel kopiert"
+            "ShareButton.copyLink": "Link zum Spiel kopiert",
+
+            "GameLiveEdit.set": "Satz",
+
+            "GameSetResult.isHome": "Heim?",
+            "GameSetResult.unset": "0:0?"
 
         }
     }

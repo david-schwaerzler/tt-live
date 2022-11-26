@@ -46,7 +46,7 @@ public class Game {
 			this.sets.add(GameSet.builder().set(entity.getSet3(), 3).build());
 			this.sets.add(GameSet.builder().set(entity.getSet4(), 4).build());
 			this.sets.add(GameSet.builder().set(entity.getSet5(), 5).build());
-
+			
 			boolean isNotStarted = false;
 			int homeScore = 0;
 			int guestScore = 0;

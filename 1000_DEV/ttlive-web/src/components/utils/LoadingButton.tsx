@@ -15,8 +15,8 @@ export interface LoadinButtonProps extends ButtonProps {
 
 const LoadingButton = ({ loading, ...rest }: LoadinButtonProps) => {
     return <StyledButton {...rest} disabled={loading ? true : rest.disabled} sx={{ display: "grid", ...rest.sx }}>
-        <Box visibility={loading ? "hidden" : "visible"} gridRow={1} gridColumn={1} display="flex" alignContent="center" alignItems="center">{rest.children}</Box>
-        <Box visibility={loading ? "visible" : "hidden"} display="flex" gridRow={1} gridColumn={1} alignContent="center" alignItems="center">
+        <Box visibility={loading ? "hidden" : "visible"} gridRow={1} gridColumn={1} display="flex" justifyContent="center" alignItems="center">{rest.children}</Box>
+        <Box visibility={loading ? "visible" : "hidden"} display="flex" gridRow={1} gridColumn={1} justifyContent="center" alignItems="center">
             <CircularProgress size={24} color="primary" />
         </Box>
     </StyledButton>

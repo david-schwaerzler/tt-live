@@ -15,6 +15,11 @@ const StyledButton = styled(IconButton)(({ theme }) => ({
     bottom: theme.spacing(7),
     background: theme.palette.primary.main,
 
+    [theme.breakpoints.up("md")]: {
+        right: "18em",
+        bottom: "1em"
+    },
+
     ":hover": {
         background: theme.palette.primary.main,
         opacity: 0.5
