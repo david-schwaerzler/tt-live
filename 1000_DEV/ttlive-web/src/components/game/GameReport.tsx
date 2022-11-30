@@ -26,7 +26,8 @@ const PlayerCell = styled(Grid)({
     fontSize: "0.9rem"
 })
 
-type GameScoreType = Game & { homeTeamScore: number, guestTeamScore: number };
+type GameType = "DOUBLES" | "SINGLES" | "FINISH_DOUBLES";
+type GameScoreType = Game & { homeTeamScore: number, guestTeamScore: number, type: GameType };
 
 const GAME_INPUT_TYPE_SETTING = "gameInputType"
 
@@ -38,9 +39,8 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
 
 
     const [gameScores, setGameScores] = useState<Array<GameScoreType> | null>(null);
-    // TODO fix final double (this should be in gamestyle somehow)
-    const [lastDouble, setLastDouble] = useState<GameScoreType | null>(null);
     const [isEditMode, setEditMode] = useState<boolean>(editorCode != null);
+    const [hasFinishingDoubles, setFinishDoubles] = useState(false);
 
     const [inputType, setInputType] = useState(() => {
         let inputTypeStr = context.getSetting(GAME_INPUT_TYPE_SETTING);
@@ -54,8 +54,6 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
         return inputType;
     });
 
-
-
     useEffect(() => {
         if (games == null) {
             setGameScores(null);
@@ -65,28 +63,32 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
         let homeTeamScore = 0;
         let guestTeamScore = 0;
 
-        let gameScores = games.map<GameScoreType>(g => {
+        let type: GameType = games.length === 0 ? "DOUBLES" : games[0].doubles ? "DOUBLES" : "SINGLES";
+        let gameScores: Array<GameScoreType> = [];
+        let hasFinishingDoubles = false;
+
+        for (let g of games) {
+
+            if (g.doubles === false && type === "DOUBLES") {
+                type = "SINGLES";
+            } else if (g.doubles === true && type === "SINGLES") {
+                type = "FINISH_DOUBLES";
+                hasFinishingDoubles = true;
+            }
 
             if (g.homeSets >= 3)
                 homeTeamScore++;
             else if (g.guestSets >= 3)
                 guestTeamScore++;
 
-            return {
+            gameScores.push({
                 ...g,
+                type: type,
                 homeTeamScore: guestTeamScore,
                 guestTeamScore: homeTeamScore
-            }
-        });
-
-        let lastDouble = gameScores[gameScores.length - 1];
-        if (lastDouble.doubles) {
-            gameScores = gameScores.filter(gc => gc.id !== lastDouble.id)
-            setLastDouble(lastDouble)
-        } else {
-            setLastDouble(null);
-        }
-
+            });
+        };
+        setFinishDoubles(hasFinishingDoubles);
         setGameScores(gameScores);
     }, [games]);
 
@@ -101,7 +103,7 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
                     <CardContent>
                         <Typography pb={2} variant="h5" >{t("GameReport.doubles")}</Typography>
                         <Stack gap={1.5}>
-                            {gameScores.filter(game => game.doubles).map(game => renderDoubles(game))}
+                            {gameScores.filter(game => game.type === "DOUBLES").map(game => renderDoubles(game))}
                         </Stack>
                     </CardContent>
                 </Card>
@@ -112,22 +114,22 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
                     <CardContent>
                         <Typography pb={2} variant="h5">{t("GameReport.singles")}</Typography>
                         <Stack gap={1.5}>
-                            {gameScores.filter(game => !game.doubles).map(game => renderSingles(game))}
+                            {gameScores.filter(game => game.type === "SINGLES").map(game => renderSingles(game))}
                         </Stack>
                     </CardContent>
                 </Card>
             }
 
-            {lastDouble != null &&
+            {gameScores != null && hasFinishingDoubles &&
                 <Card>
                     <CardContent>
                         <Typography pb={2} variant="h5">{t("GameReport.lastDouble")}</Typography>
                         <Stack gap={1.5}>
-                            {renderDoubles(lastDouble)}
+                            {gameScores.filter(game => game.type === "FINISH_DOUBLES").map(game => renderDoubles(game))}
                         </Stack>
                     </CardContent>
                 </Card>
-            }           
+            }
         </React.Fragment>
     )
 

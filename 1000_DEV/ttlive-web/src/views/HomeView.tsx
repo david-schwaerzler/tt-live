@@ -42,6 +42,9 @@ export function HomeView(props: HomeViewProps) {
                     </Link>
                 </Box>
             </Box>
+            <Box sx={{position: "absolute", bottom: theme => theme.spacing(1), left : theme => theme.spacing(1), color: theme => theme.palette.primary.main}}>
+            <Link to={"imprint"} style={{color: "inherit"}}>{t("HomeView.imprint")}</Link>
+            </Box>
         </Container>
 
     );

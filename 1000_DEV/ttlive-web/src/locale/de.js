@@ -19,6 +19,7 @@ const deDe = {
             "HomeView.createMatch": "Livegame Erstellen",
             "HomeView.goLiveText": "Gehe Live mit deinem Ligaspiel\nohne Account und in nur wenigen Klicks.",
             "HomeView.goSearchText": "... oder finde ein live Spiel über die Suche.",
+            "HomeView.imprint": "Impressum",
 
             "CreateGameView.stepRegion": "Region/Konkurenz",
             "CreateGameView.stepLeague": "Liga/Spielsystem",
@@ -118,8 +119,10 @@ const deDe = {
             "GameLiveEdit.set": "Satz",
 
             "GameSetResult.isHome": "Heim?",
-            "GameSetResult.unset": "0:0?"
+            "GameSetResult.unset": "0:0?",
 
+            "ImprintView.imprint": "Impressum:",
+            "ImprintView.contact": "Kontaktaufnahme:"
         }
     }
 }

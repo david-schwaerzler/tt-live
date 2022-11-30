@@ -10,6 +10,7 @@ import { AppContext, AppContextProps, EditorCode } from './AppContext';
 import LiveSearch from './views/LiveSearchView';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import ImprintView from './views/ImprintView';
 
 
 function App() {
@@ -88,6 +89,7 @@ function App() {
                                 <Route path="login" element={renderContent(<LoginView />)} />
                                 <Route path="live_search" element={renderContent(<LiveSearch />)} />
                                 <Route path="live" element={renderContent(<LiveView />)} />
+                                <Route path="imprint" element={renderContent(<ImprintView />)} />
                                 <Route path="*" element={<Navigate to="/" />} />
                             </Routes>
                         </HashRouter>

@@ -56,8 +56,7 @@ const MatchTable = ({ sx, fetchDelay = 0, onError, onFetched }: MatchTableProps)
                 </React.Fragment>
                 : matches.map(match => <MatchCard key={match.id} match={match} />)
             }
-        </Stack >
-
+        </Stack>
     );
 }
 

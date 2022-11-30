@@ -135,8 +135,8 @@ const LineupSetting = ({ match, isHomeTeam, editorCode }: LineupSettingProps) =>
     async function onSave(match: Match) {
 
         let requestLineUp: RequestLineup = {
-            doubles: doubles.map<RequestDouble>(d => ({ id: d.id, player1: d.player1, player2: d.player2 })),
-            players: players.map<RequestPlayer>(p => ({ id: p.id, name: p.name }))
+            doubles: doubles.map<RequestDouble>(d => ({ id: d.id, player1: d.player1.trim(), player2: d.player2.trim() })),
+            players: players.map<RequestPlayer>(p => ({ id: p.id, name: p.name.trim() }))
         };
         setLoading(true);
         let response = await putLineup(match.id, editorCode, requestLineUp);
