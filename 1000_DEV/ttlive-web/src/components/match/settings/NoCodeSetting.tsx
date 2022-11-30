@@ -39,7 +39,7 @@ const NoCodeSetting = ({ match }: NoCodeSettingProps) => {
                 <FormControl error={errorMsgs[Errors.VALIDATE_CODE] != null && errorMsgs[Errors.VALIDATE_CODE] !== ""} >
                     <TextField sx={{ width: "200px", mt: 2, display: "block" }}
                         label={t("MatchSettings.editorCodeInput")} value={newEditorCode}
-                        onChange={e => setNewEditorCode(e.target.value)}
+                        onChange={e => setNewEditorCode(e.target.value.toLocaleLowerCase())}
                         autoComplete="off"
                     />
                     <FormHelperText >{errorMsgs[Errors.VALIDATE_CODE]}</FormHelperText>

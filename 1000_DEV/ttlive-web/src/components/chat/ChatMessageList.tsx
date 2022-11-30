@@ -17,19 +17,19 @@ const ChatMessageList = React.forwardRef<HTMLUListElement, ChatMessageListProps>
     const context = useContext(AppContext);
 
     let username = context.getSetting(CHAT_USERNAME_SETTING);
+    console.log({messages: messages, stateMessages: stateMessages})
 
     useEffect(() => {
         let lastMessage: ChatMessage | null = null;
+
         let stateMessages = [];
+        if(messages.length > 0){
+            lastMessage = {...messages[0]}
+            stateMessages.push(lastMessage);            
+        }
 
-        for (let message of messages) {
-
-            if (lastMessage == null) {
-                lastMessage = message;
-                continue;
-            }
-
-            if (message.username === lastMessage.username) {
+        for (let message of messages) {          
+            if (lastMessage != null && message.username === lastMessage.username) {
                 lastMessage.text = lastMessage.text + "\n" + message.text;
             } else {
                 let copy = { ...message };
@@ -37,6 +37,8 @@ const ChatMessageList = React.forwardRef<HTMLUListElement, ChatMessageListProps>
                 lastMessage = copy;
             }
         }
+
+        
 
         setStateMessages(stateMessages);
 
@@ -47,7 +49,7 @@ const ChatMessageList = React.forwardRef<HTMLUListElement, ChatMessageListProps>
             {stateMessages.map((value, index) =>
                 <ListItem key={index} sx={{ overflowWrap: "anywhere", width: "100%", pb: 0.5, pt: 0.5 }}>
                     <Box width="100%">
-                        <Typography sx={{ fontWeight: "bold", ...(value.editor && { color: theme => theme.palette.primary.main }), display: "inline", mr: "10px" , lineHeight: 1}} >
+                        <Typography sx={{ fontWeight: "bold", ...(value.editor && { color: theme => theme.palette.primary.main }), display: "inline", mr: "10px", lineHeight: 1 }} >
                             {value.username}:
                         </Typography>
                         <Typography sx={{ ...(username === value.username && { fontWeight: "bold" }), display: "inline", mr: "10px", lineHeight: 1 }} >{value.text}</Typography>

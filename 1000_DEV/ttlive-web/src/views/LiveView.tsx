@@ -123,6 +123,8 @@ const LiveView = () => {
                     isEditor={editorCode != null}
                 />
             }
+            {/* This is needed so that the share button will not hide some stuff*/}
+            <Box height="50px" width="100%" />
         </Box>
 
     );
@@ -132,12 +134,12 @@ const LiveView = () => {
     }
 
     function renderLinup() {
-        return match && <GameReport 
-        games={match != null ? match.games : null} 
-        editorCode={editorCode} 
-        matchState={match != null ? match.state : "NOT_STARTED"} 
-        messages={messages}
-        matchId={match ? match.id : null}/>;
+        return match && <GameReport
+            games={match != null ? match.games : null}
+            editorCode={editorCode}
+            matchState={match != null ? match.state : "NOT_STARTED"}
+            messages={messages}
+            matchId={match ? match.id : null} />;
     }
 
     function renderLive() {

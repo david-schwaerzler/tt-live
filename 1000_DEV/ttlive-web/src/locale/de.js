@@ -18,7 +18,7 @@ const deDe = {
             "HomeView.search": "Spielsuche",
             "HomeView.createMatch": "Livegame Erstellen",
             "HomeView.goLiveText": "Gehe Live mit deinem Ligaspiel\nohne Account und in nur wenigen Klicks.",
-            "HomeView.goSearchText": "... oder finde ein live Spiele über die Suche.",
+            "HomeView.goSearchText": "... oder finde ein live Spiel über die Suche.",
 
             "CreateGameView.stepRegion": "Region/Konkurenz",
             "CreateGameView.stepLeague": "Liga/Spielsystem",

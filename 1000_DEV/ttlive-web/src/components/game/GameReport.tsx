@@ -127,9 +127,7 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
                         </Stack>
                     </CardContent>
                 </Card>
-            }
-
-            <Box height="50px" width="100%"/>
+            }           
         </React.Fragment>
     )
 
