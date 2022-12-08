@@ -1,7 +1,9 @@
-import { Box, Card, CardContent, Skeleton, Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 
 import { Match } from "../../../rest/data/Match";
+import CodeSetting from "./CodeSetting";
 import LineupSetting from "./LineupSetting";
+import MatchInfoEdit from "./MatchInfoEdit";
 import NoCodeSetting from "./NoCodeSetting";
 
 export interface MatchSettingsProps {
@@ -18,22 +20,12 @@ const MatchSettings = ({ match, editorCode, onMatchChanged }: MatchSettingsProps
 
     return (
         <Stack gap={2}>
-            {match == null ? <Skeleton sx={{ height: { xs: "64px", sm: "96px" } }} variant="rectangular" />
-                : <Box>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h5">Editor-Code: <Box sx={{ display: "inline", fontWeight: "bold", color: theme => theme.palette.primary.main }}>{editorCode}</Box></Typography>
-                        </CardContent>
-                    </Card>                 
-                </Box>
-            }
+            <CodeSetting editorCode={editorCode} />
             <LineupSetting match={match} editorCode={editorCode} isHomeTeam={true} />
             <LineupSetting match={match} editorCode={editorCode} isHomeTeam={false} />
-
+            <MatchInfoEdit match={match} editorCode={editorCode} />
         </Stack>
     );
-
-
 }
 
 export default MatchSettings;

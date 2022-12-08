@@ -9,10 +9,10 @@ import javax.ejb.Stateless;
 
 import com.ttlive.bo.GameSet.InvalidGameSetFormat;
 import com.ttlive.bo.Match;
-import com.ttlive.bo.RequestLineup;
-import com.ttlive.bo.RequestLineup.RequestDoubles;
-import com.ttlive.bo.RequestLineup.RequestPlayer;
-import com.ttlive.bo.RequestMatch;
+import com.ttlive.bo.request.RequestLineup;
+import com.ttlive.bo.request.RequestLineup.RequestDoubles;
+import com.ttlive.bo.request.RequestLineup.RequestPlayer;
+import com.ttlive.bo.request.RequestMatch;
 import com.ttlive.persistence.dao.GameStyleDao;
 import com.ttlive.persistence.dao.LeagueDao;
 import com.ttlive.persistence.dao.MatchDao;
@@ -50,6 +50,12 @@ public class MatchService {
 	private TeamDao teamDao;
 
 	@EJB
+	private TeamService teamService;
+
+	@EJB
+	private LeagueService leagueService;
+
+	@EJB
 	private MatchEventObserver eventObserver;
 
 	public LinkedList<Match> findAll() throws InvalidGameSetFormat {
@@ -66,10 +72,10 @@ public class MatchService {
 
 	public Match create(RequestMatch requestMatch) throws InvalidGameSetFormat, BadRestRequestException {
 
-		RegionEntity regionEntity = regionDao.findById(requestMatch.getRegionId());
+		RegionEntity regionEntity = regionDao.findById(requestMatch.getLeague().getRegionId());
 		if (regionEntity == null)
 			throw new BadRestRequestException("regionId",
-					"Region with the given id='" + requestMatch.getRegionId() + " doesn't exist");
+					"Region with the given id='" + requestMatch.getLeague().getRegionId() + " doesn't exist");
 
 		GameStyleEntity gameStyleEntity = gameStyleDao.findById(requestMatch.getGameStyleId());
 		if (gameStyleEntity == null)
@@ -216,7 +222,53 @@ public class MatchService {
 			}
 		}
 		matchEntity.setState(state);
-		
+
+		Match match = getDefault(matchEntity);
+		eventObserver.fireMatchEvent(match);
+		return match;
+	}
+
+	public Match updateMatch(long id, RequestMatch requestMatch) throws BadRestRequestException, InvalidGameSetFormat {
+		MatchEntity matchEntity = matchDao.findById(id);
+		if (matchEntity == null)
+			throw new BadRestRequestException("id", "Match with the given id='" + id + " doesn't exist");
+
+		if (requestMatch.getGameStyleId() != matchEntity.getGameStyle().getId())
+			throw new BadRestRequestException("gameStyleId", "GameStyleId must be set");
+
+		LeagueEntity oldLeague = matchEntity.getLeague();
+		LeagueEntity updatedLeague = leagueService.updateLeague(oldLeague, requestMatch.getLeague());
+		matchEntity.setLeague(updatedLeague);
+
+		TeamEntity oldHomeTeam = matchEntity.getHomeTeam();
+		TeamEntity updatedHomeTeam = teamService.updateTeam(oldHomeTeam, requestMatch.getHomeTeam(), updatedLeague);
+		matchEntity.setHomeTeam(updatedHomeTeam);
+
+		TeamEntity oldGuestTeam = matchEntity.getGuestTeam();
+		TeamEntity updatedGuestTeam = teamService.updateTeam(oldGuestTeam, requestMatch.getGuestTeam(), updatedLeague);
+		matchEntity.setGuestTeam(updatedGuestTeam);
+
+		matchEntity.setStartDate(requestMatch.getStartDate());
+
+		if (oldHomeTeam.getHomeMatches().size() == 0 && oldHomeTeam.getGuestMatches().size() == 0) {
+			// need to set the league to null, to remove the team from the league
+			// this might change wether the league will be deleted or not
+			oldHomeTeam.setLeague(null);
+			teamDao.remove(oldHomeTeam);
+		}
+
+		if (oldGuestTeam.getHomeMatches().size() == 0 && oldGuestTeam.getGuestMatches().size() == 0) {
+			// need to set the league to null, to remove the team from the league
+			// this might change wether the league will be deleted or not
+			oldGuestTeam.setLeague(null);
+			teamDao.remove(oldGuestTeam);
+		}
+		if (oldLeague.getTeams().size() == 0 && oldLeague.getMatches().size() == 0) {
+			leagueDao.remove(oldLeague);
+		}
+
+		matchDao.flush();
+
 		Match match = getDefault(matchEntity);
 		eventObserver.fireMatchEvent(match);
 		return match;

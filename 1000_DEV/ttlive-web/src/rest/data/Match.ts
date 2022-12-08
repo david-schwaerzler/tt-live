@@ -1,17 +1,15 @@
 import { Doubles } from "./Doubles";
 import { Game } from "./Game";
 import { GameStyle } from "./GameStyle";
-import { League } from "./League";
+import { League, RequestLeague } from "./League";
 import { Player } from "./Player";
-import { Team } from "./Team";
+import { RequestTeam, Team } from "./Team";
 
-export interface RequestMatch {
-    regionId: number;
-    contest : "WOMEN" | "MEN";
+export interface RequestMatch {    
     gameStyleId: number;
-    league: League;
-    homeTeam: Team;
-    guestTeam: Team;
+    league: RequestLeague;
+    homeTeam: RequestTeam;
+    guestTeam: RequestTeam;
     startDate: string;
 }
 

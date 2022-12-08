@@ -55,7 +55,8 @@ public class PlayerEntity {
 		if(this.match != null && setBoth) 
 			this.match.removePlayer(this, false);
 		this.match = match;
-		if(setBoth)
+		
+		if(setBoth && match != null)
 			match.addPlayer(this);
 	}
 }

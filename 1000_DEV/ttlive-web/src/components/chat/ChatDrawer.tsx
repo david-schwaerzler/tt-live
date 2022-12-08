@@ -55,7 +55,7 @@ const ChatDrawer = ({ match, expanded, isEditor, messages, badgeCounter, onExpan
                 ModalProps={{ keepMounted: true }}
 
             >
-                <Box sx={{ cursor: "pointer", width: "100%", display: { xs: "block", md: "block" } }} onClick={() => onExpanded(!expanded)}>
+                <Box sx={{ cursor: "pointer", width: "100%" }} onClick={() => onExpanded(!expanded)}>
                     <ExpandButton expanded={!expanded} />
                 </Box>
 

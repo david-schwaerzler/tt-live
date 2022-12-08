@@ -17,17 +17,12 @@ const ChatMessageList = React.forwardRef<HTMLUListElement, ChatMessageListProps>
     const context = useContext(AppContext);
 
     let username = context.getSetting(CHAT_USERNAME_SETTING);
-    console.log({messages: messages, stateMessages: stateMessages})
 
     useEffect(() => {
         let lastMessage: ChatMessage | null = null;
 
-        let stateMessages = [];
-        if(messages.length > 0){
-            lastMessage = {...messages[0]}
-            stateMessages.push(lastMessage);            
-        }
-
+        let stateMessages : Array<ChatMessage> = [];
+        
         for (let message of messages) {          
             if (lastMessage != null && message.username === lastMessage.username) {
                 lastMessage.text = lastMessage.text + "\n" + message.text;
@@ -36,9 +31,7 @@ const ChatMessageList = React.forwardRef<HTMLUListElement, ChatMessageListProps>
                 stateMessages.push(copy);
                 lastMessage = copy;
             }
-        }
-
-        
+        }        
 
         setStateMessages(stateMessages);
 
@@ -47,7 +40,7 @@ const ChatMessageList = React.forwardRef<HTMLUListElement, ChatMessageListProps>
     return (
         <List sx={{ overflowX: "hidden", overflowY: "scroll", flexGrow: 1, ...rest.sx }} ref={ref} >
             {stateMessages.map((value, index) =>
-                <ListItem key={index} sx={{ overflowWrap: "anywhere", width: "100%", pb: 0.5, pt: 0.5 }}>
+                <ListItem key={index} sx={{ overflowWrap: "anywhere", width: "100%", pb: 0.5, pt: 0.5, whiteSpace: "pre-wrap" }}>
                     <Box width="100%">
                         <Typography sx={{ fontWeight: "bold", ...(value.editor && { color: theme => theme.palette.primary.main }), display: "inline", mr: "10px", lineHeight: 1 }} >
                             {value.username}:

@@ -9,7 +9,7 @@ import javax.ejb.Stateless;
 import com.ttlive.bo.Game;
 import com.ttlive.bo.GameSet;
 import com.ttlive.bo.GameSet.InvalidGameSetFormat;
-import com.ttlive.bo.RequestGameSet;
+import com.ttlive.bo.request.RequestGameSet;
 import com.ttlive.persistence.dao.GameDao;
 import com.ttlive.persistence.entity.GameEntity;
 import com.ttlive.session.MatchEventObserver;

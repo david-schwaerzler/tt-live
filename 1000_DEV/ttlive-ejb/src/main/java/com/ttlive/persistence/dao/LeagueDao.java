@@ -10,16 +10,26 @@ import com.ttlive.utils.BaseDao;
 import com.ttlive.utils.LeagueContest;
 
 @Stateless
-public class LeagueDao extends BaseDao<LeagueEntity>{
+public class LeagueDao extends BaseDao<LeagueEntity> {
 
 	public LeagueDao() {
 		super(LeagueEntity.class);
 	}
-	
-	public List<LeagueEntity> loadByContest(LeagueContest contest) {
-		TypedQuery<LeagueEntity> query = em.createNamedQuery("League.findByContest", LeagueEntity.class);
+
+	public LeagueEntity findBy(String name, LeagueContest contest, long regionId) {
+		TypedQuery<LeagueEntity> query = em.createNamedQuery("League.findByNameContestAndRegion", LeagueEntity.class);
 		query.setParameter("contest", contest);
-		return query.getResultList();
+		query.setParameter("name", name);
+		query.setParameter("regionId", regionId);
+
+		List<LeagueEntity> entities = query.getResultList();
+		if (entities.size() > 1) {
+			throw new IllegalArgumentException("More than one League with name='" + name + "', contest= '" + contest
+					+ "' and regionId='" + regionId + "' exists. This is not allowed");
+		} else if (entities.size() == 0) {
+			return null;
+		}
+		return entities.get(0);
 	}
 
 }

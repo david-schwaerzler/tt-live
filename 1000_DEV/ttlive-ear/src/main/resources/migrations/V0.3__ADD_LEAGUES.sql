@@ -1,6 +1,6 @@
 
 INSERT INTO ttlive.league(name, contest, region_id) VALUES
-('Hamburg Liga ', 'MEN', 6),
+('Hamburg Liga', 'MEN', 6),
 ('1. Landesliga 1', 'MEN', 6),
 ('1. Landesliga 2', 'MEN', 6),
 ('2. Landesliga 1', 'MEN', 6),

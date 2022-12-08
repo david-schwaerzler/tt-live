@@ -1,4 +1,4 @@
-package com.ttlive.dto;
+package com.ttlive.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestGametSetDto {
+public class RequestTeamDto {
+	private long id;
+	private String club;
 	private int number;
-	private int homeScore;
-	private int guestScore;
 }

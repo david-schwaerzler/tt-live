@@ -24,6 +24,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.ttlive.utils.MatchState;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -80,14 +81,17 @@ public class MatchEntity {
 	@JoinColumn(name = "game_style_id", referencedColumnName = "id")
 	private GameStyleEntity gameStyle;
 
+	@ToString.Exclude
 	@OneToMany(mappedBy = "match", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH,
 			CascadeType.REMOVE })
 	private List<GameEntity> games = new LinkedList<GameEntity>();
 
+	@ToString.Exclude
 	@OneToMany(mappedBy = "match", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH,
 			CascadeType.REMOVE })
 	private List<PlayerEntity> players = new LinkedList<PlayerEntity>();
 
+	@ToString.Exclude
 	@OneToMany(mappedBy = "match", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH,
 			CascadeType.REMOVE })
 	private List<DoublesEntity> doubles = new LinkedList<DoublesEntity>();
@@ -109,7 +113,8 @@ public class MatchEntity {
 			this.league.removeMatch(this, false);
 		}
 		this.league = league;
-		if (setBoth)
+		
+		if (setBoth && league != null)
 			this.league.addMatch(this, false);
 	}
 
@@ -121,7 +126,8 @@ public class MatchEntity {
 		if (this.homeTeam != null && setBoth)
 			this.homeTeam.removeHomeMatch(this, false);
 		this.homeTeam = team;
-		if (setBoth)
+		
+		if (setBoth && team != null)
 			team.addHomeMatch(this, false);
 	}
 
@@ -133,7 +139,8 @@ public class MatchEntity {
 		if (this.guestTeam != null && setBoth)
 			this.guestTeam.removeGuestMatch(this, false);
 		this.guestTeam = team;
-		if (setBoth)
+		
+		if (setBoth && team != null)
 			team.addGuestMatch(this, false);
 	}
 
@@ -145,7 +152,8 @@ public class MatchEntity {
 		if (this.gameStyle != null && setBoth)
 			this.gameStyle.removeMatch(this, false);
 		this.gameStyle = gameStyle;
-		if (setBoth)
+		
+		if (setBoth && gameStyle != null)
 			gameStyle.addMatch(this, false);
 	}
 

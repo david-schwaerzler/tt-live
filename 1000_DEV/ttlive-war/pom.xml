@@ -34,6 +34,17 @@
 			<artifactId>json</artifactId>
 			<version>20201115</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt -->
+		<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>nimbus-jose-jwt</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.eclipse.microprofile.jwt/microprofile-jwt-auth-api -->
+		<dependency>
+			<groupId>org.eclipse.microprofile.jwt</groupId>
+			<artifactId>microprofile-jwt-auth-api</artifactId>
+		</dependency>
+
 
 	</dependencies>
 

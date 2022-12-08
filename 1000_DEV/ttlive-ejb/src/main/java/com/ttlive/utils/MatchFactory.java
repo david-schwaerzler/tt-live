@@ -3,7 +3,7 @@ package com.ttlive.utils;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-import com.ttlive.bo.RequestMatch;
+import com.ttlive.bo.request.RequestMatch;
 import com.ttlive.persistence.entity.DoublesEntity;
 import com.ttlive.persistence.entity.GameEntity;
 import com.ttlive.persistence.entity.GameStyleEntity;

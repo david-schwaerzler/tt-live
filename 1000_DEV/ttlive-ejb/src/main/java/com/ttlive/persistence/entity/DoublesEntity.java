@@ -47,7 +47,7 @@ public class DoublesEntity {
 		
 		this.match = match;
 		
-		if(setBoth)
+		if(setBoth && match != null)
 			match.addDoubles(this, false);
 	}
 }

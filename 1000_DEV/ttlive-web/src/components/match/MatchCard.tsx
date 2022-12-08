@@ -12,6 +12,7 @@ import MatchScore from "./MatchScore";
 import ExpandButton from "../utils/ExpandButton";
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
+import React from "react";
 
 export interface MatchCardProps {
     match: Match | null
@@ -59,14 +60,14 @@ const MatchCard = ({ match }: MatchCardProps) => {
 
     function renderHeader(match: Match) {
         return (
-            <Box sx={{ opacity: 0.5, display: "flex", alignItems: "center" }} padding={spacingSmall}>
+            <Box sx={{ display: "flex", alignItems: "center" }} padding={spacingSmall}>
 
-                <Typography sx={{ flexGrow: 1, fontSize: "0.8rem" }}>{match.league.name}</Typography>
-                <Box sx={{ opacity: 1, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
+                <Typography sx={{ flexGrow: 1, fontSize: "0.8rem", opacity: 0.5 }}>{match.league.name}</Typography>
+                <Box sx={{ position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
                     <MatchStateLabel variant="border" state={match.state} startDate={match.startDate} />
                 </Box>
-                <Typography sx={{}}>{match.league.region}</Typography>
-                {match.league.contest === "MEN" ? <MaleIcon sx={{ ml: 1 }} /> : <FemaleIcon sx={{ ml: 1 }} />}
+                <Typography sx={{opacity: 0.5}}>{match.league.region}</Typography>
+                    {match.league.contest === "MEN" ? <MaleIcon sx={{ ml: 1 }} color="success" /> : <FemaleIcon sx={{ ml: 1 }} color="primary" />}
             </Box>
         );
     }

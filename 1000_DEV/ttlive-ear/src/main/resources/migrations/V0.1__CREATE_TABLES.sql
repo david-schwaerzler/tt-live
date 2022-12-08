@@ -10,6 +10,7 @@ CREATE TABLE account (
 	id BIGSERIAl PRIMARY KEY,
 	username VARCHAR(64) NOT NULL,
 	password VARCHAR(64) NOT NULL,
+	role VARCHAR(64) NOT NULL,
 	email VARCHAR(512) NOT NULL,
 	isAuthenticated BOOLEAN NOT NULL,
 	

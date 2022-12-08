@@ -20,8 +20,6 @@ const ERROR_GENERAL = 0;
 const ERROR_CLUB = 1;
 const ERROR_NUMBER = 2;
 
-
-
 const TeamState = ({ matchStateObject, onUpdate, setValidate, isHomeTeam }: TeamStateProps) => {
 
     const [errorMsgs, setErrorMsgs] = useState<Array<string>>([]);

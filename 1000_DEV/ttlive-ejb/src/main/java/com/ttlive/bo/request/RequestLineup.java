@@ -1,4 +1,4 @@
-package com.ttlive.bo;
+package com.ttlive.bo.request;
 
 import java.util.List;
 

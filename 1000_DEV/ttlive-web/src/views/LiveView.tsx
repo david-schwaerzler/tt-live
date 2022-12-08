@@ -10,7 +10,6 @@ import GameLiveScore from "../components/game/GameLiveScore";
 import GameReport from "../components/game/GameReport";
 import MatchScore from "../components/match/MatchScore";
 import MatchSettings from "../components/match/settings/MatchSettings";
-import ErrorMessage from "../components/utils/ErrorMessage";
 import ShareButton from "../components/utils/ShareButton";
 import { spacingNormal } from "../components/utils/StyleVars";
 import WebHookUtil from "../components/utils/WebHookUtil";
@@ -112,7 +111,6 @@ const LiveView = () => {
 
             {match && <ShareButton matchId={match.id} />}
 
-
             {match != null &&
                 <ChatDrawer
                     match={match}
@@ -145,7 +143,6 @@ const LiveView = () => {
     function renderLive() {
         return (
             <Stack direction="column" gap={spacingNormal}>
-                <ErrorMessage msg={errorMsg} centered />
                 {match == null ? <Skeleton sx={{ height: { xs: "212px", sm: "200px" } }} variant="rectangular" />
                     : <React.Fragment><Card>
                         <CardContent>

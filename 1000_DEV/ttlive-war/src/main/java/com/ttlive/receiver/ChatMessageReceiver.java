@@ -14,9 +14,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.ttlive.bo.ChatMessage;
-import com.ttlive.bo.RequestChatMessage;
+import com.ttlive.bo.request.RequestChatMessage;
 import com.ttlive.dto.ChatMessageDto;
-import com.ttlive.dto.RequestChatMessageDto;
+import com.ttlive.dto.request.RequestChatMessageDto;
 import com.ttlive.service.ChatMessageService;
 import com.ttlive.utils.BadRestRequestException;
 

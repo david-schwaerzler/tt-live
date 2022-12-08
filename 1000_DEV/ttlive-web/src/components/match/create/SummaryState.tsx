@@ -39,7 +39,7 @@ const SummaryState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =
 
             
             {values.map((value, index) => (
-                <Grid key={index} container direction={{ xs: "column", sm: "row" }} sx={{ paddingBottom: {...spacingNormal, sm: "0"}, display:"flex", justifyContent: "space-evenly", alignItems: "flex-start" , textAlign: "left"}}>
+                <Grid key={index} container direction={{ xs: "column", sm: "row" }} sx={{ pb: 2, display:"flex", justifyContent: "space-evenly", alignItems: "flex-start" , textAlign: "left"}}>
                     <BoldGrid item xs={6} md={5} sx={{textAlign: "right"}}>{value.key}</BoldGrid>
                     <Grid item xs={6} md={5} sx={{textAlign: "left"}}>{value.value}</Grid>
                 </Grid>

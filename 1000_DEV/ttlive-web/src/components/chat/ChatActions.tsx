@@ -7,6 +7,10 @@ import { postChatMessage } from "../../rest/api/ChatApi";
 import { RequestChatMessage } from "../../rest/data/ChatMessage";
 import LoadingButton from "../utils/LoadingButton";
 import ChatNameMenu from "./ChatNameMenu";
+import SendIcon from '@mui/icons-material/Send';
+import CircularProgress from '@mui/material/CircularProgress';
+import { Box } from "@mui/system";
+
 
 export interface ChatActionProps {
     matchId: number;
@@ -33,7 +37,7 @@ const ChatAction = ({ matchId, isEditor, onScrollEvent, showAvatar = true }: Cha
     const [t] = useTranslation();
 
 
-    
+
     const onSend = useCallback(async (anchor: HTMLElement) => {
         if (inputValue.trim() === "") {
             return;
@@ -80,7 +84,7 @@ const ChatAction = ({ matchId, isEditor, onScrollEvent, showAvatar = true }: Cha
     return (
         <React.Fragment>
             <Divider />
-            <Stack direction="row" gap={2} p={1}>
+            <Stack direction="row" gap={1} p={1}>
                 {/** TODO better validation for long strings (error Message)*/}
                 <TextField
                     value={inputValue}
@@ -94,15 +98,16 @@ const ChatAction = ({ matchId, isEditor, onScrollEvent, showAvatar = true }: Cha
                     onKeyDown={onKeyDown}
                 />
 
-                <LoadingButton loading={isLoading} onClick={e => onSend(e.currentTarget)} variant="outlined" size="small">
-                    {t("ChatDrawer.send")}
-                </LoadingButton>
-                <ChatNameMenu anchor={menueAnchor} onClose={() => setMenueAnchor(null)} />
-                <IconButton onClick={e => setMenueAnchor(e.currentTarget)} sx={{ display: showAvatar ? "block" : "none" }} ref={userRef} >
-                    <AccountCircle sx={{ color: theme => theme.palette.primary.main }} />
+                <IconButton onClick={e => onSend(e.currentTarget)} size="small" sx={{ display: "grid" }}>
+                    <Box alignSelf="center" gridRow={1} gridColumn={1}><SendIcon color="primary" sx={{ visibility: isLoading ? "hidden" : "visible", justifySelf: "center" }} /></Box>
+                    <Box alignSelf="center" gridRow={1} gridColumn={1}><CircularProgress color="primary" sx={{ visibility: isLoading ? "visible" : "hidden" }} size={24} /></Box>
                 </IconButton>
+                <IconButton onClick={e => setMenueAnchor(e.currentTarget)} sx={{ display: showAvatar ? "inline" : "none" }} ref={userRef} size="small" >
+                    <AccountCircle color="primary" />
+                </IconButton>
+                <ChatNameMenu anchor={menueAnchor} onClose={() => setMenueAnchor(null)} />
             </Stack>
-        </React.Fragment>
+        </React.Fragment >
     );
 
     function onKeyDown(e: React.KeyboardEvent) {

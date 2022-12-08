@@ -84,8 +84,8 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
             gameScores.push({
                 ...g,
                 type: type,
-                homeTeamScore: guestTeamScore,
-                guestTeamScore: homeTeamScore
+                homeTeamScore: homeTeamScore,
+                guestTeamScore: guestTeamScore
             });
         };
         setFinishDoubles(hasFinishingDoubles);
@@ -102,7 +102,7 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
                 : <Card sx={{ mb: 2 }}>
                     <CardContent>
                         <Typography pb={2} variant="h5" >{t("GameReport.doubles")}</Typography>
-                        <Stack gap={1.5}>
+                        <Stack gap={3}>
                             {gameScores.filter(game => game.type === "DOUBLES").map(game => renderDoubles(game))}
                         </Stack>
                     </CardContent>
@@ -113,7 +113,7 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
                 : <Card sx={{ mb: 2 }}>
                     <CardContent>
                         <Typography pb={2} variant="h5">{t("GameReport.singles")}</Typography>
-                        <Stack gap={1.5}>
+                        <Stack gap={3}>
                             {gameScores.filter(game => game.type === "SINGLES").map(game => renderSingles(game))}
                         </Stack>
                     </CardContent>
@@ -124,7 +124,7 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
                 <Card>
                     <CardContent>
                         <Typography pb={2} variant="h5">{t("GameReport.lastDouble")}</Typography>
-                        <Stack gap={1.5}>
+                        <Stack gap={3}>
                             {gameScores.filter(game => game.type === "FINISH_DOUBLES").map(game => renderDoubles(game))}
                         </Stack>
                     </CardContent>
@@ -137,14 +137,13 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
 
         let homeWon = game.state === "FINISHED" && game.homeSets > game.guestSets;
         let guestWon = game.state === "FINISHED" && game.guestSets > game.homeSets;
-
         return (
             <Box key={game.gameNumber} sx={{ display: "flex" }} >
                 <Box sx={{ flexGrow: 1 }}>
                     <Grid container sx={{ textAlign: "center" }} columns={11}>
                         <PlayerCell item xs={5} sx={{ fontSize: "0.8rem", fontWeight: homeWon ? 500 : "normal" }}>{renderPlayer(game.homeDoubles.player1)}<br />{renderPlayer(game.homeDoubles.player2)}</PlayerCell>
                         {game.sets.map(value =>
-                            <Grid key={value.number} sx={{ opacity: isEditMode ? "inherited" : 0.5 }} item xs={1} margin="auto">
+                            <Grid key={value.number} sx={{ opacity: isEditMode ? "inherit" : 0.5 }} item xs={1} margin="auto">
                                 {renderGameSetScore(value, true, game)}
                             </Grid>)
                         }
@@ -156,14 +155,14 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
                     <Grid container sx={{ textAlign: "center" }} columns={11}>
                         <PlayerCell item xs={5} sx={{ fontSize: "0.8rem", fontWeight: guestWon ? 500 : "normal" }}>{renderPlayer(game.guestDoubles.player1)}<br />{renderPlayer(game.guestDoubles.player2)}</PlayerCell>
                         {game.sets.map(value =>
-                            <Grid key={value.number} sx={{ opacity: isEditMode ? "inherited" : 0.5 }} item xs={1} margin="auto">
+                            <Grid key={value.number} sx={{ opacity: isEditMode ? "inherit" : 0.5 }} item xs={1} margin="auto">
                                 {renderGameSetScore(value, false, game)}
                             </Grid>
                         )}
                         <Grid item xs={1} sx={{ fontWeight: "bold", m: "auto" }}>{game.state !== "NOT_STARTED" ? game.guestSets : "-"}</Grid>
                     </Grid>
                 </Box>
-                <Stack minWidth="40px" textAlign="right" fontSize="1.1rem">
+                <Stack minWidth="40px" textAlign="right" fontSize="1.1rem" justifyContent="center">
                     {game.state === "FINISHED" && <i>{game.homeTeamScore}:{game.guestTeamScore}</i>}
                     {game.state === "LIVE" && <Typography color={theme => theme.palette.primary.main} fontWeight="bold" fontStyle="italic">LIVE</Typography>}
                     {isEditMode === true && editorCode != null && matchId != null &&
@@ -184,7 +183,7 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
                     <Grid container sx={{ textAlign: "center", mb: "3px" }} columns={11} alignItems="center">
                         <PlayerCell item xs={5} sx={{ fontWeight: homeWon ? 500 : "normal" }}>{renderPlayer(game.homePlayer.name)}</PlayerCell>
                         {game.sets.map(value =>
-                            <Grid key={value.number} sx={{ opacity: isEditMode ? "inherited" : 0.5 }} item xs={1} >
+                            <Grid key={value.number} sx={{ opacity: isEditMode ? "inherit" : 0.5 }} item xs={1} >
                                 {renderGameSetScore(value, true, game)}
                             </Grid>
                         )}
@@ -194,14 +193,14 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
                     <Grid container sx={{ textAlign: "center", mt: "3px" }} columns={11} alignItems="center">
                         <PlayerCell item xs={5} sx={{ fontWeight: guestWon ? 500 : "normal" }}>{renderPlayer(game.guestPlayer.name)}</PlayerCell>
                         {game.sets.map(value =>
-                            <Grid key={value.number} sx={{ opacity: isEditMode ? "inherited" : 0.5 }} item xs={1}>
+                            <Grid key={value.number} sx={{ opacity: isEditMode ? "inherit" : 0.5 }} item xs={1}>
                                 {renderGameSetScore(value, false, game)}
                             </Grid>
                         )}
                         <Grid item xs={1} sx={{ fontWeight: "bold" }}>{game.state !== "NOT_STARTED" ? game.guestSets : "-"}</Grid>
                     </Grid>
                 </Box>
-                <Stack minWidth="40px" textAlign="right" fontSize="1.1rem">
+                <Stack minWidth="40px" textAlign="right" fontSize="1.1rem" justifyContent="center">
                     {game.state === "FINISHED" && <i>{game.homeTeamScore}:{game.guestTeamScore}</i>}
                     {game.state === "LIVE" && <Typography color={theme => theme.palette.primary.main} fontWeight="bold" fontStyle="italic">LIVE</Typography>}
                     {isEditMode === true && editorCode != null && matchId != null &&

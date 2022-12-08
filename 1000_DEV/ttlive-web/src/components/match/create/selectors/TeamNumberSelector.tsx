@@ -1,7 +1,7 @@
-import { Autocomplete, createFilterOptions, FilterOptionsState, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Team } from "../../../../rest/data/Team";
+import CustomAutoComplete from "../../../utils/CustomAutoComplete";
 import { MatchStateObject } from "../MatchStateObject";
 
 export interface TeamNumberSelectorProps {
@@ -13,84 +13,43 @@ export interface TeamNumberSelectorProps {
     error: boolean;
 }
 
-const filter = createFilterOptions<Team>();
-
-
 const TeamNumberSelector = ({ onUpdate, updateError, isHomeTeam, teams, matchStateObject, error }: TeamNumberSelectorProps) => {
 
-    const [numberInput, setNumberInput] = useState<string>("");
-    const [tmpTeams, setTmpTeams] = useState<Array<Team>>([]);
+    const [options, setOptions] = useState<Array<Team>>([]);
 
     const [t] = useTranslation();
 
     useEffect(() => {
 
-        let options = teams.map(t => { return { ...t } });
-
         if (isHomeTeam) {
-            if (matchStateObject.homeTeam?.id === -1) {
-                options.push(matchStateObject.homeTeam)
-            }
+            setOptions(teams.filter(t => t.club === matchStateObject.homeClub));            
         } else {
-            if (matchStateObject.guestTeam?.id === -1) {
-                options.push(matchStateObject.guestTeam)
-            }
+            setOptions(teams.filter(t => t.club === matchStateObject.guestClub));            
         }
-        setTmpTeams(options);
 
-    }, [teams, isHomeTeam, matchStateObject.guestTeam, matchStateObject.homeTeam])
+    }, [teams, isHomeTeam, matchStateObject.homeClub, matchStateObject.guestClub])
 
+    const onCreate = useCallback((number: string) => ({
+        id: -1,
+        club: isHomeTeam ? matchStateObject.homeClub! : matchStateObject.guestClub!, // can't be null here
+        number: parseInt(number)
+    }), [isHomeTeam, matchStateObject.homeClub, matchStateObject.guestClub]);
 
     return (
-        <Autocomplete
-            id="auto-league"
-            sx={{ minWidth: "200px", alignSelf: "center" }}
+
+        <CustomAutoComplete<Team>
             value={isHomeTeam ? matchStateObject.homeTeam : matchStateObject.guestTeam}
-            onChange={(e, value) => onNumberSelected(value)}
-            options={tmpTeams.filter(t => isHomeTeam ? t.club === matchStateObject.homeClub : t.club === matchStateObject.guestClub)}
-            getOptionLabel={option => option.number === -1 ? `Add "${numberInput}"` : option.number.toString()}
-            inputValue={numberInput}
-            onInputChange={(e, value) => onInputChange(value)}
-            renderInput={(params) => <TextField {...params} label={t("TeamState.number")} error={error} />}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            filterOptions={filterOptions}
-            autoHighlight={true}
+            options={options}
+            accessor={team => team.number.toString()}
+            onCreateType={onCreate}
+            label={t("TeamState.number")}
+            error={error}
+            onChange={onNumberSelected}
+            inputValidation={isNum}
         />
-    );
-
-
-    function onInputChange(value: string) {
-        if (value !== "" && isNum(value) === false)
-            return;
-        setNumberInput(value)
-    }
-
-    function filterOptions(options: Array<Team>, params: FilterOptionsState<Team>) {
-        const filtered = filter(options, params);
-        const { inputValue } = params;
-
-        const isExisting = options.some((option) => parseInt(inputValue) === option.number);
-        if (inputValue !== '' && !isExisting) {
-            let newTeam: Team = {
-                id: -1,
-                club: isHomeTeam ? matchStateObject.homeClub! : matchStateObject.guestClub!, // can't be null here
-                number: -1
-            }
-            filtered.push(newTeam);
-        }
-        return filtered;
-    }
+    );    
 
     function onNumberSelected(team: Team | null) {
-
-        if (team != null && team.id === -1) {
-            team.number = parseInt(numberInput)
-
-            let tmp = teams.map(t => { return { ...t } })
-            tmp.push(team);
-            setTmpTeams(tmp);
-        }
-
         let update = { ...matchStateObject };
         if (isHomeTeam)
             update.homeTeam = team;
@@ -100,8 +59,9 @@ const TeamNumberSelector = ({ onUpdate, updateError, isHomeTeam, teams, matchSta
         updateError('');
     }
 
-
     function isNum(str: string) {
+        if(str === "")
+            return true;
         return /\d$/.test(str);
     }
 }

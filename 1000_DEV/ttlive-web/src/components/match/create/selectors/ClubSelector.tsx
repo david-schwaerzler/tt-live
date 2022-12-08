@@ -1,7 +1,7 @@
-import { Autocomplete, createFilterOptions, FilterOptionsState, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Team } from "../../../../rest/data/Team";
+import CustomAutoComplete from "../../../utils/CustomAutoComplete";
 import { MatchStateObject } from "../MatchStateObject";
 
 export interface ClubSelectorProps {
@@ -13,13 +13,8 @@ export interface ClubSelectorProps {
     error: boolean;
 }
 
-const filter = createFilterOptions<string>();
-
-
 const ClubSelector = ({ onUpdate, updateError, isHomeTeam, matchStateObject, teams, error }: ClubSelectorProps) => {
 
-    const [clubInput, setClubInput] = useState<string>("");
-    const [tmpClub, setTmpClub] = useState<string>("");
     const [clubs, setClubs] = useState<Array<string>>([]);
 
     const [t] = useTranslation();
@@ -28,48 +23,29 @@ const ClubSelector = ({ onUpdate, updateError, isHomeTeam, matchStateObject, tea
         let lookupMap: any = {};
         let clubs = teams.filter(t => lookupMap.hasOwnProperty(t.club) ? false : (lookupMap[t.club] = true)).map(c => c.club);
         setClubs(clubs);
+
     }, [teams])
 
-    return (
-        <Autocomplete
-            id="auto-league"            
-            sx={{ minWidth: "200px", alignSelf: "center" }}
-            value={isHomeTeam ? matchStateObject.homeClub : matchStateObject.guestClub}
-            onChange={(e, value) => onClubSelected(value)}
-            options={clubs}
-            inputValue={clubInput}
-            onInputChange={(e, value) => value.startsWith("Add \"") === false && setClubInput(value)}
-            renderInput={(params) => <TextField {...params} label={isHomeTeam ? t("TeamState.homeTeam") : t("TeamState.guestTeam")} error={error}/>}
-            filterOptions={filterOptions}
-            autoHighlight={true}
 
+
+    return (
+        <CustomAutoComplete<string>
+            accessor={value => value}
+            onCreateType={value => value}
+            onChange={onClubSelected}
+            label={isHomeTeam ? t("TeamState.homeTeam") : t("TeamState.guestTeam")}
+            error={error}
+            options={clubs}
+            value={isHomeTeam
+                ? matchStateObject.homeClub === "" ? null : matchStateObject.homeClub
+                : matchStateObject.guestClub === "" ? null : matchStateObject.guestClub
+            }
         />
     )
 
-    function filterOptions(options: string[], params: FilterOptionsState<string>) {
-        const filtered = filter(options, params);
-        const { inputValue } = params;
-        const isExisting = options.some((option) => inputValue === option);
-        if (inputValue !== '' && !isExisting) {
-            filtered.push(`Add "${inputValue}"`);
-        }
-        return filtered;
-    }
 
 
     function onClubSelected(club: string | null) {
-
-        if (club != null && club.startsWith("Add \"")) {
-            club = club.replace("Add \"", "");
-            club = club.replace("\"", "");
-            club = club.trim();
-
-            let newClubs = clubs.filter(c => c !== tmpClub);
-            newClubs.push(club);
-
-            setClubs(newClubs);
-            setTmpClub(club);
-        }
 
         let oldClub;
         let update = { ...matchStateObject };
@@ -98,6 +74,7 @@ const ClubSelector = ({ onUpdate, updateError, isHomeTeam, matchStateObject, tea
                     update.guestTeam = null;
             }
         }
+
         onUpdate(update);
         updateError('');
     }

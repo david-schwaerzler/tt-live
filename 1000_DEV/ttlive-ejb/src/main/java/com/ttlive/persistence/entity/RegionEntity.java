@@ -11,6 +11,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -26,6 +27,7 @@ public class RegionEntity {
 	@Column(name = "description")
 	private String description;
 
+	@ToString.Exclude
 	@OneToMany(mappedBy = "region")
 	private List<LeagueEntity> leagues;
 

@@ -13,7 +13,9 @@ import TeamState from "../components/match/create/TeamState";
 import LoadingButton from "../components/utils/LoadingButton";
 import { spacingNormal } from "../components/utils/StyleVars";
 import { postMatch } from "../rest/api/MatchApi";
+import { RequestLeague } from "../rest/data/League";
 import { RequestMatch } from "../rest/data/Match";
+import { RequestTeam } from "../rest/data/Team";
 
 export interface CreateGameViewProps {
 
@@ -98,7 +100,7 @@ const CreateGameView = (props: CreateGameViewProps) => {
                 </Box>
 
                 <Stack sx={{ display: { xs: "none", sm: "flex" }, paddingTop: spacingNormal }} direction="row" justifyContent="center" gap="2em">
-                    <Button  variant="outlined" disabled={currentStep === 0} onClick={setPreviousStep}>{t("CreateGameView.back")}</Button>
+                    <Button variant="outlined" disabled={currentStep === 0} onClick={setPreviousStep}>{t("CreateGameView.back")}</Button>
                     <LoadingButton loading={isLoading} variant="outlined" onClick={setNextStep}>
                         {isLastStep() ? t("CreateGameView.submit") : t("CreateGameView.next")}
                     </LoadingButton>
@@ -189,13 +191,30 @@ const CreateGameView = (props: CreateGameViewProps) => {
         }
         setLoading(true);
 
+        let requestLeague: RequestLeague = {
+            id: matchStateObject.league.id,
+            name: matchStateObject.league.name.trim(),
+            contest: matchStateObject.league.contest,
+            regionId: matchStateObject.region.id
+        };
+
+        let requestHomeTeam: RequestTeam = {
+            id: matchStateObject.homeTeam.id,
+            club: matchStateObject.homeTeam.club.trim(),
+            number: matchStateObject.homeTeam.number,
+        }
+
+        let requestGuestTeam: RequestTeam = {
+            id: matchStateObject.guestTeam.id,
+            club: matchStateObject.guestTeam.club.trim(),
+            number: matchStateObject.guestTeam.number,
+        }
+
         let requestMatch: RequestMatch = {
-            contest: matchStateObject.contest,
-            regionId: matchStateObject.region.id,
             gameStyleId: matchStateObject.gameStyle.id,
-            league: matchStateObject.league,
-            homeTeam: matchStateObject.homeTeam,
-            guestTeam: matchStateObject.guestTeam,
+            league: requestLeague,
+            homeTeam: requestHomeTeam,
+            guestTeam: requestGuestTeam,
             startDate: matchStateObject.startDate.toISOString()
         };
 

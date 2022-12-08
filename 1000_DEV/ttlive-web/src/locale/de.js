@@ -110,6 +110,15 @@ const deDe = {
             "LineupSetting.homeTeam": "Aufstellung Heimverein",
             "LineupSetting.guestTeam": "Aufstellung Gastverein",
 
+            "MatchInfoEdit.title": "Spielinfo",
+            "MatchInfoEdit.homeTeamName": "Heimverein",
+            "MatchInfoEdit.guestTeamName": "Gastverein",
+            "MatchInfoEdit.teamNumber": "Nr.",
+            "MatchInfoEdit.league": "Liga",
+            "MatchInfoEdit.startDate": "Spielbeginn",
+            "MatchInfoEdit.common": "Allgemein",
+
+
             "ChatDrawer.send": "Senden",
             "ChatDrawer.username": "Username",
             "ChatDrawer.save": "OK",

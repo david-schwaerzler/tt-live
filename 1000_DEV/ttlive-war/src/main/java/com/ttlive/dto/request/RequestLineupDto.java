@@ -1,4 +1,4 @@
-package com.ttlive.dto;
+package com.ttlive.dto.request;
 
 import java.util.List;
 

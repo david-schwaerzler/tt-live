@@ -2,8 +2,8 @@ import { Autocomplete, FormControl, FormHelperText, InputLabel, MenuItem, Select
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { fetchRegions } from "../../../rest/api/RegionApi";
 import { Region } from "../../../rest/data/Region";
-import { Config } from "../../utils/Config";
 import ErrorMessage from "../../utils/ErrorMessage";
 import { spacingNormal, spacingSmall } from "../../utils/StyleVars";
 import { MatchStateObject } from "./MatchStateObject";
@@ -28,19 +28,13 @@ const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
     }, [errorMsgs]);
 
 
-    const fetchRegions = useCallback(async () => {
-        try {
-            let response = await fetch(Config.REST_URL + "/region")
-            if (!response.ok) {
-                console.log(`Error fetching regions. status: '${response.status}'`)
-                updateError(ERROR_GENERAL, t('Common.errorFetch'));
-                return;
-            }
-            let regions: Array<Region> = await response.json();
-            setRegions(regions);
-        } catch (error) {
-            console.log(`Error fetching regions. error: '${error}'`)
-            updateError(ERROR_GENERAL, t('Common.errorFetch'))
+    const fetchRegionsLocal = useCallback(async () => {
+
+        let response = await fetchRegions();
+        if(response.data != null){
+            setRegions(response.data);
+        }else{
+            updateError(ERROR_GENERAL, t(`Common.errorFetch: ${response.error}`))
         }
     }, [updateError, t]);
 
@@ -59,10 +53,10 @@ const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
         if (hasFetchedData.current === false) {
             setErrorMsgs([])
             setValidate(onValidate);
-            fetchRegions();
+            fetchRegionsLocal();
             hasFetchedData.current = true;
         }
-    }, [setValidate, fetchRegions, updateError, t])
+    }, [setValidate, fetchRegionsLocal, updateError, t])
 
     return (
         <Box sx={{ width: "100%", margin: "auto" }}>

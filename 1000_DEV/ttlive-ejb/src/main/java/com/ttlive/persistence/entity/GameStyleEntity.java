@@ -11,6 +11,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -41,6 +42,7 @@ public class GameStyleEntity {
 	@Column(name ="finish_early")
 	private boolean isFinishingEarly;
 
+	@ToString.Exclude
 	@OneToMany(mappedBy = "gameStyle")
 	private List<MatchEntity> matches;
 

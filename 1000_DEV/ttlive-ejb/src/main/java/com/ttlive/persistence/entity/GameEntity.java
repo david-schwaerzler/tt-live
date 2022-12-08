@@ -98,16 +98,9 @@ public class GameEntity {
 		if (this.match != null && setBoth)
 			this.match.removeGame(this);
 		this.match = match;
-		if (setBoth)
+		
+		if (setBoth && match != null)
 			match.addGame(this);
 	}
-	/*
-	 * public void setHomePlayer(PlayerEntity player) { setHomePlayer(player, true)
-	 * }
-	 * 
-	 * public void setHomePlayer(PlayerEntity player, boolean setBoth) { if
-	 * (this.homePlayer != null && setBoth) this.homePlayer.removeGame(this, false);
-	 * this.homePlayer = player; if (setBoth) homePlayer.addGame(this, false); }
-	 */
 
 }

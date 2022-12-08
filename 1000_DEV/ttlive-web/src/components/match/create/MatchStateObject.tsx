@@ -1,6 +1,6 @@
 import { Dayjs } from "dayjs";
 import { GameStyle } from "../../../rest/data/GameStyle";
-import { League } from "../../../rest/data/League";
+import { League,  } from "../../../rest/data/League";
 import { Region } from "../../../rest/data/Region";
 import { Team } from "../../../rest/data/Team";
 

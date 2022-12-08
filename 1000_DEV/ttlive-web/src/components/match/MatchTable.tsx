@@ -7,13 +7,11 @@ import { spacingNormal } from "../utils/StyleVars";
 import MatchCard from "./MatchCard";
 
 export interface MatchTableProps {
-    onError: (msg: string) => void;
-    onFetched: () => void;
     sx?: any;
     fetchDelay?: number
 }
 
-const MatchTable = ({ sx, fetchDelay = 0, onError, onFetched }: MatchTableProps) => {
+const MatchTable = ({ sx, fetchDelay = 0 }: MatchTableProps) => {
 
     const [t] = useTranslation();
     const [matches, setMatches] = useState<Array<Match> | null>(null);
@@ -23,9 +21,8 @@ const MatchTable = ({ sx, fetchDelay = 0, onError, onFetched }: MatchTableProps)
             let response = await fetchMatches();
             if (response.data != null) {
                 setMatches(response.data);
-                onFetched()
             } else {
-                onError(response.error == null ? "" : t("Common.errorFetch"))
+                // don't display any error yet 
             }
 
         };
@@ -43,7 +40,7 @@ const MatchTable = ({ sx, fetchDelay = 0, onError, onFetched }: MatchTableProps)
                 clearInterval(intervalId);
         }
 
-    }, [onError, onFetched, fetchDelay, t]);
+    }, [ fetchDelay, t]);
 
     return (
 

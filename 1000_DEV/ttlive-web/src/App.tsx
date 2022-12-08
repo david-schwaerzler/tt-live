@@ -37,11 +37,13 @@ function App() {
             return {};
         }
     })
+    const [isAuthenticated, setAuthenticated] = useState(false);
 
 
     const valueProvider: AppContextProps = useMemo(() => ({
         matchId: matchId,
         editorCode: editorCode,
+        isAuthenticated: isAuthenticated,
         setMatchId: id => { localStorage.setItem("matchId", id == null ? "" : id.toString()); setMatchId(id) },
         setEditorCode: (matchId, newCode) => {
             let copy = { ...editorCode };
@@ -72,9 +74,10 @@ function App() {
         },
         getSetting: key => {
             return settings[key]
-        }
+        },
+        doLogin: isAuthenticated => setAuthenticated(isAuthenticated)
 
-    }), [matchId, setMatchId, editorCode, settings]);
+    }), [matchId, editorCode, settings, isAuthenticated]);
 
     return (
         <React.StrictMode>

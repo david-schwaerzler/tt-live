@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -22,10 +24,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.ttlive.utils.LeagueContest;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
 @Table(name = "league")
+@NamedQueries({
+		@NamedQuery(name = "League.findByNameContestAndRegion", query = "select l from LeagueEntity l join l.region r where l.name = :name and l.contest = :contest and r.id = :regionId") })
 public class LeagueEntity {
 
 	@Id
@@ -51,9 +56,11 @@ public class LeagueEntity {
 	@JoinColumn(name = "region_id", referencedColumnName = "id")
 	private RegionEntity region;
 
+	@ToString.Exclude
 	@OneToMany(mappedBy = "league")
 	private List<TeamEntity> teams = new LinkedList<TeamEntity>();
 
+	@ToString.Exclude
 	@OneToMany(mappedBy = "league")
 	private List<MatchEntity> matches = new LinkedList<MatchEntity>();
 
@@ -65,7 +72,8 @@ public class LeagueEntity {
 		if (this.region != null && setBoth)
 			this.region.removeLeague(this, false);
 		this.region = region;
-		if (setBoth)
+
+		if (setBoth && region != null)
 			region.addLeague(this, false);
 	}
 

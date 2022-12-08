@@ -1,5 +1,6 @@
 package com.ttlive.receiver;
 
+import java.time.ZoneId;
 import java.util.LinkedList;
 
 import javax.ejb.EJB;
@@ -19,20 +20,19 @@ import javax.ws.rs.core.Response.Status;
 import org.json.JSONObject;
 
 import com.ttlive.bo.GameSet.InvalidGameSetFormat;
-import com.ttlive.bo.League;
 import com.ttlive.bo.Match;
-import com.ttlive.bo.RequestLineup;
-import com.ttlive.bo.RequestLineup.RequestDoubles;
-import com.ttlive.bo.RequestLineup.RequestPlayer;
-import com.ttlive.bo.RequestMatch;
-import com.ttlive.bo.Team;
+import com.ttlive.bo.request.RequestLeague;
+import com.ttlive.bo.request.RequestLineup;
+import com.ttlive.bo.request.RequestLineup.RequestDoubles;
+import com.ttlive.bo.request.RequestLineup.RequestPlayer;
+import com.ttlive.bo.request.RequestMatch;
+import com.ttlive.bo.request.RequestTeam;
 import com.ttlive.dto.MatchDto;
-import com.ttlive.dto.RequestGametSetDto;
-import com.ttlive.dto.RequestLineupDto;
-import com.ttlive.dto.RequestMatchDto;
+import com.ttlive.dto.request.RequestLineupDto;
+import com.ttlive.dto.request.RequestMatchDto;
+import com.ttlive.dto.request.RequestLineupDto.RequestDoublesDto;
+import com.ttlive.dto.request.RequestLineupDto.RequestPlayerDto;
 import com.ttlive.rest.InvalidEditorCodeException;
-import com.ttlive.dto.RequestLineupDto.RequestDoublesDto;
-import com.ttlive.dto.RequestLineupDto.RequestPlayerDto;
 import com.ttlive.service.MatchService;
 import com.ttlive.utils.BadRestRequestException;
 import com.ttlive.utils.LeagueContest;
@@ -68,51 +68,34 @@ public class MatchReceiver {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response create(RequestMatchDto requestMatchDto) throws InvalidGameSetFormat, BadRestRequestException {
 
-		if (requestMatchDto.getContest() == null
-				|| (!requestMatchDto.getContest().equals("WOMEN") && !requestMatchDto.getContest().equals("MEN"))) {
-			return Response.status(Status.BAD_REQUEST).entity("Contest must be set and eather be 'WOMEN' or 'MEN'")
-					.build();
-		}
+		validateRequestMatch(requestMatchDto);
 
-		if (requestMatchDto.getGuestTeam() == null) {
-			return Response.status(Status.BAD_REQUEST).entity("guestTeam must be set").build();
-		}
-		if (requestMatchDto.getHomeTeam() == null) {
-			return Response.status(Status.BAD_REQUEST).entity("homeTeam must be set").build();
-		}
-		if (requestMatchDto.getLeague() == null) {
-			return Response.status(Status.BAD_REQUEST).entity("league must be set").build();
-		}
-		if (requestMatchDto.getStartDate() == null) {
-			return Response.status(Status.BAD_REQUEST).entity("startDate must be set").build();
-		}
-
-		League league = League.builder() //
+		RequestLeague league = RequestLeague.builder() //
 				.id(requestMatchDto.getLeague().getId()) //
 				.name(requestMatchDto.getLeague().getName()) //
-				.contest(requestMatchDto.getLeague().getContest()) //
+				.contest(LeagueContest.valueOf(requestMatchDto.getLeague().getContest())) //
+				.regionId(requestMatchDto.getLeague().getRegionId()) ///
 				.build();
 
-		Team homeTeam = Team.builder() //
+		RequestTeam homeTeam = RequestTeam.builder() //
 				.id(requestMatchDto.getHomeTeam().getId()) //
 				.club(requestMatchDto.getHomeTeam().getClub()) //
 				.number(requestMatchDto.getHomeTeam().getNumber()) //
 				.build();
 
-		Team guestTeam = Team.builder() //
+		RequestTeam guestTeam = RequestTeam.builder() //
 				.id(requestMatchDto.getGuestTeam().getId()) //
 				.club(requestMatchDto.getGuestTeam().getClub()) //
 				.number(requestMatchDto.getGuestTeam().getNumber()) //
 				.build();
 
 		RequestMatch requestMatch = RequestMatch.builder() //
-				.regionId(requestMatchDto.getRegionId()) //
-				.contest(requestMatchDto.getContest().equals("WOMEN") ? LeagueContest.WOMEN : LeagueContest.MEN) //
 				.gameStyleId(requestMatchDto.getGameStyleId()) //
 				.league(league) //
 				.homeTeam(homeTeam) //
 				.guestTeam(guestTeam) //
-				.startDate(requestMatchDto.getStartDate())//
+				.startDate(requestMatchDto.getStartDate().withZoneSameInstant(ZoneId.of("Europe/Berlin"))
+						.toLocalDateTime())//
 				.build();
 
 		Match match = matchService.create(requestMatch);
@@ -129,7 +112,8 @@ public class MatchReceiver {
 	@Path("/{id}/validate")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response isEditorCodeValid(@PathParam("id") long id, @QueryParam("editorCode") String editorCode) throws BadRestRequestException {
+	public Response isEditorCodlineupeValid(@PathParam("id") long id, @QueryParam("editorCode") String editorCode)
+			throws BadRestRequestException {
 		if (editorCode == null)
 			return Response.status(Status.BAD_REQUEST).entity("No editorCode was provided in the path").build();
 
@@ -144,18 +128,18 @@ public class MatchReceiver {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateLineup(@PathParam("id") long id, @QueryParam("editorCode") String editorCode,
-			RequestLineupDto lineupDto) throws InvalidGameSetFormat, InvalidEditorCodeException, BadRestRequestException {
+			RequestLineupDto lineupDto)
+			throws InvalidGameSetFormat, InvalidEditorCodeException, BadRestRequestException {
 
 		if (editorCode == null || !matchService.isEditorCodeValid(id, editorCode)) {
 			throw new InvalidEditorCodeException(editorCode, id);
 		}
-		
-		if(lineupDto.getDoubles() == null) 
+
+		if (lineupDto.getDoubles() == null)
 			return Response.status(Status.BAD_REQUEST).entity("doubles must be set").build();
 
-		if(lineupDto.getPlayers() == null) 
+		if (lineupDto.getPlayers() == null)
 			return Response.status(Status.BAD_REQUEST).entity("player must be set").build();
-		
 
 		LinkedList<RequestDoubles> doubles = new LinkedList<>();
 		for (RequestDoublesDto dto : lineupDto.getDoubles()) {
@@ -182,15 +166,81 @@ public class MatchReceiver {
 		Match match = matchService.updateLineup(id, requestLineup);
 		return Response.ok(MatchDto.builder().bo(match).build()).build();
 	}
-	
+
 	@PUT
-	@Path("/{id}/set")
+	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response updateSet(@PathParam("id") long id, @QueryParam("editorCode") String editorCode,
-			RequestGametSetDto lineupDto) throws InvalidGameSetFormat, InvalidEditorCodeException {
-		
-		
-		return Response.ok().build();
+	public Response updateMatch(@PathParam("id") long id, @QueryParam("editorCode") String editorCode,
+			RequestMatchDto requestMatchDto)
+			throws InvalidGameSetFormat, InvalidEditorCodeException, BadRestRequestException {
+
+		if (editorCode == null || !matchService.isEditorCodeValid(id, editorCode)) {
+			throw new InvalidEditorCodeException(editorCode, id);
+		}
+
+		validateRequestMatch(requestMatchDto);
+
+		RequestLeague league = RequestLeague.builder() //
+				.id(requestMatchDto.getLeague().getId()) //
+				.name(requestMatchDto.getLeague().getName()) //
+				.contest(LeagueContest.valueOf(requestMatchDto.getLeague().getContest())) //
+				.regionId(requestMatchDto.getLeague().getRegionId()) //
+				.build();
+
+		RequestTeam homeTeam = RequestTeam.builder() //
+				.id(requestMatchDto.getHomeTeam().getId()) //
+				.club(requestMatchDto.getHomeTeam().getClub()) //
+				.number(requestMatchDto.getHomeTeam().getNumber()) //
+				.build();
+
+		RequestTeam guestTeam = RequestTeam.builder() //
+				.id(requestMatchDto.getGuestTeam().getId()) //
+				.club(requestMatchDto.getGuestTeam().getClub()) //
+				.number(requestMatchDto.getGuestTeam().getNumber()) //
+				.build();
+
+		RequestMatch requestMatch = RequestMatch.builder() //				
+				.gameStyleId(requestMatchDto.getGameStyleId()) //
+				.league(league) //
+				.homeTeam(homeTeam) //
+				.guestTeam(guestTeam) //
+				.startDate(requestMatchDto.getStartDate().withZoneSameInstant(ZoneId.of("Europe/Berlin"))
+						.toLocalDateTime())//
+				.build();
+
+		Match match = matchService.updateMatch(id, requestMatch);
+		return Response.ok(MatchDto.builder().bo(match).build()).build();
+	}
+
+	private void validateRequestMatch(RequestMatchDto requestMatchDto)
+			throws BadRestRequestException {
+	
+
+		if (requestMatchDto.getLeague() == null)
+			throw new BadRestRequestException("league", "League must be set");
+
+		if (requestMatchDto.getLeague().getContest() == null
+				|| (requestMatchDto.getLeague().getContest().equals("WOMEN") == false
+						&& requestMatchDto.getLeague().getContest().equals("MEN") == false))
+			throw new BadRestRequestException("contest", "Invalid value for league contest");
+
+		if (requestMatchDto.getLeague().getName() == null || requestMatchDto.getLeague().getName().isEmpty())
+			throw new BadRestRequestException("name", "Name of the league must set and not empty");
+
+		if (requestMatchDto.getHomeTeam() == null)
+			throw new BadRestRequestException("homeTeam", "HomeTeam must be set");
+
+		if (requestMatchDto.getHomeTeam().getClub() == null || requestMatchDto.getHomeTeam().getClub().isEmpty())
+			throw new BadRestRequestException("club", "Club in homeTeam must be set and not empty");
+
+		if (requestMatchDto.getGuestTeam() == null)
+			throw new BadRestRequestException("guestTeam", "GuestTeam must be set");
+
+		if (requestMatchDto.getGuestTeam().getClub() == null || requestMatchDto.getGuestTeam().getClub().isEmpty())
+			throw new BadRestRequestException("club", "Club in guestTeam must be set and not empty");
+
+		if (requestMatchDto.getStartDate() == null)
+			throw new BadRestRequestException("startDate", "Startdate must be set");
 	}
 }

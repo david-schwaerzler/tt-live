@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -15,10 +16,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
 @Table(name = "account")
+@NamedQuery(name = "Account.findByName", query = "select a from AccountEntity a where a.username = :name")
 public class AccountEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,6 +47,7 @@ public class AccountEntity {
 	@Column(name = "modified_at")
 	private LocalDateTime modifiedAt;
 	
+	@ToString.Exclude
 	@OneToMany(mappedBy = "account")
 	private List<MatchEntity> matches;
 }

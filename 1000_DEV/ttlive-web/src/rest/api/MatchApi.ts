@@ -105,3 +105,26 @@ export async function putLineup(id: number, editorCode: string, requestLineup: R
         return returnError(`${error}`);
     }
 }
+
+export async function putMatch(id : number, requestMatch: RequestMatch, editorCode: string){
+    try {
+        let response = await fetch(`${Config.REST_URL}/match/${id}?editorCode=${editorCode}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestMatch)
+        });
+        if (!response.ok) {
+            console.log(`Error updating match from the Server: ${response.status}`)
+            return returnError(response.status.toString());
+        }
+
+        let match: Match = await response.json();
+        return returnData(sortMatch(match));
+
+    } catch (error) {
+        console.log(`Error updating match on Server: ${error}`)
+        return returnError(`${error}`);
+    }
+}
