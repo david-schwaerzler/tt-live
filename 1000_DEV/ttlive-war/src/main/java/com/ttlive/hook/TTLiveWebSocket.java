@@ -105,6 +105,7 @@ public class TTLiveWebSocket {
 			List<Session> sockets = sessions.get(event.getMatchId());
 			if (sockets == null)
 				return;
+
 			synchronized (sockets) {
 				for (Iterator<Session> iter = sockets.iterator(); iter.hasNext();) {
 					try {
@@ -131,16 +132,13 @@ public class TTLiveWebSocket {
 			List<Session> sockets = sessions.get(event.getMatchId());
 			if (sockets == null)
 				return;
-			synchronized (sockets) {
-				for (Session socket : sockets) {
-					socket.getBasicRemote().sendObject(json);
-				}
-			}
+
+			emitMessage(sockets, json);
 		} catch (Exception e) {
 			log.severe(e.toString());
 		}
 	}
-	
+
 	public void emitChatMessageEvent(@ObservesAsync ChatMessageEvent event) {
 		try {
 			UpdateActionDto actionDto = UpdateActionDto.builder().chatAction(event.getMessage()).build();
@@ -148,13 +146,43 @@ public class TTLiveWebSocket {
 			List<Session> sockets = sessions.get(event.getMatchId());
 			if (sockets == null)
 				return;
-			synchronized (sockets) {
-				for (Session socket : sockets) {
-					socket.getBasicRemote().sendObject(json);
-				}
-			}
+
+			emitMessage(sockets, json);
+
 		} catch (Exception e) {
 			log.severe(e.toString());
 		}
+	}
+
+	public void emitMessage(List<Session> sockets, String json) {
+
+		synchronized (sockets) {
+
+			for (Iterator<Session> socketIter = sockets.iterator(); socketIter.hasNext();) {
+				Session socket = socketIter.next();
+				try {
+					if (socket.isOpen() == true) {
+						socket.getBasicRemote().sendObject(json);
+					} else {
+						socket.close();
+						socketIter.remove();
+					}
+				} catch (Exception e) {
+					try {
+						socket.close();
+					} catch (Exception e2) {
+					}
+
+					socketIter.remove();
+				}
+			}
+		}
+	}
+
+	public long getUserCount(long matchId) {
+		List<Session> users = sessions.get(matchId);
+		if (users == null)
+			return 0;
+		return users.size();
 	}
 }

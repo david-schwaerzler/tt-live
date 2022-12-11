@@ -39,7 +39,7 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
 
 
     const [gameScores, setGameScores] = useState<Array<GameScoreType> | null>(null);
-    const [isEditMode, setEditMode] = useState<boolean>(editorCode != null);
+    const [isEditMode, setEditMode] = useState<boolean>(false);
     const [hasFinishingDoubles, setFinishDoubles] = useState(false);
 
     const [inputType, setInputType] = useState(() => {

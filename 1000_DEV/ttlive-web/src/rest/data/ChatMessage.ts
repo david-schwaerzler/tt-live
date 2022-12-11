@@ -12,6 +12,10 @@ export interface RequestChatMessage {
     editor: boolean;
 }
 
+export interface LiveCount{
+    count: number;
+}
+
 export function sortChatMessages(messages: Array<ChatMessage>) {
     return messages.sort((a, b) => a.createdAt === b.createdAt ? 0 : a.createdAt > b.createdAt ? 1 : -1);
 }

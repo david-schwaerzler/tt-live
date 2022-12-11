@@ -1,9 +1,10 @@
 import { Config } from "../../components/utils/Config";
-import { ChatMessage, RequestChatMessage, sortChatMessages } from "../data/ChatMessage";
+import { ChatMessage, LiveCount, RequestChatMessage, sortChatMessages } from "../data/ChatMessage";
 import { ApiResponse, returnData, returnError } from "./ApiResponse";
 
 export type ChatMessageResponse = ApiResponse<ChatMessage>;
 export type ChatMessagesResponse = ApiResponse<Array<ChatMessage>>;
+export type LiveCountResponse = ApiResponse<number>;
 
 
 export async function postChatMessage(matchId: number, requestMessage: RequestChatMessage) : Promise<ChatMessageResponse>{
@@ -44,6 +45,23 @@ export async function fetchChatMessages(matchId: number): Promise<ChatMessagesRe
 
     } catch (error) {
         console.log(`Error fetching chatMessages on Server: ${error}`)
+        return returnError(`${error}`);
+    }
+}
+
+export async function fetchLiveCount(matchId: number) : Promise<LiveCountResponse>{
+    try {
+        let response = await fetch(`${Config.REST_URL}/chat/${matchId}/livecount`);
+        if (!response.ok) {
+            console.log(`Error fetching liveCount from the Server: ${response.status}`)
+            return returnError(response.status.toString());
+        }
+
+        let liveCount : LiveCount = await response.json();
+        return returnData(liveCount.count);
+
+    } catch (error) {
+        console.log(`Error fetching liveCount on Server: ${error}`)
         return returnError(`${error}`);
     }
 }

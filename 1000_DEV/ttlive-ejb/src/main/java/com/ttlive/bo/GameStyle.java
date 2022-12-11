@@ -1,7 +1,5 @@
 package com.ttlive.bo;
 
-import javax.persistence.Column;
-
 import com.ttlive.persistence.entity.GameStyleEntity;
 
 import lombok.Builder;
