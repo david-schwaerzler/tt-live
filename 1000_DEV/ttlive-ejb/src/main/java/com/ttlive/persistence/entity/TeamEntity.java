@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,8 +27,7 @@ import lombok.ToString;
 @Entity
 @Table(name = "team")
 @NamedQueries({
-	@NamedQuery(name = "Team.findByClubAndNumber", query = "select t from TeamEntity t join t.league l where t.club = :club and t.number = :number and l.id = :leagueId")
-})
+		@NamedQuery(name = "Team.findByClubAndNumber", query = "select t from TeamEntity t join t.league l where t.club = :club and t.number = :number and l.id = :leagueId") })
 public class TeamEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +47,7 @@ public class TeamEntity {
 	@Column(name = "modified_at")
 	private LocalDateTime modifiedAt;
 
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
 	@JoinColumn(name = "league_id", referencedColumnName = "id")
 	private LeagueEntity league;
 
@@ -69,7 +69,7 @@ public class TeamEntity {
 		}
 
 		this.league = league;
-		if(league != null && setBoth)
+		if (league != null && setBoth)
 			league.addTeam(this, false);
 	}
 
@@ -77,13 +77,13 @@ public class TeamEntity {
 		addHomeMatch(entity, true);
 	}
 
-	public void addHomeMatch( MatchEntity entity, boolean setBoth) {
-		if(!homeMatches.contains(entity))
-			homeMatches.add(entity);		
-		if(setBoth)
-			entity.setHomeTeam(this, false);		
+	public void addHomeMatch(MatchEntity entity, boolean setBoth) {
+		if (!homeMatches.contains(entity))
+			homeMatches.add(entity);
+		if (setBoth)
+			entity.setHomeTeam(this, false);
 	}
-	
+
 	public void removeHomeMatch(MatchEntity match) {
 		removeHomeMatch(match, true);
 	}
@@ -93,19 +93,19 @@ public class TeamEntity {
 		if (setBoth)
 			match.setLeague(null, false);
 	}
-	
+
 	public void addGuestMatch(MatchEntity entity) {
 		addGuestMatch(entity, true);
 	}
 
-	public void addGuestMatch( MatchEntity teamEntity, boolean setBoth) {
-		if(!guestMatches.contains(teamEntity))
+	public void addGuestMatch(MatchEntity teamEntity, boolean setBoth) {
+		if (!guestMatches.contains(teamEntity))
 			guestMatches.add(teamEntity);
-		
-		if(setBoth && teamEntity != null)
-			teamEntity.setHomeTeam(this, false);		
+
+		if (setBoth && teamEntity != null)
+			teamEntity.setHomeTeam(this, false);
 	}
-	
+
 	public void removeGuestMatch(MatchEntity match) {
 		removeGuestMatch(match, true);
 	}

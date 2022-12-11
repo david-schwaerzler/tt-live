@@ -54,7 +54,6 @@ const CreateGameView = (props: CreateGameViewProps) => {
     return (
         <Card>
             <CardContent>
-
                 <Dialog onClose={onErrorDialogClosed} open={errorDialogOpen} >
                     <DialogTitle>{t("Common.error")}</DialogTitle>
                     <DialogContent>
@@ -85,10 +84,10 @@ const CreateGameView = (props: CreateGameViewProps) => {
                         position="bottom"
                         activeStep={currentStep}
                         nextButton={
-                            <Button size="small" onClick={setNextStep} disabled={false}>
+                            <LoadingButton loading={isLoading} size="small" onClick={setNextStep} disabled={false}>
                                 {isLastStep() ? t("CreateGameView.submit") : t("CreateGameView.next")}
                                 <KeyboardArrowRight />
-                            </Button>
+                            </LoadingButton>
                         }
                         backButton={
                             <Button size="small" onClick={setPreviousStep} disabled={false}>
