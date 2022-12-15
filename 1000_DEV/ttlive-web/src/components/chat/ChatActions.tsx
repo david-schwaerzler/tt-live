@@ -1,7 +1,6 @@
 import { AccountCircle } from "@mui/icons-material";
 import { Divider, IconButton, Stack, TextField, useMediaQuery, useTheme } from "@mui/material";
 import React, { createRef, useCallback, useContext, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { AppContext } from "../../AppContext";
 import { postChatMessage } from "../../rest/api/ChatApi";
 import { RequestChatMessage } from "../../rest/data/ChatMessage";
