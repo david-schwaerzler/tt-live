@@ -63,7 +63,7 @@ const MenuBar = () => {
                                 className={location.pathname === "/live" ? "current" : ""}
                                 sx={{ color: 'white', display: 'block' }}
                             >
-                                {t('MenuBar.live')}
+                                <i>{t('MenuBar.live')}</i>
                             </HoverButton>
                         </Link>
                     }
