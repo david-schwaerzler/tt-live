@@ -1,33 +1,55 @@
-import React, { useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Match } from "../../rest/data/Match";
 import { Autocomplete, Box, Button, Collapse, FormControl, FormControlLabel, IconButton, InputLabel, MenuItem, Radio, Select, TextField, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Stack } from "@mui/system";
 import FilterListIcon from '@mui/icons-material/FilterList';
+import { AppContext } from "../../AppContext";
 
 export interface MatchFilterProps {
     matches: Array<Match>;
     onFilter: (filteredMatched: Array<Match>) => void;
 }
 
+const MATCH_FILTER_SETTING_KEY = "matchFilter";
+interface MatchFilters {
+    region: string | null,
+    league: string | null,
+    club: string | null,
+    contest: string,
+    showLive: boolean,
+    showFinished: boolean,
+    showUpcoming: boolean,
+    expanded: boolean
+}
+
 const MatchFilter = ({ matches, onFilter }: MatchFilterProps) => {
 
-    const [expanded, setExpanded] = useState<boolean>(false);
-
     const [regions, setRegions] = useState<Array<string>>([]);
-    const [region, setRegion] = useState<string | null>(null);
-
     const [leagues, setLeagues] = useState<Array<string>>([]);
-    const [league, setLeague] = useState<string | null>(null);
+    const [clubs, setClubs] = useState<Array<string>>([]);
+    const [isIconColored, setIconColored] = useState<boolean>(false);
 
-    const [clubs, setClubs] = useState<Array<string>>([])
-    const [club, setClub] = useState<string | null>(null);
+    const context = useContext(AppContext);
+    const filter: MatchFilters = useMemo(() => {
 
-    const [showLive, setShowLive] = useState<boolean>(true);
-    const [showFinished, setShowFinished] = useState<boolean>(true);
-    const [showUpcoming, setShowUpcoming] = useState<boolean>(true);
+        let str = context.getSetting(MATCH_FILTER_SETTING_KEY)
 
-    const [contest, setContest] = useState<string>("")
+        let ret: MatchFilters = {
+            region: null,
+            league: null,
+            club: null,
+            contest: "",
+            showLive: true,
+            showFinished: true,
+            showUpcoming: true,
+            expanded: false
+        };
+        if (str == null || str === "")
+            return ret;
+        return { ...ret, ...JSON.parse(str) };
+    }, [context]);
+
     const [t] = useTranslation();
 
     useEffect(() => {
@@ -53,39 +75,59 @@ const MatchFilter = ({ matches, onFilter }: MatchFilterProps) => {
 
     useEffect(() => {
         let filtered = [...matches];
-        if (region != null)
-            filtered = filtered.filter(m => m.league.region === region);
-        if (league != null)
-            filtered = filtered.filter(m => m.league.name === league)
-        if (club != null)
-            filtered = filtered.filter(m => m.homeTeam.club === club || m.guestTeam.club === club)
-        if (contest !== "")
-            filtered = filtered.filter(m => m.league.contest === contest);
-        if (showLive === false)
+
+        // will be set to true if at least one filter has been applied
+        let someFiltered = false;
+
+        if (filter.region != null){
+            filtered = filtered.filter(m => m.league.region === filter.region);
+            someFiltered = true;
+        }
+        if (filter.league != null){
+            filtered = filtered.filter(m => m.league.name === filter.league);
+            someFiltered = true;
+        }
+        if (filter.club != null){
+            filtered = filtered.filter(m => m.homeTeam.club === filter.club || m.guestTeam.club === filter.club)
+            someFiltered = true;
+        }
+        if (filter.contest !== ""){
+            filtered = filtered.filter(m => m.league.contest === filter.contest);
+            someFiltered = true;
+        }
+        if (filter.showLive === false){
             filtered = filtered.filter(m => m.state !== "LIVE");
-        if (showUpcoming === false)
+            someFiltered = true;
+        }
+        if (filter.showUpcoming === false){
             filtered = filtered.filter(m => m.state !== "NOT_STARTED");
-        if (showFinished === false)
+            someFiltered = true;
+        }
+        if (filter.showFinished === false){
             filtered = filtered.filter(m => m.state !== "FINISHED");
+            someFiltered = true;
+        }
+
+        setIconColored(someFiltered);
 
         onFilter(filtered);
-    }, [matches, region, club, league, contest, showFinished, showLive, showUpcoming, onFilter])
+    }, [matches, filter, onFilter])
 
     return (
         <Box>
             <Stack direction="row-reverse">
-                <IconButton onClick={() => setExpanded(!expanded)}>
-                    <FilterListIcon color={expanded ? "primary" : undefined} />
-                    <Typography sx={{ opacity: "50%", fontStyle: "italic" }}>Filter </Typography>
+                <IconButton onClick={() => context.setSetting(MATCH_FILTER_SETTING_KEY, JSON.stringify({...filter, expanded: !filter.expanded}), false)} >
+                    <FilterListIcon color={isIconColored ? "primary" : undefined} />
+                    <Typography sx={{ fontStyle: "italic", ...(isIconColored ? {fontWeight: "bold"} : {opacity: "50%"}) }}>Filter </Typography>
                 </IconButton>
             </Stack>
-            <Collapse in={expanded}>
+            <Collapse in={filter.expanded}>
                 <Stack direction="column" gap={1}>
                     <Stack direction="row" gap={1} >
                         <FormControl sx={{ flex: "1 1 0" }}>
                             <Autocomplete
-                                value={region}
-                                onChange={(e, value) => setRegion(value)}
+                                value={filter.region}
+                                onChange={(e, value) => context.setSetting(MATCH_FILTER_SETTING_KEY, JSON.stringify({...filter, region: value}), false)}
                                 options={regions}
                                 renderInput={(params) => <TextField {...params} label={t('MatchFilter.region')} error={false} />}
                             />
@@ -96,8 +138,8 @@ const MatchFilter = ({ matches, onFilter }: MatchFilterProps) => {
                                 id="select-contest"
                                 labelId="select-contest"
                                 label={t('MatchFilter.contest')}
-                                value={contest}
-                                onChange={e => setContest(e.target.value)}>
+                                value={filter.contest}
+                                onChange={e => context.setSetting(MATCH_FILTER_SETTING_KEY, JSON.stringify({...filter, contest: e.target.value}), false)}>
                                 <MenuItem value="WOMEN">{t('MatchFilter.contestWomen')}</MenuItem>
                                 <MenuItem value="MEN">{t('MatchFilter.contestMen')}</MenuItem>
                                 <MenuItem value="">{<i>{t('MatchFilter.emptyContest')}</i>}</MenuItem>
@@ -107,16 +149,16 @@ const MatchFilter = ({ matches, onFilter }: MatchFilterProps) => {
                     <Stack gap={1} direction={{ xs: "column", sm: "row" }}>
                         <FormControl sx={{ flex: "1 1 0" }} >
                             <Autocomplete
-                                value={league}
-                                onChange={(e, value) => setLeague(value)}
+                                value={filter.league}
+                                onChange={(e, value) => context.setSetting(MATCH_FILTER_SETTING_KEY, JSON.stringify({...filter, league: value}), false)}
                                 options={leagues}
                                 renderInput={(params) => <TextField {...params} label={t('MatchFilter.league')} error={false} />}
                             />
                         </FormControl>
                         <FormControl sx={{ flex: "1 1 0" }} >
                             <Autocomplete
-                                value={club}
-                                onChange={(e, value) => setClub(value)}
+                                value={filter.club}
+                                onChange={(e, value) => context.setSetting(MATCH_FILTER_SETTING_KEY, JSON.stringify({...filter, club: value}), false)}
                                 options={clubs}
                                 renderInput={(params) => <TextField {...params} label={t('MatchFilter.club')} error={false} />}
                                 sx={{ minWidth: "200px" }}
@@ -127,47 +169,45 @@ const MatchFilter = ({ matches, onFilter }: MatchFilterProps) => {
                         <FormControlLabel
                             label={t("MatchFilter.showUpcoming")}
                             control={<Radio
-                                checked={showUpcoming}
-                                onClick={() => setShowUpcoming(!showUpcoming)} />}
+                                checked={filter.showUpcoming}
+                                onClick={() => context.setSetting(MATCH_FILTER_SETTING_KEY, JSON.stringify({...filter, showUpcoming: !filter.showUpcoming}), false)} />}
                         />
                         <FormControlLabel
                             label={t("MatchFilter.showLive")}
                             control={<Radio
-                                checked={showLive}
-                                onClick={() => setShowLive(!showLive)} />}
+                                checked={filter.showLive}
+                                onClick={() => context.setSetting(MATCH_FILTER_SETTING_KEY, JSON.stringify({...filter, showLive: !filter.showLive}), false)} />}
                         />
                         <FormControlLabel
                             label={t("MatchFilter.showFinished")}
                             control={<Radio
-                                checked={showFinished}
-                                onClick={() => setShowFinished(!showFinished)} />}
+                                checked={filter.showFinished}
+                                onClick={() => context.setSetting(MATCH_FILTER_SETTING_KEY, JSON.stringify({...filter, showFinished: !filter.showFinished}), false)} />}
                         />
                     </Stack>
 
                     <Stack direction="row" gap={1}>
-                        <Button onClick={() => onReset()}>{t("Common.reset")}</Button>
+                        <Button onClick={() => onReset(filter.expanded)}>{t("Common.reset")}</Button>
                     </Stack>
                 </Stack>
             </Collapse>
         </Box>
     );
 
-    function onReset() {
-        setRegion(null);
-        setLeague(null);
-        setClub(null);
-        setContest("");
-        setShowFinished(true);
-        setShowLive(true);
-        setShowUpcoming(true);
+    function onReset(expanded: boolean) {
+        let ret: MatchFilters = {
+            region: null,
+            league: null,
+            club: null,
+            contest: "",
+            showLive: true,
+            showFinished: true,
+            showUpcoming: true,
+            expanded: expanded            
+        };
 
-        onSave();
+       context.setSetting(MATCH_FILTER_SETTING_KEY, JSON.stringify(ret), false);
     }
-
-    function onSave(){
-
-    }
-
 };
 
 export default MatchFilter;
