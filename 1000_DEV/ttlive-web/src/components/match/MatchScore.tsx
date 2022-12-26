@@ -1,11 +1,11 @@
-import { Box } from "@mui/system";
+import { Box, SxProps } from "@mui/system";
 import { Match } from "../../rest/data/Match";
 import { spacingSmall } from "../utils/StyleVars";
 
 export interface MatchScoreProps {
     match: Match;
     scoreSize?: string | { xs?: string, sm?: string, md?: string },
-    sx?: any;
+    sx?: SxProps;
 }
 
 const MatchScore = ({ match, scoreSize = "3rem", sx }: MatchScoreProps) => {

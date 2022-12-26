@@ -19,7 +19,6 @@ import { ChatMessage, sortChatMessages } from "../rest/data/ChatMessage";
 import { Game } from "../rest/data/Game";
 import { Match, sortMatch } from "../rest/data/Match";
 
-
 const LiveView = () => {
     const [match, setMatch] = useState<Match | null>(null);
     const [errorMsg, setErrorMsg] = useState<string>("");
@@ -33,7 +32,6 @@ const LiveView = () => {
     const context = useContext(AppContext)
     const [t] = useTranslation();
     const [searchParams] = useSearchParams();
-
 
     const swipeHanlder = useSwipeable({
         onSwipedRight: () => setActiveTab(activeTab - 1 < 0 ? 0 : activeTab - 1),
@@ -69,7 +67,6 @@ const LiveView = () => {
             if (response.data)
                 setMessages(response.data)
         }
-
 
         let intervalId: NodeJS.Timer | null = null;
         if (context.matchId != null) {
@@ -214,7 +211,6 @@ const LiveView = () => {
         setChatDrawerExpanded(expanded);
         if (!expanded)
             setBadgeCounter(0);
-
     }
 
     function onGameUpdated(game: Game, match: Match) {

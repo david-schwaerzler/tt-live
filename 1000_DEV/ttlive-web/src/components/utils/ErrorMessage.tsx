@@ -1,9 +1,9 @@
-import { Typography } from "@mui/material";
+import { SxProps, Typography } from "@mui/material";
 
 export interface ErrorMessageProps {
     msg?: string | null;
     centered?: boolean;
-    sx?: any;
+    sx?: SxProps;
 }
 
 const ErrorMessage = ({ msg, centered = false, sx }: ErrorMessageProps) => {

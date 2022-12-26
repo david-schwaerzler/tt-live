@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { fetchMatches } from "../../rest/api/MatchApi";
 import { Match } from "../../rest/data/Match";
-import { Stack } from "@mui/system";
+import { Stack, SxProps } from "@mui/system";
 import { spacingNormal } from "../utils/StyleVars";
 import MatchCard from "./MatchCard";
+import MatchFilter from "./MatchFilter";
 
 export interface MatchTableProps {
-    sx?: any;
+    sx?: SxProps;
     fetchDelay?: number
 }
 
@@ -15,7 +16,7 @@ const MatchTable = ({ sx, fetchDelay = 0 }: MatchTableProps) => {
 
     const [t] = useTranslation();
     const [matches, setMatches] = useState<Array<Match> | null>(null);
-
+    const [filteredMatches, setFilteredMatches] = useState<Array<Match>>([]);
     useEffect(() => {
         async function fetch() {
             let response = await fetchMatches();
@@ -40,10 +41,13 @@ const MatchTable = ({ sx, fetchDelay = 0 }: MatchTableProps) => {
                 clearInterval(intervalId);
         }
 
-    }, [ fetchDelay, t]);
+    }, [fetchDelay, t]);
+
+    const onFilter = useCallback((filtered: Array<Match>) => {
+        setFilteredMatches(filtered);
+    }, [setFilteredMatches]);
 
     return (
-
         <Stack sx={{ gap: spacingNormal }}>
             {matches == null
                 ? <React.Fragment>
@@ -51,7 +55,10 @@ const MatchTable = ({ sx, fetchDelay = 0 }: MatchTableProps) => {
                     <MatchCard match={null} />
                     <MatchCard match={null} />
                 </React.Fragment>
-                : matches.map(match => <MatchCard key={match.id} match={match} />)
+                : <React.Fragment>
+                    <MatchFilter matches={matches} onFilter={onFilter} />
+                    {filteredMatches.map(match => <MatchCard key={match.id} match={match} />)}
+                </React.Fragment>
             }
         </Stack>
     );

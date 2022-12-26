@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box, SxProps } from "@mui/system";
 import dayjs from "dayjs";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 
 export interface MatchStateLabelProps {
     state: "NOT_STARTED" | "LIVE" | "FINISHED";
-    sx?: any;
+    sx?: SxProps;
     variant?: "normal" | "border";
     startDate?: string;
 }
