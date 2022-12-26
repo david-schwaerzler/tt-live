@@ -1,7 +1,8 @@
-import { Button, Typography } from "@mui/material";
+import { Button, Card, CardContent, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import { Trans, useTranslation } from "react-i18next";
 import { Link } from "react-router-dom"
+import ContactForm from "../components/contact/ContactForm";
 
 export interface HomeViewProps {
 
@@ -14,12 +15,12 @@ export function HomeView(props: HomeViewProps) {
             <Box m="auto">
                 <Typography variant="h1"  >
                     <Trans i18nKey={"HomeView.welcomeText"} />
-                </Typography>               
+                </Typography>
 
-                <Typography variant="h2" mt={4}>
+                <Typography variant="h2" mt={6}>
                     {t("HomeView.goLiveText")}
                 </Typography>
-                <Box mt={1}>
+                <Box mt={2}>
                     <Link to="/create" style={{ textDecoration: "none" }}>
                         <Button sx={{ flexGrow: 0 }} variant="outlined" size="large">
                             <Typography variant="h3">
@@ -29,10 +30,10 @@ export function HomeView(props: HomeViewProps) {
                     </Link>
                 </Box>
 
-                <Typography variant="h2" mt={4}>
-                {t("HomeView.goSearchText")}
+                <Typography variant="h2" mt={6}>
+                    {t("HomeView.goSearchText")}
                 </Typography>
-                <Box mt={1}>
+                <Box mt={2}>
                     <Link to="/live_search" style={{ textDecoration: "none" }}>
                         <Button sx={{ flexGrow: 0 }} variant="outlined" size="large">
                             <Typography variant="h3">
@@ -42,8 +43,9 @@ export function HomeView(props: HomeViewProps) {
                     </Link>
                 </Box>
             </Box>
-            <Box sx={{position: "absolute", bottom: theme => theme.spacing(1), left : theme => theme.spacing(1), color: theme => theme.palette.primary.main}}>
-            <Link to={"imprint"} style={{color: "inherit"}}>{t("HomeView.imprint")}</Link>
+            <ContactForm sx={{ mt: 6 }} />
+            <Box sx={{ mt: 3, color: theme => theme.palette.primary.main }}>
+                <Link to={"imprint"} style={{ color: "inherit" }}>{t("HomeView.imprint")}</Link>
             </Box>
         </Container>
 

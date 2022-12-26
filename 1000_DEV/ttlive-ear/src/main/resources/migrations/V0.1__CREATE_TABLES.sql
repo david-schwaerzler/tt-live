@@ -133,3 +133,9 @@ CREATE TABLE chat_message (
 	match_id BIGINT NOT NULL REFERENCES match(id)	,
 	created_at TIMESTAMP NOT NULL DEFAULT now()
 );
+
+CREATE TABLE contact (
+	 id BIGSERIAL PRIMARY KEY,
+	 text VARCHAR(4096),
+	 recipient VARCHAR(256)
+);
