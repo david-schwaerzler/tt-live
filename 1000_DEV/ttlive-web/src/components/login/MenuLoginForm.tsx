@@ -1,9 +1,10 @@
 import styled from "@emotion/styled";
 import { AccountCircle } from "@mui/icons-material";
 import { Button, IconButton, Menu, Stack, TextField } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box, height } from "@mui/system";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { spacingNormal } from "../utils/StyleVars";
 
 export interface MenuLoginFormProps {
@@ -58,8 +59,9 @@ const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
                 <WhiteTextField size="small" label={t("LoginForm.username")} variant="outlined" />
                 <WhiteTextField size="small" label={t("LoginForm.password")} variant="outlined" />
                 <WhiteButton size="small" variant="outlined">{t("LoginForm.login")}</WhiteButton>
-                <WhiteButton size="small" variant="outlined">{t("LoginForm.register")}</WhiteButton>
-
+                <Link to="/register" >
+                    <WhiteButton size="small" sx={{height: "100%"}} variant="outlined">{t("LoginForm.register")}</WhiteButton>
+                </Link>
             </Box>
             <Box sx={{ display: { xs: "flex", md: "none" }, flexGrow: 0 }}  >
                 <IconButton onClick={e => setLoginAnchor(e.currentTarget)} sx={{ p: 0, pr: 2 }}>
@@ -86,7 +88,9 @@ const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
                     <TextField size="small" label={t("LoginForm.password")} variant="outlined" />
                     <Box>
                         <Button size="small">{t("LoginForm.login")}</Button>
-                        <Button size="small">{t("LoginForm.register")}</Button>
+                        <Link to="/register">
+                            <Button size="small">{t("LoginForm.register")}</Button>
+                        </Link>
                     </Box>
                 </Stack>
             </Menu>

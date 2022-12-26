@@ -11,7 +11,7 @@ import LiveSearch from './views/LiveSearchView';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import ImprintView from './views/ImprintView';
-
+import RegisterView from './views/RegisterView';
 
 function App() {
     const [matchId, setMatchId] = useState<number | null>(() => {
@@ -90,6 +90,7 @@ function App() {
                                 <Route path="/" element={renderContent(<HomeView />)} />
                                 <Route path="create" element={renderContent(<CreateGameView />)} />
                                 <Route path="login" element={renderContent(<LoginView />)} />
+                                <Route path="register" element={renderContent(<RegisterView />)} />
                                 <Route path="live_search" element={renderContent(<LiveSearch />)} />
                                 <Route path="live" element={renderContent(<LiveView />)} />
                                 <Route path="imprint" element={renderContent(<ImprintView />)} />

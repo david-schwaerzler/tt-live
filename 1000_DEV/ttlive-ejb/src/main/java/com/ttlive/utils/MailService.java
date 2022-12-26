@@ -23,8 +23,7 @@ public class MailService {
 	@Resource(mappedName = "java:jboss/mail/Default")
 	private Session mailSession;
 
-	
-	@PostConstruct
+
 	public void onCreate() {
 		try {
 		

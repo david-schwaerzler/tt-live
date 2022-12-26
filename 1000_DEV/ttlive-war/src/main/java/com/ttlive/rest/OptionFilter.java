@@ -22,7 +22,7 @@ public class OptionFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse resp = (HttpServletResponse) servletResponse;
 
-		if (request.getMethod().equals("OPTIONS")) {
+		if (request.getMethod().equals("OPTIONS")) { 	
 			resp.setStatus(HttpServletResponse.SC_OK);
 			return;
 		}

@@ -1,6 +1,7 @@
 package com.ttlive.persistence.entity;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -36,6 +37,9 @@ public class AccountEntity {
 	@Column(name = "email")
 	private String email;
 	
+	@Column(name = "role")
+	private String role;
+	
 	@Column(name = "isAuthenticated")
 	private boolean isAuthenticated;
 	
@@ -49,5 +53,5 @@ public class AccountEntity {
 	
 	@ToString.Exclude
 	@OneToMany(mappedBy = "account")
-	private List<MatchEntity> matches;
+	private List<MatchEntity> matches = new LinkedList<MatchEntity>();
 }

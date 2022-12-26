@@ -22,10 +22,6 @@ import com.ttlive.hook.TTLiveWebSocket;
 import com.ttlive.service.ChatMessageService;
 import com.ttlive.utils.BadRestRequestException;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import net.minidev.json.JSONObject;
-
 @Stateless
 @Path("/chat")
 public class ChatMessageReceiver {

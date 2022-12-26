@@ -4,6 +4,8 @@ const deDe = {
             "Common.error": "Fehler",
             "Common.ok": "OK",
             "Common.errorFetch": "Leider kann der Server nicht erreicht werden. Bitte versuchen sie es später noch einmal",
+            "Common.reset": "Reset",
+            "Common.close": "Schließen",
 
             "MenuBar.home": "Home",
             "MenuBar.live": "Live",
@@ -30,7 +32,6 @@ const deDe = {
             "CreateGameView.submit": "Erstellen",
             "CreateGameView.back": "Zurück",
             "CreateGameView.createError": "Leider ist ein Fehler aufgetreten und das Match konnte nicht erstellt werden.\nBitte versuchen sie es später erneut.",
-
 
             "RegionState.region": "Verband",
             "RegionState.contest": "Konkurrenz",
@@ -131,7 +132,48 @@ const deDe = {
             "GameSetResult.unset": "0:0?",
 
             "ImprintView.imprint": "Impressum:",
-            "ImprintView.contact": "Kontaktaufnahme:"
+            "ImprintView.contact": "Kontaktaufnahme:",
+
+            "MatchFilter.showUpcoming": "Upcoming?",
+            "MatchFilter.showLive": "Live?",
+            "MatchFilter.showFinished": "Beendet?",
+            "MatchFilter.emptyContest": "Alle",
+            "MatchFilter.club": "Mannschaft",
+            "MatchFilter.league": "Liga",
+            "MatchFilter.contestWomen": "Damen",
+            "MatchFilter.contestMen": "Herren",
+            "MatchFilter.contest": "Konkurrenz",
+            "MatchFilter.region": "Region",
+
+            "ContactForm.header": "Feedback",
+            "ContactForm.introduction": "Moin,\n"
+                + "TT-Live ist ein kleine Projekt, welches ich in meiner Freizeit entwickel.\n"
+                + "Haben Sie Feedback, Vorschläge für Verbesserungen oder\n"
+                + "sind Fehler aufgetreten, lassen sie es mich gerne wissen.",
+            "ContactForm.text": "Ihre Nachricht",
+            "ContactForm.recipient": "Email (otional)",
+            "ContactForm.submit": "Senden",
+            "ContactForm.confirmTitle": "Erfolgreich",
+            "ContactForm.confirmText": "Ihre Nachricht wurde erfolgreich versendet.\nVielen Dank für ihr Feedback.",
+            "ContactForm.errorTextLength": "Der Text darf nur maximal 4096 Zeichen umfassen",
+            "ContactForm.errorTextEmpty": "Sie müssen schon etwas schreiben",
+            "ContactForm.errorRecipientLength": "Maximale länge 265 Zeichn",
+            "ContactForm.errorPost": "Leider ist ein Fehler aufgetreten, bitte versuchen sie es später erneut.",
+
+            "RegisterView.title": "Registrieren",
+            "RegisterView.registeredTitl": "Registrieren",
+            "RegisterView.username": "Username",
+            "RegisterView.password": "Password",
+            "RegisterView.passwordConfirm": "Password bestätigen",
+            "RegisterView.email": "Email",
+            "RegisterView.register": "Registrieren",
+            "RegisterView.errorUsernameEmpty": "Username darf nicht leer sein",
+            "RegisterView.errorPost": "Leider ist ein Fehler aufgetreten, bitte versuchen sie es später erneut.",
+            "RegisterView.errorUernameTaken": "Der Benutzername existiert bereits",
+            "RegisterView.errorPasswordsEmpty": "Passwort darf nicht leer sein",
+            "RegisterView.errorPasswordNotEqual": "Die Passwörter stimmen nicht überein",
+            "RegisterView.errorEmailEmpty": "Email darf nicht leer sein",
+            "RegisterView.errorEmailValidation": "Email ist im falschen Format"   
         }
     }
 }

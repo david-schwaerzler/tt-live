@@ -35,7 +35,7 @@ public class JwtFactory {
 
 	private static final PrivateKey privateKey;
 	private static final int TOKEN_VALIDITY = 4 * 60 * 60;
-	private static final String ROLE= "user";
+	private static final String ROLE = "user";
 	private static final String ISSUER = "ttlive";
 	private static final String AUDIENCE = "ttlive-web-app";
 
