@@ -1,11 +1,16 @@
 import styled from "@emotion/styled";
 import { AccountCircle } from "@mui/icons-material";
 import { Button, IconButton, Menu, Stack, TextField } from "@mui/material";
-import { Box, height } from "@mui/system";
-import { useState } from "react";
+import { Box } from "@mui/system";
+import { useCallback, useState } from "react";
+import { useSignIn } from "react-auth-kit";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { postLogin } from "../../rest/api/AccountApi";
+import { RequestLogin } from "../../rest/data/Account";
+import LoadingButton from "../utils/LoadingButton";
 import { spacingNormal } from "../utils/StyleVars";
+import { LoginErrors } from "./LoginForm";
 
 export interface MenuLoginFormProps {
     /* Resposive padding for the Toolbar */
@@ -46,21 +51,119 @@ const WhiteButton = styled(Button)({
     "&:hover": {
         borderColor: "white"
     }
-})
+});
+
+const WhiteLoadingButton = styled(LoadingButton)({
+    color: "white",
+    borderColor: "white",
+    "&:hover": {
+        borderColor: "white"
+    }
+});
 
 
 const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
 
     const [loginAnchor, setLoginAnchor] = useState<null | HTMLElement>(null);
     const [t] = useTranslation();
+    const [username, setUsername] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
+    const navigate = useNavigate();
+    const signIn = useSignIn();
+
+    const onLogin = useCallback(async () => {
+
+        const redirectError = (type: LoginErrors, error: string) => navigate(`/login?error=${error}&username=${username}&type=${type}`);
+
+        if (username === "") {
+            redirectError(LoginErrors.USERNAME, "LoginForm.errorUsernameEmpty");
+            setLoginAnchor(null);
+            setPassword("");
+            return;
+        }
+        if (password === "") {
+            redirectError(LoginErrors.PASSWORD, "LoginForm.errorPasswordEmpty");
+            setLoginAnchor(null);
+            setPassword("")
+            return;
+        }
+
+        let requestLogin: RequestLogin = {
+            username: username,
+            password: password
+        };
+
+        setLoading(true);
+        let response = await postLogin(requestLogin);
+        if (response.data != null) {
+            switch (response.data.status) {
+                case "USERNAME_INVALID":
+                    redirectError(LoginErrors.USERNAME, "LoginForm.errorWrongUsername");
+                    break;
+                case "PASSWORD_INVALID":
+                    redirectError(LoginErrors.GENERAL, "LoginForm.errorNotAuthenticated");
+                    break;
+                case "SUCCESS":
+                    if (response.data.token == null) {
+                        console.error(`Login success but no token was provided.`);
+                        redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
+                    } else {
+                        if (signIn(
+                            {
+                                token: response.data.token,
+                                expiresIn: 1,
+                                tokenType: "Bearer"
+                            })) {
+                            navigate("/profile")
+                        } else {
+                            console.error(`Error login in. Error from react auth kit`);
+                            redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
+                        }
+                    }
+                    break;
+                default:
+                    console.error(`Login returned unknown status. Status=${response.data.status}`);
+                    redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
+                    break;
+            }
+        } else {
+            redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
+        }
+        setLoading(false);
+        setPassword("");
+        setLoginAnchor(null);
+    }, [navigate, password, signIn, username]);
+
     return (
         <Box sx={{ pl: padding }}>
             <Box sx={{ display: { xs: "none", md: "flex" }, gap: "1em", flexGrow: 0 }}  >
-                <WhiteTextField size="small" label={t("LoginForm.username")} variant="outlined" />
-                <WhiteTextField size="small" label={t("LoginForm.password")} variant="outlined" />
-                <WhiteButton size="small" variant="outlined">{t("LoginForm.login")}</WhiteButton>
+                <WhiteTextField
+                    size="small"
+                    label={t("LoginForm.username")}
+                    variant="outlined"
+                    onChange={e => setUsername(e.target.value)}
+                    value={username}
+                />
+                <WhiteTextField
+                    size="small"
+                    label={t("LoginForm.password")}
+                    variant="outlined"
+                    onChange={e => setPassword(e.target.value)}
+                    value={password}
+                    type="password"
+                />
+                <WhiteLoadingButton
+                    loading={loading}
+                    size="small"
+                    variant="outlined"
+                    onClick={onLogin}>
+                    {t("LoginForm.login")}
+                </WhiteLoadingButton>
                 <Link to="/register" >
-                    <WhiteButton size="small" sx={{height: "100%"}} variant="outlined">{t("LoginForm.register")}</WhiteButton>
+                    <WhiteButton size="small" sx={{ height: "100%" }} variant="outlined" onClick={() => setLoginAnchor(null)}>
+                        {t("LoginForm.register")}
+                    </WhiteButton>
                 </Link>
             </Box>
             <Box sx={{ display: { xs: "flex", md: "none" }, flexGrow: 0 }}  >
@@ -84,18 +187,31 @@ const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
                 open={loginAnchor != null}
                 onClose={() => setLoginAnchor(null)}>
                 <Stack direction="column" sx={{ paddingTop: spacingNormal, paddingLeft: spacingNormal, paddingRight: spacingNormal }} spacing={spacingNormal}>
-                    <TextField size="small" label={t("LoginForm.username")} variant="outlined" />
-                    <TextField size="small" label={t("LoginForm.password")} variant="outlined" />
+                <WhiteTextField
+                        size="small"
+                        label={t("LoginForm.username")}
+                        variant="outlined"
+                        onChange={e => setUsername(e.target.value)}
+                        value={username}
+                    />
+                    <WhiteTextField
+                        size="small"
+                        label={t("LoginForm.password")}
+                        variant="outlined"
+                        onChange={e => setPassword(e.target.value)}
+                        value={password}
+                        type="password"
+                    />
+
                     <Box>
-                        <Button size="small">{t("LoginForm.login")}</Button>
+                        <LoadingButton loading={loading} sx={{display: "inline-grid"}} size="small" onClick={onLogin}>{t("LoginForm.login")}</LoadingButton>
                         <Link to="/register">
-                            <Button size="small">{t("LoginForm.register")}</Button>
+                            <Button size="small" onClick={() => setLoginAnchor(null)}>{t("LoginForm.register")}</Button>
                         </Link>
                     </Box>
                 </Stack>
             </Menu>
         </Box >
-
     )
 }
 

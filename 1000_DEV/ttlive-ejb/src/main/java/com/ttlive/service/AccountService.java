@@ -18,11 +18,13 @@ public class AccountService {
 
 	public LoginStatus login(String username, String password) {
 		AccountEntity entity = accountDao.findByName(username);
+		String hashedPassword = HashUtils.hash(password);
 		if (entity == null)
 			return LoginStatus.USERNAME_INVALID;
-		else if (entity.isAuthenticated() == false)
-			return LoginStatus.NOT_AUTHENTICATED;
-		else if (entity.getPassword().equals(password))
+		// TODO implement Email authentification 
+		//else if (entity.isAuthenticated() == false)
+		//	return LoginStatus.NOT_AUTHENTICATED;
+		else if (entity.getPassword().equals(hashedPassword) == false)
 			return LoginStatus.PASSWORD_INVALID;
 
 		return LoginStatus.SUCCESS;

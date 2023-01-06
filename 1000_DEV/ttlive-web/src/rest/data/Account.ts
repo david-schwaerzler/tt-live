@@ -1,9 +1,9 @@
 import { Match } from "./Match";
 
 export interface Account {
-    id : number;
+	id: number;
 	username: string;
-    password: string;
+	password: string;
 	email: string;
 	isAuthenticated: boolean;
 	createdAt: string;
@@ -12,7 +12,17 @@ export interface Account {
 }
 
 export interface RequestAccount {
-    username: string;
-    password: string;
-    email: string;
+	username: string;
+	password: string;
+	email: string;
+}
+
+export interface RequestLogin {
+	username: string;
+	password: string;
+}
+
+export interface LoginResponse {
+	token: string | null,
+	status: "USERNAME_INVALID" | "PASSWORD_INVALID" | "NOT_AUTHENTICATED" | "SUCCESS";
 }

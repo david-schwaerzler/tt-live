@@ -1,5 +1,5 @@
-import { Button, Card, CardContent, FormControl, Stack, TextField, Typography } from "@mui/material";
-import { Box, maxWidth } from "@mui/system";
+import { Button, Card, CardContent, Stack, TextField, Typography } from "@mui/material";
+import { Box } from "@mui/system";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";

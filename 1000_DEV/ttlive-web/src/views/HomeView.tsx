@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import { Trans, useTranslation } from "react-i18next";
 import { Link } from "react-router-dom"
@@ -10,6 +10,7 @@ export interface HomeViewProps {
 
 export function HomeView(props: HomeViewProps) {
     const [t] = useTranslation();
+
     return (
         <Container sx={{ width: "100%", mt: 4 }}>
             <Box m="auto">

@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 const ImprintView = () => {
 
     const [t] = useTranslation();
-
     return <React.Fragment>
         <h1>{t("ImprintView.imprint")}</h1>
 
