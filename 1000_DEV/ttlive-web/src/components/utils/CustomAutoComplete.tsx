@@ -1,4 +1,4 @@
-import { Autocomplete, createFilterOptions, FilterOptionsState, TextField } from "@mui/material";
+import { Autocomplete, createFilterOptions, FilterOptionsState, SxProps, TextField } from "@mui/material";
 import { SyntheticEvent, useEffect, useMemo, useState } from "react";
 
 export interface CustomAutoCompleteProps<Type> {
@@ -6,13 +6,14 @@ export interface CustomAutoCompleteProps<Type> {
     options: Array<Type>;
     label: string,
     error?: boolean,
+    sx?: SxProps
     onChange: (value: Type | null) => void;
     onCreateType: (value: string) => Type;
     accessor: (value: Type) => string;
     inputValidation?: (value: string) => boolean;
 }
 
-const CustomAutoComplete = <Type,>({ value, options, label, error, onChange, onCreateType, accessor, inputValidation }: CustomAutoCompleteProps<Type>) => {
+const CustomAutoComplete = <Type,>({ value, options, label, error, sx, onChange, onCreateType, accessor, inputValidation }: CustomAutoCompleteProps<Type>) => {
 
     const filter = useMemo(() => createFilterOptions<Type>(), []);
 
@@ -31,7 +32,7 @@ const CustomAutoComplete = <Type,>({ value, options, label, error, onChange, onC
 
     return (
         <Autocomplete
-            sx={{ minWidth: "200px", alignSelf: "center" }}
+            sx={sx}
             value={value}
             onChange={(e, value) => onValueSelected(e, value)}
             options={tmpOptions}

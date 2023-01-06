@@ -108,9 +108,9 @@ const LiveView = () => {
 
             {editorCode != null && isLineupComplete === false &&
                 <Alert sx={{ mb: 1 }} severity="warning" elevation={1} action={
-                    <Button onClick={() => setActiveTab(0)}>{t("LiveView.fix")}</Button>
+                    <Button sx={{mt: "-2px"}} onClick={() => setActiveTab(0)} >{t("LiveView.fix")}</Button>
                 }>
-                    <AlertTitle>{t("LiveView.missingLineup")}</AlertTitle>
+                    <AlertTitle sx={{mb: 0}}>{t("LiveView.missingLineup")}</AlertTitle>
                 </Alert>
             }
 

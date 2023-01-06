@@ -28,6 +28,7 @@ const LeagueSelector = ({ onUpdate, updateError, leagues, matchStateObject, erro
 
     return (
         <CustomAutoComplete<League>
+            sx={{ minWidth: "200px", alignSelf: "center" }}
             value={matchStateObject.league}
             onChange={onLeagueSelected}
             options={leagues}
@@ -39,7 +40,7 @@ const LeagueSelector = ({ onUpdate, updateError, leagues, matchStateObject, erro
     );
 
 
-    function onLeagueSelected(league: League | null) {      
+    function onLeagueSelected(league: League | null) {
         let updated = { ...matchStateObject };
         updated.league = league;
         updateError("")

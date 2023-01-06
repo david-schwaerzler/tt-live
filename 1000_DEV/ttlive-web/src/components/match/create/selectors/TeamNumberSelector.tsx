@@ -38,6 +38,7 @@ const TeamNumberSelector = ({ onUpdate, updateError, isHomeTeam, teams, matchSta
     return (
 
         <CustomAutoComplete<Team>
+            sx={{ minWidth: "200px", alignSelf: "center" }}
             value={isHomeTeam ? matchStateObject.homeTeam : matchStateObject.guestTeam}
             options={options}
             accessor={team => team.number.toString()}

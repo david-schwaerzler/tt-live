@@ -7,6 +7,7 @@ import { Doubles, RequestDouble } from "../../../rest/data/Doubles";
 import { Match } from "../../../rest/data/Match";
 import { Player, RequestPlayer } from "../../../rest/data/Player";
 import { RequestLineup } from "../../../rest/data/RequestLineup";
+import CustomAutoComplete from "../../utils/CustomAutoComplete";
 import ErrorMessage from "../../utils/ErrorMessage";
 import ExpandButton from "../../utils/ExpandButton";
 import LoadingButton from "../../utils/LoadingButton";
@@ -46,6 +47,12 @@ const LineupSetting = ({ match, isHomeTeam, editorCode }: LineupSettingProps) =>
     if (match == null)
         return <Skeleton sx={{ height: { xs: "88px", sm: "88px" } }} variant="rectangular" />
 
+    let playerNames: Array<string> = [];
+    players.forEach(p => {
+        if (p.name !== "" && playerNames.includes(p.name) === false)
+            playerNames.push(p.name);
+    })
+
     return (
         <Card >
             <Typography variant="h5" p={2}>
@@ -80,17 +87,23 @@ const LineupSetting = ({ match, isHomeTeam, editorCode }: LineupSettingProps) =>
                         {doubles.map((double, index) => (
                             <Stack gap={1} key={double.id}>
                                 <FormControl>
-                                    <TextField
-                                        label={t('LineupSetting.double') + " " + double.position + " - " + t('LineupSetting.player') + " 1"}
-                                        variant="outlined"
+                                    <CustomAutoComplete<string>
                                         value={double.player1}
-                                        onChange={e => updateDoubles(index, e.target.value, double.player2)} />
+                                        onChange={name => updateDoubles(index, name ?? "", double.player2)}
+                                        options={playerNames}
+                                        label={t('LineupSetting.double') + " " + double.position + " - " + t('LineupSetting.player') + " 1"}
+                                        onCreateType={name => name}
+                                        accessor={name => name}
+                                    />
                                 </FormControl>
                                 <FormControl>
-                                    <TextField label={t('LineupSetting.double') + " " + double.position + " - " + t('LineupSetting.player') + " 2"}
-                                        variant="outlined"
+                                    <CustomAutoComplete<string>
                                         value={double.player2}
-                                        onChange={e => updateDoubles(index, double.player1, e.target.value)}
+                                        onChange={name => updateDoubles(index, name ?? "", double.player2)}
+                                        options={playerNames}
+                                        label={t('LineupSetting.double') + " " + double.position + " - " + t('LineupSetting.player') + " 2"}
+                                        onCreateType={name => name}
+                                        accessor={name => name}
                                     />
                                 </FormControl>
                             </Stack>
