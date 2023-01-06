@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Skeleton, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Alert, AlertTitle, Button, Card, CardContent, Skeleton, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -18,16 +18,17 @@ import { fetchMatch } from "../rest/api/MatchApi";
 import { ChatMessage, sortChatMessages } from "../rest/data/ChatMessage";
 import { Game } from "../rest/data/Game";
 import { Match, sortMatch } from "../rest/data/Match";
+import { Player } from "../rest/data/Player";
 
 const LiveView = () => {
     const [match, setMatch] = useState<Match | null>(null);
-    const [errorMsg, setErrorMsg] = useState<string>("");
     const [editorCode, setEditorCode] = useState<string | null>(null)
     const [reversedGames, setReversedGames] = useState<Array<Game>>([]); // games of the match in reversed order (higher game number is first)
     const [activeTab, setActiveTab] = useState<number>(1);
     const [chatDrawerExpanded, setChatDrawerExpanded] = useState(false);
     const [messages, setMessages] = useState<Array<ChatMessage>>([])
     const [badgeCounter, setBadgeCounter] = useState<number>(0);
+    const [isLineupComplete, setLineupComplete] = useState<boolean>(true);
 
     const context = useContext(AppContext)
     const [t] = useTranslation();
@@ -58,9 +59,7 @@ const LiveView = () => {
                     setEditorCode(context.editorCode[response.data?.id]);
                 else
                     setEditorCode(null)
-            } else {
-                setErrorMsg(response.error == null ? "" : response.error);
-            }
+            } 
         }
         async function fetchChatLocal(id: number) {
             let response = await fetchChatMessages(id)
@@ -87,6 +86,17 @@ const LiveView = () => {
         }
     }, [context.matchId, context.editorCode])
 
+    useEffect(() => {
+        if (match?.homePlayers != null && match.guestPlayers != null && match.homeDoubles != null && match.guestDoubles != null) {
+            let players: Array<Player> = [...match.homePlayers, ...match.guestPlayers];
+            let doubles = [...match.homeDoubles, ...match.guestDoubles];
+
+            let someUnset = players.some(p => p.name === "");
+            someUnset = someUnset || doubles.some(d => d.player1 === "" || d.player2 === "")
+            setLineupComplete(!someUnset)
+        }
+    }, [match?.homePlayers, match?.guestPlayers, match?.homeDoubles, match?.guestDoubles]);
+
     if (context.matchId == null)
         return renderNoMatch();
 
@@ -95,6 +105,14 @@ const LiveView = () => {
             {match != null && <WebHookUtil match={match} onGameUpdated={game => onGameUpdated(game, match)} onMatchUpdated={onMatchUpdated} onAddChatMessage={onAddChatMessage} />}
             {/* This is a quick fix to allow swiping on on outside the component */}
             <Box {...swipeHanlder} className="test" position="absolute" top={"10%"} bottom={0} left={0} right={0} zIndex={-10} />
+
+            {editorCode != null && isLineupComplete === false &&
+                <Alert sx={{ mb: 1 }} severity="warning" elevation={1} action={
+                    <Button onClick={() => setActiveTab(0)}>{t("LiveView.fix")}</Button>
+                }>
+                    <AlertTitle>{t("LiveView.missingLineup")}</AlertTitle>
+                </Alert>
+            }
 
             <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} centered variant="fullWidth" sx={{ mb: 4, ...(chatDrawerExpanded && {}) }}>
                 <Tab label={t("LiveView.settings")} />

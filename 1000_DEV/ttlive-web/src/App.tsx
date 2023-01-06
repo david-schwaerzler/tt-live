@@ -12,6 +12,9 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import ImprintView from './views/ImprintView';
 import RegisterView from './views/RegisterView';
+import { AuthProvider } from 'react-auth-kit';
+import PrivateRoute from './components/utils/PrivateRoute';
+;
 
 function App() {
     const [matchId, setMatchId] = useState<number | null>(() => {
@@ -52,20 +55,20 @@ function App() {
             localStorage.setItem("editorCode", JSON.stringify(copy));
         },
         setSetting: (key, value, persist) => {
-            let copy = {...settings};
+            let copy = { ...settings };
             copy[key] = value;
             setSettings(copy);
 
-            if(persist){
+            if (persist) {
                 let settingJson = localStorage.getItem("settings");
-                let storedSettings : any = {};
+                let storedSettings: any = {};
                 if (settingJson == null || settingJson === "")
                     settingJson = "{}"
                 try {
                     storedSettings = JSON.parse(settingJson);
                     storedSettings[key] = value;
                     localStorage.setItem("settings", JSON.stringify(storedSettings));
-                } catch (e) {                    
+                } catch (e) {
                     storedSettings[key] = value;
                     localStorage.setItem("settings", JSON.stringify(storedSettings));
                 }
@@ -81,31 +84,43 @@ function App() {
 
     return (
         <React.StrictMode>
-            <LocalizationProvider dateAdapter={AdapterMoment}>
-
-                <div className="App">
+            <div className="App">
+                <LocalizationProvider dateAdapter={AdapterMoment}>
                     <AppContext.Provider value={valueProvider}>
-                        <HashRouter>
-                            <Routes>
-                                <Route path="/" element={renderContent(<HomeView />)} />
-                                <Route path="create" element={renderContent(<CreateGameView />)} />
-                                <Route path="login" element={renderContent(<LoginView />)} />
-                                <Route path="register" element={renderContent(<RegisterView />)} />
-                                <Route path="live_search" element={renderContent(<LiveSearch />)} />
-                                <Route path="live" element={renderContent(<LiveView />)} />
-                                <Route path="imprint" element={renderContent(<ImprintView />)} />
-                                <Route path="*" element={<Navigate to="/" />} />
-                            </Routes>
-                        </HashRouter>
+                        <AuthProvider
+                            authType={'cookie'}
+                            authName={'_auth'}
+                            cookieDomain={window.location.hostname}
+                            cookieSecure={window.location.protocol === "https:"}>
+
+                            <HashRouter>
+                                <Routes>
+                                    <Route path="/" element={renderContent(<HomeView />)} />
+                                    <Route path="login" element={renderContent(<LoginView />)} />
+                                    <Route path="create" element={renderContent(<CreateGameView />)} />
+                                    <Route path="register" element={renderContent(<RegisterView />)} />
+                                    <Route path="live_search" element={renderContent(<LiveSearch />)} />
+                                    <Route path="live" element={renderContent(<LiveView />)} />
+                                    <Route path="imprint" element={renderContent(<ImprintView />)} />
+                                    
+                                    <Route path="*" element={<Navigate to="/" />} />
+                                </Routes>
+                            </HashRouter>
+                        </AuthProvider>
                     </AppContext.Provider>
-                </div>
-            </LocalizationProvider>
-        </React.StrictMode>
+                </LocalizationProvider>
+            </div>
+
+        </React.StrictMode >
     );
 
-    function renderContent(content: React.ReactNode) {
+    function renderContent(content: React.ReactNode, secured: boolean = false): JSX.Element {
+        if (secured)
+            return <PrivateRoute login='/login'><MainView content={content} /></PrivateRoute>
+
         return <MainView content={content} />
     }
+
 }
 
 export default App;

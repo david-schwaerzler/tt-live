@@ -82,6 +82,8 @@ const deDe = {
             "LiveView.lineup": "Spielbericht",
             "LiveView.settings": "Settings",
             "LiveView.notStartedText": "Spielbeginn",
+            "LiveView.missingLineup": "Mannschaftsaufstellung unvollständig",
+            "LiveView.fix": "beheben",
 
             "MatchStateLabel.live": "Live",
             "MatchStateLabel.notStarted": "Bald",
