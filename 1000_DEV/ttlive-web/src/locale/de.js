@@ -39,7 +39,7 @@ const deDe = {
             "RegionState.contestWomen": "Damen",
             "RegionState.errorEmptyRegion": "Region muss gesetzt werden",
             "RegionState.errorEmptyContest": "Konkurrenz muss gesetzt werden",
-            
+
             "LeagueState.league": "Liga",
             "LeagueState.gameStyle": "Spielsystem",
             "LeagueState.gameStyleDesc": "Spielsystem:",
@@ -50,7 +50,7 @@ const deDe = {
             "LeagueState.errorEmptyStartDate": "Spielbeginn ist leer",
             "LeagueState.errorInvalidStartDate": "Ungültiges Datumsformat",
             "LeagueState.errorRegion": "Es muss zunächst ein Verband ausgewählt werden.",
-            "LeagueState.errorContest": "Es muss zunächst eine Konkurrenz ausgewählt werden.",            
+            "LeagueState.errorContest": "Es muss zunächst eine Konkurrenz ausgewählt werden.",
 
             "TeamState.homeTeam": "Heimverein",
             "TeamState.guestTeam": "Gastverein",
@@ -68,8 +68,8 @@ const deDe = {
             "SummaryState.guestTeam": "Gastmanschaft:",
             "SummaryState.homeTeam": "Heimmanschaft:",
             "SummaryState.startDate": "Spielbeginn:",
-            
-            
+
+
             "LiveSearch.headline": "Alle Spiele im Überblick",
             "LiveSearch.region": "Verband",
             "LiveSearch.league": "Liga",
@@ -82,7 +82,7 @@ const deDe = {
             "LiveView.lineup": "Spielbericht",
             "LiveView.settings": "Settings",
             "LiveView.notStartedText": "Spielbeginn",
-            "LiveView.missingLineup": "Mannschaftsaufstellung unvollständig",
+            "LiveView.missingLineup": "Aufstellung unvollständig",
             "LiveView.fix": "beheben",
 
             "MatchStateLabel.live": "Live",
@@ -99,6 +99,9 @@ const deDe = {
             "GameReport.points": "Punkte",
             "GameReport.edit": "Editieren?",
             "GameReport.inputType": "Eingabeform",
+
+            "CodeSetting.editorCode": "Editor-Code",
+            "CodeSetting.description": "Dieser Code ermöglicht es anderen zu Editoren zu werden.",
 
 
             "MatchSettings.noCodeHeader": "Du bist <strong style='color=\"red\"'>kein</strong> Editor!",
@@ -149,14 +152,14 @@ const deDe = {
 
             "ContactForm.header": "Feedback",
             "ContactForm.introduction": "Moin,\n"
-                + "TT-Live ist ein kleine Projekt, welches ich in meiner Freizeit entwickel.\n"
-                + "Haben Sie Feedback, Vorschläge für Verbesserungen oder\n"
+                + "TT-Live ist ein kleine Projekt, welches ich in meiner Freizeit neben meinem Studium entwickel.\n"
+                + "Haben du Feedback, Verbesserungensvorschläge oder\n"
                 + "sind Fehler aufgetreten, lassen sie es mich gerne wissen.",
-            "ContactForm.text": "Ihre Nachricht",
+            "ContactForm.text": "Deine Nachricht",
             "ContactForm.recipient": "Email (otional)",
             "ContactForm.submit": "Senden",
             "ContactForm.confirmTitle": "Erfolgreich",
-            "ContactForm.confirmText": "Ihre Nachricht wurde erfolgreich versendet.\nVielen Dank für ihr Feedback.",
+            "ContactForm.confirmText": "Deome Nachricht wurde erfolgreich versendet.\nVielen Dank für ihr Feedback.",
             "ContactForm.errorTextLength": "Der Text darf nur maximal 4096 Zeichen umfassen",
             "ContactForm.errorTextEmpty": "Sie müssen schon etwas schreiben",
             "ContactForm.errorRecipientLength": "Maximale länge 265 Zeichn",
@@ -175,7 +178,7 @@ const deDe = {
             "RegisterView.errorPasswordsEmpty": "Passwort darf nicht leer sein",
             "RegisterView.errorPasswordNotEqual": "Die Passwörter stimmen nicht überein",
             "RegisterView.errorEmailEmpty": "Email darf nicht leer sein",
-            "RegisterView.errorEmailValidation": "Email ist im falschen Format"   
+            "RegisterView.errorEmailValidation": "Email ist im falschen Format"
         }
     }
 }
