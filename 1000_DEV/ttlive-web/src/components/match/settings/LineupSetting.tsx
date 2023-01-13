@@ -91,7 +91,7 @@ const LineupSetting = ({ match, isHomeTeam, editorCode }: LineupSettingProps) =>
                         <FormControl>
                             <CustomAutoComplete<string>
                                 value={double.player2}
-                                onChange={name => updateDoubles(index, name ?? "", double.player2)}
+                                onChange={name => updateDoubles(index, double.player1, name ?? "")}
                                 options={playerNames}
                                 label={t('LineupSetting.double') + " " + double.position + " - " + t('LineupSetting.player') + " 2"}
                                 onCreateType={name => name}

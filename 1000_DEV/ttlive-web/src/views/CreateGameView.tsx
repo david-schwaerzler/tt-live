@@ -24,7 +24,7 @@ export interface CreateGameViewProps {
 }
 
 enum Steps {
-    REGION = 0, LEAGUE, HOME_TEAM, GUEST_TEAM, LOGIN, SUMMARY
+    LOGIN = -1, REGION = 0, LEAGUE, HOME_TEAM, GUEST_TEAM, SUMMARY
 }
 
 let onValidate: null | ((matchStateObject: MatchStateObject) => boolean);
@@ -75,8 +75,10 @@ const CreateGameView = (props: CreateGameViewProps) => {
                         <Step><StepLabel>{t("CreateGameView.stepLeague")}</StepLabel></Step>
                         <Step><StepLabel>{t("CreateGameView.stepHomeTeam")}</StepLabel></Step>
                         <Step><StepLabel>{t("CreateGameView.stepGuestTeam")}</StepLabel></Step>
-                        {isAuthenticated() === false
-                            && <Step><StepLabel>{t("CreateGameView.stepLogin")}</StepLabel></Step>}
+                        {
+                        //{isAuthenticated() === false
+                        //    && <Step><StepLabel>{t("CreateGameView.stepLogin")}</StepLabel></Step>}
+                        }
                         <Step><StepLabel>{t("CreateGameView.stepSummary")}</StepLabel></Step>
                     </Stepper>
                     <Divider orientation="horizontal" sx={{ paddingTop: spacingNormal }} />
@@ -87,7 +89,7 @@ const CreateGameView = (props: CreateGameViewProps) => {
                 <Box sx={{ display: { xs: "block", sm: "none" }, paddingTop: spacingNormal }}>
                     <MobileStepper
                         variant="text"
-                        steps={isAuthenticated() === false ? 6 : 5}
+                        steps={5} // {isAuthenticated() === false ? 6 : 5}
                         position="bottom"
                         activeStep={currentStep}
                         nextButton={

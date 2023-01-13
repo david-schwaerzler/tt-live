@@ -11,7 +11,6 @@ const AuthUtil = () => {
         axios.defaults.baseURL  = Config.REST_URL;
         axios.defaults.headers.common['Authorization'] = authHeader();
         axios.defaults.headers.common['Content-Type'] = "application/json";
-        console.log("authHeader: " + authHeader())
     }, [authHeader]);
 
     return <React.Fragment></React.Fragment>

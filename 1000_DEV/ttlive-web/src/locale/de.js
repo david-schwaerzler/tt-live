@@ -181,7 +181,7 @@ const deDe = {
             "ContactForm.header": "Kontakt",
             "ContactForm.introduction": "Moin,\n"
                 + "TT-Live ist ein kleine Projekt, welches ich in meiner Freizeit neben meinem Studium entwickel.\n"
-                + "HAst du Feedback, Verbesserungensvorschläge oder\n"
+                + "Hast du Feedback, Verbesserungsvorschläge oder\n"
                 + "sind Fehler aufgetreten, lassen sie es mich gerne wissen.",
             "ContactForm.text": "Deine Nachricht",
             "ContactForm.recipient": "Email (otional)",
@@ -206,7 +206,10 @@ const deDe = {
             "RegisterView.errorPasswordsEmpty": "Passwort darf nicht leer sein",
             "RegisterView.errorPasswordNotEqual": "Die Passwörter stimmen nicht überein",
             "RegisterView.errorEmailEmpty": "Email darf nicht leer sein",
-            "RegisterView.errorEmailValidation": "Email ist im falschen Format"
+            "RegisterView.errorEmailValidation": "Email ist im falschen Format",
+            "RegisterView.registeredTitle": "Registrierung Erfolgreich",
+            "RegisterView.registeredText": "Dein Account wurde erfolgreich erstellt.\nDu kannst dich jetzt über den Login anmelden.",
+            "RegisterView.toLogin": "Zum Login"
         }
     }
 }

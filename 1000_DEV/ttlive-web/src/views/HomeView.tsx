@@ -13,7 +13,6 @@ export function HomeView(props: HomeViewProps) {
     const [t] = useTranslation()
 
     const authHeader = useAuthHeader();
-    console.log(authHeader())
     return (
         <Container sx={{ width: "100%", mt: 4 }}>
             <Box m="auto">
