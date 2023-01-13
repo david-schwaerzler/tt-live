@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ws.rs.NotAuthorizedException;
 
 import com.ttlive.bo.GameSet.InvalidGameSetFormat;
 import com.ttlive.bo.Match;
@@ -13,11 +14,13 @@ import com.ttlive.bo.request.RequestLineup;
 import com.ttlive.bo.request.RequestLineup.RequestDoubles;
 import com.ttlive.bo.request.RequestLineup.RequestPlayer;
 import com.ttlive.bo.request.RequestMatch;
+import com.ttlive.persistence.dao.AccountDao;
 import com.ttlive.persistence.dao.GameStyleDao;
 import com.ttlive.persistence.dao.LeagueDao;
 import com.ttlive.persistence.dao.MatchDao;
 import com.ttlive.persistence.dao.RegionDao;
 import com.ttlive.persistence.dao.TeamDao;
+import com.ttlive.persistence.entity.AccountEntity;
 import com.ttlive.persistence.entity.DoublesEntity;
 import com.ttlive.persistence.entity.GameEntity;
 import com.ttlive.persistence.entity.GameStyleEntity;
@@ -58,6 +61,9 @@ public class MatchService {
 	@EJB
 	private MatchEventObserver eventObserver;
 
+	@EJB
+	private AccountDao accountDao;
+
 	public LinkedList<Match> findAll() throws InvalidGameSetFormat {
 		List<MatchEntity> entities = matchDao.findAll();
 		return getDefault(entities);
@@ -71,6 +77,14 @@ public class MatchService {
 	}
 
 	public Match create(RequestMatch requestMatch) throws InvalidGameSetFormat, BadRestRequestException {
+
+		AccountEntity account = null;
+		if (requestMatch.getAccountUsername() != null) {
+			account = accountDao.findByName(requestMatch.getAccountUsername());
+			if (account == null)
+				throw new BadRestRequestException("accountUsername",
+						"Username with the name='" + requestMatch.getAccountUsername() + "' doesn't exist");
+		}
 
 		RegionEntity regionEntity = regionDao.findById(requestMatch.getLeague().getRegionId());
 		if (regionEntity == null)
@@ -106,12 +120,30 @@ public class MatchService {
 		}
 		HashSet<String> existingCodes = matchDao.getAllCodes();
 
-		MatchEntity matchEntity = MatchFactory.createMatchEntity(requestMatch, regionEntity, gameStyleEntity,
+		MatchEntity matchEntity = MatchFactory.createMatchEntity(account, requestMatch, regionEntity, gameStyleEntity,
 				leagueEntity, homeTeamEntity, guestTeamEntity, existingCodes);
 		matchDao.persist(matchEntity);
 
 		return getDefault(matchEntity);
 
+	}
+	
+	public void delete(long id, String username) {
+		
+		MatchEntity matchEntity = matchDao.findById(id);
+		
+		if(matchEntity.getAccount() == null) {
+			matchDao.remove(matchEntity);
+		}else {
+			AccountEntity accountEntity = accountDao.findByName(username);
+			if(accountEntity == null)
+				throw new NotAuthorizedException("Must be logged in to delete this match");
+			
+			if(accountEntity.getId() != matchEntity.getAccount().getId())
+				throw new NotAuthorizedException("The logged in user is not allowed to delete this match");
+			
+			matchDao.remove(matchEntity);			
+		}		
 	}
 
 	public LinkedList<Match> getDefault(List<MatchEntity> entities) throws InvalidGameSetFormat {
@@ -230,6 +262,7 @@ public class MatchService {
 
 	public Match updateMatch(long id, RequestMatch requestMatch) throws BadRestRequestException, InvalidGameSetFormat {
 		MatchEntity matchEntity = matchDao.findById(id);
+
 		if (matchEntity == null)
 			throw new BadRestRequestException("id", "Match with the given id='" + id + " doesn't exist");
 
@@ -284,7 +317,9 @@ public class MatchService {
 				.gameStyle(entity.getGameStyle()) //
 				.players(entity.getPlayers()) //
 				.doubles(entity.getDoubles()) //
-				.games(entity.getGames()).build();
+				.games(entity.getGames()) //
+				.account(entity.getAccount()) //
+				.build();
 	}
 
 }

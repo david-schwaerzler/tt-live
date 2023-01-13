@@ -76,8 +76,8 @@ public class Match {
 			return this;
 		}
 
-		public MatchBuilder account(AccountEntity entity) {
-			this.account = Account.builder().entity(entity).build();
+		public MatchBuilder account(AccountEntity entity) {			
+			this.account = entity == null ? null : Account.builder().entity(entity).build();
 			return this;
 		}
 

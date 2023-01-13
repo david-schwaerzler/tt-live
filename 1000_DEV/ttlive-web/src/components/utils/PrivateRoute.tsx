@@ -10,7 +10,6 @@ export interface PrivateRouteProps {
 const PrivateRoute = ({ children, login }: PrivateRouteProps) => {
     const isAuthenticated = useIsAuthenticated();
     const auth = isAuthenticated();
-    console.log(auth)
     return auth ? children : <Box><Navigate to={login} /></Box>;
 };
 

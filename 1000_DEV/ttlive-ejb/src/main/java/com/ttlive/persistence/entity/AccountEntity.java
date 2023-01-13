@@ -30,19 +30,19 @@ public class AccountEntity {
 
 	@Column(name = "username")
 	private String username;
-	
+
 	@Column(name = "password")
 	private String password;
-	
+
 	@Column(name = "email")
 	private String email;
-	
+
 	@Column(name = "role")
 	private String role;
-	
+
 	@Column(name = "isAuthenticated")
 	private boolean isAuthenticated;
-	
+
 	@UpdateTimestamp
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
@@ -50,8 +50,32 @@ public class AccountEntity {
 	@CreationTimestamp
 	@Column(name = "modified_at")
 	private LocalDateTime modifiedAt;
-	
+
 	@ToString.Exclude
 	@OneToMany(mappedBy = "account")
 	private List<MatchEntity> matches = new LinkedList<MatchEntity>();
+
+	public void addMatch(MatchEntity match) {
+		addMatch(match, true);
+	}
+
+	public void addMatch(MatchEntity match, boolean setBoth) {
+		if (this.matches.contains(match) == false)
+			this.matches.add(match);
+
+		if (setBoth) {
+			match.setAccount(this, false);
+		}
+	}
+
+	public void removeMatch(MatchEntity match) {
+		removeMatch(match, true);
+	}
+
+	public void removeMatch(MatchEntity match, boolean setBoth) {
+		this.matches.remove(match);
+		if (setBoth)
+			match.setAccount(null, false);
+
+	}
 }

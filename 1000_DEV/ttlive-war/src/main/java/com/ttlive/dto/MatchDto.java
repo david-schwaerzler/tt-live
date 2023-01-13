@@ -32,13 +32,15 @@ public class MatchDto {
 	private LeagueDto league;
 	private TeamDto homeTeam;
 	private TeamDto guestTeam;
-	// private Account account;
 	private GameStyleDto gameStyle;
 	private LinkedList<GameDto> games;
 	private LinkedList<PlayerDto> homePlayers;
 	private LinkedList<PlayerDto> guestPlayers;
 	private LinkedList<DoublesDto> homeDoubles;
 	private LinkedList<DoublesDto> guestDoubles;
+	
+	private String accountUsername;
+	private Long accountId;
 
 	public static class MatchDtoBuilder {
 		public MatchDtoBuilder bo(Match bo) {
@@ -65,6 +67,11 @@ public class MatchDto {
 			this.guestDoubles = DoublesDto.fromBos(bo.getGuestDoubles());
 
 			this.games = GameDto.fromBos(bo.getGames());
+			
+			if(bo.getAccount() != null) {
+				this.accountUsername = bo.getAccount().getUsername();
+				this.accountId = bo.getAccount().getId();
+			}			
 
 			return this;
 		}

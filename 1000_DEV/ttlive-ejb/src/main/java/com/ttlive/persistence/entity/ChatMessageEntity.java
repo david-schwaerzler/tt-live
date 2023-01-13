@@ -51,4 +51,17 @@ public class ChatMessageEntity {
 	@CreationTimestamp
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
+	
+	public void setMatch(MatchEntity match) {
+		setMatch(match, true);
+	}
+	public void setMatch(MatchEntity match, boolean setBoth) {
+		if(this.match != null && setBoth)
+			this.match.removeMessage(this, false);
+		
+		this.match = match;
+		
+		if(setBoth) 
+			match.addMessage(this, false);	
+	}
 }

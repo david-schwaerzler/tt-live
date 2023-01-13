@@ -23,6 +23,9 @@ export interface Match {
     editorCode: string;
     state: "NOT_STARTED" | "LIVE" | "FINISHED";
     
+    accountUsername: string | null,
+    accountId : number | null,
+
     startDate: string;
     createdAt: string;
 

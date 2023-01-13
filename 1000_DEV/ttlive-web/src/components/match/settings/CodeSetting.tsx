@@ -10,21 +10,19 @@ const CodeSetting = ({ editorCode }: CodeSettingProps) => {
     const [t] = useTranslation();
 
     return (
-        <Box>
-            <Card>
-                <CardContent >
-                    <Typography variant="h5">
-                        {t("CodeSetting.editorCode")}:&nbsp;
-                        <Box sx={{ display: "inline", fontWeight: "bold", color: theme => theme.palette.primary.main }}>
-                            {editorCode}
-                        </Box>
-                    </Typography>
-                    <Typography>
-                        {t("CodeSetting.description")}
-                    </Typography>
-                </CardContent>
-            </Card>
-        </Box>
+        <Card>
+            <CardContent >
+                <Typography variant="h5">
+                    {t("CodeSetting.editorCode")}:&nbsp;
+                    <Box sx={{ display: "inline", fontWeight: "bold", color: theme => theme.palette.primary.main }}>
+                        {editorCode}
+                    </Box>
+                </Typography>
+                <Typography>
+                    {t("CodeSetting.description")}
+                </Typography>
+            </CardContent>
+        </Card>
     )
 }
 

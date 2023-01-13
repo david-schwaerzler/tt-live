@@ -1,4 +1,5 @@
 import { Dayjs } from "dayjs";
+import { Account } from "../../../rest/data/Account";
 import { GameStyle } from "../../../rest/data/GameStyle";
 import { League,  } from "../../../rest/data/League";
 import { Region } from "../../../rest/data/Region";
@@ -14,4 +15,5 @@ export interface MatchStateObject {
     homeTeam: Team | null; 
     guestTeam: Team | null;
     startDate: Dayjs | null;  
+    account: Account | null;
 }

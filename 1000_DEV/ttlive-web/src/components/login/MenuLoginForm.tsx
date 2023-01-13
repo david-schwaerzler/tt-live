@@ -2,8 +2,8 @@ import styled from "@emotion/styled";
 import { AccountCircle } from "@mui/icons-material";
 import { Button, IconButton, Menu, Stack, TextField } from "@mui/material";
 import { Box } from "@mui/system";
-import { useCallback, useState } from "react";
-import { useSignIn } from "react-auth-kit";
+import React, { useCallback, useState } from "react";
+import { useIsAuthenticated, useSignIn, useSignOut } from "react-auth-kit";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { postLogin } from "../../rest/api/AccountApi";
@@ -71,6 +71,8 @@ const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
     const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
     const signIn = useSignIn();
+    const signOut = useSignOut();
+    const isAuthenticated = useIsAuthenticated();
 
     const onLogin = useCallback(async () => {
 
@@ -85,7 +87,7 @@ const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
         if (password === "") {
             redirectError(LoginErrors.PASSWORD, "LoginForm.errorPasswordEmpty");
             setLoginAnchor(null);
-            setPassword("")
+            setPassword("");
             return;
         }
 
@@ -113,10 +115,9 @@ const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
                             {
                                 token: response.data.token,
                                 expiresIn: 1,
-                                tokenType: "Bearer"
-                            })) {
-                            navigate("/profile")
-                        } else {
+                                tokenType: "Bearer",
+                                authState: response.data.account
+                            }) === false) {
                             console.error(`Error login in. Error from react auth kit`);
                             redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
                         }
@@ -138,33 +139,39 @@ const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
     return (
         <Box sx={{ pl: padding }}>
             <Box sx={{ display: { xs: "none", md: "flex" }, gap: "1em", flexGrow: 0 }}  >
-                <WhiteTextField
-                    size="small"
-                    label={t("LoginForm.username")}
-                    variant="outlined"
-                    onChange={e => setUsername(e.target.value)}
-                    value={username}
-                />
-                <WhiteTextField
-                    size="small"
-                    label={t("LoginForm.password")}
-                    variant="outlined"
-                    onChange={e => setPassword(e.target.value)}
-                    value={password}
-                    type="password"
-                />
-                <WhiteLoadingButton
-                    loading={loading}
-                    size="small"
-                    variant="outlined"
-                    onClick={onLogin}>
-                    {t("LoginForm.login")}
-                </WhiteLoadingButton>
-                <Link to="/register" >
-                    <WhiteButton size="small" sx={{ height: "100%" }} variant="outlined" onClick={() => setLoginAnchor(null)}>
-                        {t("LoginForm.register")}
-                    </WhiteButton>
-                </Link>
+                {isAuthenticated() === false ?
+                    <React.Fragment>
+                        <WhiteTextField
+                            size="small"
+                            label={t("LoginForm.username")}
+                            variant="outlined"
+                            onChange={e => setUsername(e.target.value)}
+                            value={username}
+                        />
+                        <WhiteTextField
+                            size="small"
+                            label={t("LoginForm.password")}
+                            variant="outlined"
+                            onChange={e => setPassword(e.target.value)}
+                            value={password}
+                            type="password"
+                        />
+                        <WhiteLoadingButton
+                            loading={loading}
+                            size="small"
+                            variant="outlined"
+                            onClick={onLogin}>
+                            {t("LoginForm.login")}
+                        </WhiteLoadingButton>
+                        <Link to="/register" >
+                            <WhiteButton size="small" sx={{ height: "100%" }} variant="outlined" onClick={() => setLoginAnchor(null)}>
+                                {t("LoginForm.register")}
+                            </WhiteButton>
+                        </Link>
+                    </React.Fragment>
+                    : <WhiteButton size="small" variant="outlined" onClick={onLogout} sx={{ height: "100%", minHeight: "40px" }}>
+                        {t("LoginForm.logout")}
+                    </WhiteButton>}
             </Box>
             <Box sx={{ display: { xs: "flex", md: "none" }, flexGrow: 0 }}  >
                 <IconButton onClick={e => setLoginAnchor(e.currentTarget)} sx={{ p: 0, pr: 2 }}>
@@ -187,32 +194,44 @@ const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
                 open={loginAnchor != null}
                 onClose={() => setLoginAnchor(null)}>
                 <Stack direction="column" sx={{ paddingTop: spacingNormal, paddingLeft: spacingNormal, paddingRight: spacingNormal }} spacing={spacingNormal}>
-                <WhiteTextField
-                        size="small"
-                        label={t("LoginForm.username")}
-                        variant="outlined"
-                        onChange={e => setUsername(e.target.value)}
-                        value={username}
-                    />
-                    <WhiteTextField
-                        size="small"
-                        label={t("LoginForm.password")}
-                        variant="outlined"
-                        onChange={e => setPassword(e.target.value)}
-                        value={password}
-                        type="password"
-                    />
+                    {isAuthenticated() === false ?
+                        <React.Fragment>
+                            <WhiteTextField
+                                size="small"
+                                label={t("LoginForm.username")}
+                                variant="outlined"
+                                onChange={e => setUsername(e.target.value)}
+                                value={username}
+                            />
+                            <WhiteTextField
+                                size="small"
+                                label={t("LoginForm.password")}
+                                variant="outlined"
+                                onChange={e => setPassword(e.target.value)}
+                                value={password}
+                                type="password"
+                            />
 
-                    <Box>
-                        <LoadingButton loading={loading} sx={{display: "inline-grid"}} size="small" onClick={onLogin}>{t("LoginForm.login")}</LoadingButton>
-                        <Link to="/register">
-                            <Button size="small" onClick={() => setLoginAnchor(null)}>{t("LoginForm.register")}</Button>
-                        </Link>
-                    </Box>
+                            <Box>
+                                <LoadingButton loading={loading} sx={{ display: "inline-grid" }} size="small" onClick={onLogin}>{t("LoginForm.login")}</LoadingButton>
+                                <Link to="/register">
+                                    <Button size="small" onClick={() => setLoginAnchor(null)}>{t("LoginForm.register")}</Button>
+                                </Link>
+                            </Box>
+                        </React.Fragment>
+                        : <Button size="small" onClick={onLogout}>{t("LoginForm.logout")}</Button>}
+
                 </Stack>
             </Menu>
         </Box >
-    )
+    );
+
+    function onLogout() {
+        setLoginAnchor(null)
+        if (signOut() === false) {
+            console.error("Couldn't perform logout for some reason");
+        }
+    }
 }
 
 

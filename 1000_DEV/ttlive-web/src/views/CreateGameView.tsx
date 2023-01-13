@@ -2,10 +2,12 @@ import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Divider, MobileStepper, Step, StepLabel, Stepper } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useContext, useState } from "react";
+import { useIsAuthenticated } from "react-auth-kit";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { AppContext } from "../AppContext";
 import LeagueState from "../components/match/create/LeagueState";
+import LoginState from "../components/match/create/LoginState";
 import { MatchStateObject } from "../components/match/create/MatchStateObject";
 import RegionState from "../components/match/create/RegionState";
 import SummaryState from "../components/match/create/SummaryState";
@@ -22,7 +24,7 @@ export interface CreateGameViewProps {
 }
 
 enum Steps {
-    REGION = 0, LEAGUE, HOME_TEAM, GUEST_TEAM, SUMMARY
+    REGION = 0, LEAGUE, HOME_TEAM, GUEST_TEAM, LOGIN, SUMMARY
 }
 
 let onValidate: null | ((matchStateObject: MatchStateObject) => boolean);
@@ -44,12 +46,15 @@ const CreateGameView = (props: CreateGameViewProps) => {
         homeTeam: null,
         guestClub: null,
         homeClub: null,
-        startDate: null
+        startDate: null,
+        account: null
     });
     const [errorDialogOpen, setErrorDialogOpen] = useState(false);
     const [t] = useTranslation();
     const navigate = useNavigate();
     const [isLoading, setLoading] = useState(false);
+    const isAuthenticated = useIsAuthenticated();
+
 
     return (
         <Card>
@@ -70,6 +75,8 @@ const CreateGameView = (props: CreateGameViewProps) => {
                         <Step><StepLabel>{t("CreateGameView.stepLeague")}</StepLabel></Step>
                         <Step><StepLabel>{t("CreateGameView.stepHomeTeam")}</StepLabel></Step>
                         <Step><StepLabel>{t("CreateGameView.stepGuestTeam")}</StepLabel></Step>
+                        {isAuthenticated() === false
+                            && <Step><StepLabel>{t("CreateGameView.stepLogin")}</StepLabel></Step>}
                         <Step><StepLabel>{t("CreateGameView.stepSummary")}</StepLabel></Step>
                     </Stepper>
                     <Divider orientation="horizontal" sx={{ paddingTop: spacingNormal }} />
@@ -80,12 +87,12 @@ const CreateGameView = (props: CreateGameViewProps) => {
                 <Box sx={{ display: { xs: "block", sm: "none" }, paddingTop: spacingNormal }}>
                     <MobileStepper
                         variant="text"
-                        steps={5}
+                        steps={isAuthenticated() === false ? 6 : 5}
                         position="bottom"
                         activeStep={currentStep}
                         nextButton={
                             <LoadingButton loading={isLoading} size="small" onClick={setNextStep} disabled={false}>
-                                {isLastStep() ? t("CreateGameView.submit") : t("CreateGameView.next")}
+                                {renderNextButtonText()}
                                 <KeyboardArrowRight />
                             </LoadingButton>
                         }
@@ -108,14 +115,25 @@ const CreateGameView = (props: CreateGameViewProps) => {
         </Card>
     )
 
+    function renderNextButtonText() {
+        if (isLastStep())
+            return t("CreateGameView.submit");
+
+        if (currentStep === Steps.LOGIN)
+            return t("CreateGameView.nextNoAccount");
+
+        return t("CreateGameView.next");
+    }
+
     function renderState() {
         return (
             <Box sx={{ paddingTop: spacingNormal }}>
-                {currentStep === Steps.REGION && <RegionState setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} />}
-                {currentStep === Steps.LEAGUE && <LeagueState setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} />}
-                {currentStep === Steps.HOME_TEAM && <TeamState isHomeTeam={true} setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} />}
-                {currentStep === Steps.GUEST_TEAM && <TeamState isHomeTeam={false} setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} />}
-                {currentStep === Steps.SUMMARY && <SummaryState setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} />}
+                {currentStep === Steps.REGION && <RegionState setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} onNext={setNextStep} />}
+                {currentStep === Steps.LEAGUE && <LeagueState setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} onNext={setNextStep} />}
+                {currentStep === Steps.HOME_TEAM && <TeamState isHomeTeam={true} setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} onNext={setNextStep} />}
+                {currentStep === Steps.GUEST_TEAM && <TeamState isHomeTeam={false} setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} onNext={setNextStep} />}
+                {currentStep === Steps.LOGIN && <LoginState setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} onNext={setNextStep} />}
+                {currentStep === Steps.SUMMARY && <SummaryState setValidate={setValidate} matchStateObject={matchStateObject} onUpdate={onUpdate} onNext={setNextStep} />}
             </Box>
         );
     }
@@ -131,6 +149,10 @@ const CreateGameView = (props: CreateGameViewProps) => {
             onSubmit();
             return;
         }
+
+        // Skip login step if the user is already logged in
+        if (numericValue + 1 === Steps.LOGIN && isAuthenticated() === true)
+            numericValue += 1;
 
         setCurrentStep(numericValue + 1);
     }
@@ -214,7 +236,7 @@ const CreateGameView = (props: CreateGameViewProps) => {
             league: requestLeague,
             homeTeam: requestHomeTeam,
             guestTeam: requestGuestTeam,
-            startDate: matchStateObject.startDate.toISOString()
+            startDate: matchStateObject.startDate.toISOString(),
         };
 
         let response = await postMatch(requestMatch);

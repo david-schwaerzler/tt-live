@@ -1,5 +1,4 @@
-import { Button, Card, CardActions, CardContent, Collapse, Divider, FormControl, Skeleton, Stack, TextField, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { Button,  FormControl, Skeleton, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { putLineup } from "../../../rest/api/MatchApi";
@@ -9,8 +8,8 @@ import { Player, RequestPlayer } from "../../../rest/data/Player";
 import { RequestLineup } from "../../../rest/data/RequestLineup";
 import CustomAutoComplete from "../../utils/CustomAutoComplete";
 import ErrorMessage from "../../utils/ErrorMessage";
-import ExpandButton from "../../utils/ExpandButton";
 import LoadingButton from "../../utils/LoadingButton";
+import BaseSetting from "./BaseSetting";
 
 export interface LineupSettingProps {
     match: Match | null,
@@ -54,73 +53,57 @@ const LineupSetting = ({ match, isHomeTeam, editorCode }: LineupSettingProps) =>
     })
 
     return (
-        <Card >
-            <Typography variant="h5" p={2}>
-                {isHomeTeam ? t('LineupSetting.homeTeam') : t('LineupSetting.guestTeam')}
-            </Typography>
-            <Collapse in={expanded} timeout="auto" >
-                <Divider />
-                <CardContent>
+        <BaseSetting title={isHomeTeam ? t('LineupSetting.homeTeam') : t('LineupSetting.guestTeam')} expanded={expanded} onExpandedChanged={setExpanded}>
+            <Stack direction="column" sx={{ gap: 2, p: 2 }}>
+                <ErrorMessage msg={errorMsg} />
 
-                    <Stack direction="column" sx={{ gap: 2, p: 2 }}>
-                        <ErrorMessage msg={errorMsg} />
+                <Typography variant="h6" width="100%">
+                    {t("LineupSetting.player")}:
+                    <Button sx={{ float: "right" }} onClick={() => onResetPlayers(match)}>reset</Button>
+                </Typography>
+                {players.map((player, index) => (
+                    <FormControl key={player.id}>
+                        <TextField key={player.id} sx={{ minWidth: "100px" }}
+                            label={t("LineupSetting.player") + " " + player.position}
+                            variant="outlined"
+                            value={player.name}
+                            onChange={e => updatePlayer(index, e.target.value)}
+                        />
+                    </FormControl>
+                ))}
 
-                        <Typography variant="h6" width="100%">
-                            {t("LineupSetting.player")}:
-                            <Button sx={{ float: "right" }} onClick={() => onResetPlayers(match)}>reset</Button>
-                        </Typography>
-                        {players.map((player, index) => (
-                            <FormControl key={player.id}>
-                                <TextField key={player.id} sx={{ minWidth: "100px" }}
-                                    label={t("LineupSetting.player") + " " + player.position}
-                                    variant="outlined"
-                                    value={player.name}
-                                    onChange={e => updatePlayer(index, e.target.value)}
-                                />
-                            </FormControl>
-                        ))}
-
-                        <Typography variant="h6" width="100%">
-                            {t("LineupSetting.double")}:
-                            <Button sx={{ float: "right" }} onClick={() => onResetDoubles(match)}>reset</Button>
-                        </Typography>
-                        {doubles.map((double, index) => (
-                            <Stack gap={1} key={double.id}>
-                                <FormControl>
-                                    <CustomAutoComplete<string>
-                                        value={double.player1}
-                                        onChange={name => updateDoubles(index, name ?? "", double.player2)}
-                                        options={playerNames}
-                                        label={t('LineupSetting.double') + " " + double.position + " - " + t('LineupSetting.player') + " 1"}
-                                        onCreateType={name => name}
-                                        accessor={name => name}
-                                    />
-                                </FormControl>
-                                <FormControl>
-                                    <CustomAutoComplete<string>
-                                        value={double.player2}
-                                        onChange={name => updateDoubles(index, name ?? "", double.player2)}
-                                        options={playerNames}
-                                        label={t('LineupSetting.double') + " " + double.position + " - " + t('LineupSetting.player') + " 2"}
-                                        onCreateType={name => name}
-                                        accessor={name => name}
-                                    />
-                                </FormControl>
-                            </Stack>
-                        ))}
-
-                        <LoadingButton loading={loading} variant="outlined" onClick={() => onSave(match)}>Save</LoadingButton>
+                <Typography variant="h6" width="100%">
+                    {t("LineupSetting.double")}:
+                    <Button sx={{ float: "right" }} onClick={() => onResetDoubles(match)}>reset</Button>
+                </Typography>
+                {doubles.map((double, index) => (
+                    <Stack gap={1} key={double.id}>
+                        <FormControl>
+                            <CustomAutoComplete<string>
+                                value={double.player1}
+                                onChange={name => updateDoubles(index, name ?? "", double.player2)}
+                                options={playerNames}
+                                label={t('LineupSetting.double') + " " + double.position + " - " + t('LineupSetting.player') + " 1"}
+                                onCreateType={name => name}
+                                accessor={name => name}
+                            />
+                        </FormControl>
+                        <FormControl>
+                            <CustomAutoComplete<string>
+                                value={double.player2}
+                                onChange={name => updateDoubles(index, name ?? "", double.player2)}
+                                options={playerNames}
+                                label={t('LineupSetting.double') + " " + double.position + " - " + t('LineupSetting.player') + " 2"}
+                                onCreateType={name => name}
+                                accessor={name => name}
+                            />
+                        </FormControl>
                     </Stack>
+                ))}
 
-
-                </CardContent>
-            </Collapse>
-            <CardActions>
-                <Box sx={{ cursor: "pointer", display: "flex", justifyContent: "center", width: "100%" }} onClick={() => setExpanded(!expanded)}>
-                    <ExpandButton expanded={expanded} />
-                </Box>
-            </CardActions>
-        </Card >
+                <LoadingButton loading={loading} variant="outlined" onClick={() => onSave(match)}>Save</LoadingButton>
+            </Stack>
+        </BaseSetting>
     );
 
     function updatePlayer(index: number, newName: string) {

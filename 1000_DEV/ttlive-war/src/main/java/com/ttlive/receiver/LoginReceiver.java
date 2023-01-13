@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import com.ttlive.bo.Account;
+import com.ttlive.bo.LoginResponse;
 import com.ttlive.bo.request.RequestAccount;
 import com.ttlive.dto.AccountDto;
 import com.ttlive.dto.LoginResponseDto;
@@ -80,13 +81,20 @@ public class LoginReceiver {
 		else if (dto.getPassword() == null)
 			throw new BadRestRequestException("password", "Password must be set");
 
-		LoginStatus loginStatus = service.login(dto.getUsername(), dto.getPassword());
+		LoginResponse loginResponse = service.login(dto.getUsername(), dto.getPassword());
 		LoginResponseDto loginResponseDto;
-		if (loginStatus != LoginStatus.SUCCESS) {
-			loginResponseDto = LoginResponseDto.builder().status(loginStatus.toString()).token(null).build();
+		if (loginResponse.getStatus() != LoginStatus.SUCCESS) {
+			loginResponseDto = LoginResponseDto.builder() //
+					.status(loginResponse.getStatus().toString()) //
+					.token(null) //
+					.build();
 		} else {
 			String token = jwtFactory.createUserJwt(dto.getUsername());
-			loginResponseDto = LoginResponseDto.builder().status(loginStatus.toString()).token(token).build();
+			loginResponseDto = LoginResponseDto.builder() //
+					.status(loginResponse.getStatus().toString()) //
+					.token(token) //
+					.account(AccountDto.builder().bo(loginResponse.getAccount()).build()) //
+					.build();
 		}
 		return Response.ok(loginResponseDto).build();
 	}

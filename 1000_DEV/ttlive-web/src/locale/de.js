@@ -6,6 +6,7 @@ const deDe = {
             "Common.errorFetch": "Leider kann der Server nicht erreicht werden. Bitte versuchen sie es später noch einmal",
             "Common.reset": "Reset",
             "Common.close": "Schließen",
+            "Common.delete": "Löschen",
 
             "MenuBar.home": "Home",
             "MenuBar.live": "Live",
@@ -15,6 +16,13 @@ const deDe = {
             "LoginForm.register": "Registrieren",
             "LoginForm.username": "Username",
             "LoginForm.password": "Passwort",
+            "LoginForm.logout": "Logout",
+            "LoginForm.errorUsernameEmpty": "Username darf nicht leer sein",
+            "LoginForm.errorPasswordEmpty": "Passwort darf nicht leer sein",
+            "LoginForm.errorWrongUsername": "Username konnte nicht gefunden werden",
+            "LoginForm.errorWrongPassword": "Ungültiges Passwort",
+            "LoginForm.errorNotAuthenticated": "Account ist noch nicht verifiziert. Eine Verifikations Email wurde verwendet.",
+            "LoginForm.errorPost": "Es ist ein Fehler aufgetreten. Bitte versuchen sie es später erneut.",
 
             "HomeView.welcomeText": "<strong>TT-Live</strong>, die Tischtennis Liveticker App",
             "HomeView.search": "Spielsuche",
@@ -27,8 +35,10 @@ const deDe = {
             "CreateGameView.stepLeague": "Liga/Spielsystem",
             "CreateGameView.stepHomeTeam": "Heimmanschaft",
             "CreateGameView.stepGuestTeam": "Gastmannschaft",
+            "CreateGameView.stepLogin": "Account verknüpfen",
             "CreateGameView.stepSummary": "Übersicht",
             "CreateGameView.next": "Weiter",
+            "CreateGameView.nextNoAccount": "Weiter ohne Account",
             "CreateGameView.submit": "Erstellen",
             "CreateGameView.back": "Zurück",
             "CreateGameView.createError": "Leider ist ein Fehler aufgetreten und das Match konnte nicht erstellt werden.\nBitte versuchen sie es später erneut.",
@@ -69,6 +79,10 @@ const deDe = {
             "SummaryState.homeTeam": "Heimmanschaft:",
             "SummaryState.startDate": "Spielbeginn:",
 
+            "LoginState.description": "Melde dich an um das Spiel mit deinem Account zu verknüpfen. "
+                + "Nicht verknüpfte Spiele...",                
+            "LoginState.deleted": "werden nach <strong>48h gelöscht</strong>.",
+            "LoginState.notSearchable": "sind nicht öffentlich und tauchen <strong>nicht in der Spielsuche auf</strong>.",
 
             "LiveSearch.headline": "Alle Spiele im Überblick",
             "LiveSearch.region": "Verband",
@@ -124,6 +138,20 @@ const deDe = {
             "MatchInfoEdit.startDate": "Spielbeginn",
             "MatchInfoEdit.common": "Allgemein",
 
+            "AccountSetting.title": "Account Verknüpfen",
+            "AccountSetting.notConnected": "Match nicht verknüpft",
+            "AccountSetting.putError": "Es ist ein Fehler aufgetreten. Bitte versuchen sie es später erneut",
+            "AccountSetting.confirm.title": "Wirklich Verknüpfen?",
+            "AccountSetting.confirm.text": "Diese Aktion ist <strong>unumkehrbar</strong>. "
+                + "Ein Match kann nur mit <strong>einem</strong> Account verknüpft werden.",
+            "AccountSetting.confirm": "Mit diesem Account Verknüpfen",
+
+            "DeleteMatchSetting.title": "Match Löschen",
+            "DeleteMatchSetting.deletable": "Gebe <strong>löschen</strong> ein, um das Spiel zu löschen.\nDiese Aktion ist unumkehrbar.",
+            "DeleteMatchSetting.notDeletableAccount": "Löschen des Spieles nicht möglich.\nNur der inhaber kann das Spiel löschen \nInhaber:",
+            "DeleteMatchSetting.notDeletableEditor": "Löschen des Spieles nicht möglich.\nNur Editoren kann das Spiel löschen",
+            "DeleteMatchSetting.inputError": "Falsche Eingabe. Geben sie 'löschen' ein",
+            "DeleteMatchSetting.deleteError": "Leider ist ein Fehler aufgetreten, Bitte versuchen sie es später erneut.",
 
             "ChatDrawer.send": "Senden",
             "ChatDrawer.username": "Username",
@@ -150,10 +178,10 @@ const deDe = {
             "MatchFilter.contest": "Konkurrenz",
             "MatchFilter.region": "Region",
 
-            "ContactForm.header": "Feedback",
+            "ContactForm.header": "Kontakt",
             "ContactForm.introduction": "Moin,\n"
                 + "TT-Live ist ein kleine Projekt, welches ich in meiner Freizeit neben meinem Studium entwickel.\n"
-                + "Haben du Feedback, Verbesserungensvorschläge oder\n"
+                + "HAst du Feedback, Verbesserungensvorschläge oder\n"
                 + "sind Fehler aufgetreten, lassen sie es mich gerne wissen.",
             "ContactForm.text": "Deine Nachricht",
             "ContactForm.recipient": "Email (otional)",

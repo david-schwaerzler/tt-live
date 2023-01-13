@@ -14,9 +14,11 @@ import ImprintView from './views/ImprintView';
 import RegisterView from './views/RegisterView';
 import { AuthProvider } from 'react-auth-kit';
 import PrivateRoute from './components/utils/PrivateRoute';
+import AuthUtil from './components/utils/AuthUtil';
 ;
 
 function App() {
+
     const [matchId, setMatchId] = useState<number | null>(() => {
         let matchId = localStorage.getItem("matchId");
         return matchId == null || matchId === "" ? null : parseInt(matchId);
@@ -40,17 +42,18 @@ function App() {
             return {};
         }
     })
-    const [isAuthenticated, setAuthenticated] = useState(false);
 
 
     const valueProvider: AppContextProps = useMemo(() => ({
         matchId: matchId,
         editorCode: editorCode,
-        isAuthenticated: isAuthenticated,
         setMatchId: id => { localStorage.setItem("matchId", id == null ? "" : id.toString()); setMatchId(id) },
         setEditorCode: (matchId, newCode) => {
             let copy = { ...editorCode };
-            copy[matchId] = newCode;
+            if(newCode === "")
+                delete copy[matchId];
+            else
+                copy[matchId] = newCode;
             setEditorCode(copy);
             localStorage.setItem("editorCode", JSON.stringify(copy));
         },
@@ -73,14 +76,12 @@ function App() {
                     localStorage.setItem("settings", JSON.stringify(storedSettings));
                 }
             }
-
         },
         getSetting: key => {
             return settings[key]
         },
-        doLogin: isAuthenticated => setAuthenticated(isAuthenticated)
 
-    }), [matchId, editorCode, settings, isAuthenticated]);
+    }), [matchId, editorCode, settings]);
 
     return (
         <React.StrictMode>
@@ -92,6 +93,8 @@ function App() {
                             authName={'_auth'}
                             cookieDomain={window.location.hostname}
                             cookieSecure={window.location.protocol === "https:"}>
+
+                            <AuthUtil />
 
                             <HashRouter>
                                 <Routes>

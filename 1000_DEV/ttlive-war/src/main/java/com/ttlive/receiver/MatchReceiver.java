@@ -1,11 +1,13 @@
 package com.ttlive.receiver;
 
+import java.security.Principal;
 import java.time.ZoneId;
 import java.util.LinkedList;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -13,8 +15,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 
 import org.json.JSONObject;
@@ -43,6 +47,9 @@ public class MatchReceiver {
 
 	@EJB
 	private MatchService matchService;
+	
+	@Context
+	private SecurityContext context;
 
 	@GET
 	@Path("/")
@@ -97,6 +104,11 @@ public class MatchReceiver {
 				.startDate(requestMatchDto.getStartDate().withZoneSameInstant(ZoneId.of("Europe/Berlin"))
 						.toLocalDateTime())//
 				.build();
+		
+		Principal userPrincipal = context.getUserPrincipal();
+		if(userPrincipal != null && userPrincipal.getName() != null && userPrincipal.getName().equals("") == false) {
+			requestMatch.setAccountUsername(userPrincipal.getName());
+		}
 
 		Match match = matchService.create(requestMatch);
 
@@ -208,10 +220,35 @@ public class MatchReceiver {
 				.startDate(requestMatchDto.getStartDate().withZoneSameInstant(ZoneId.of("Europe/Berlin"))
 						.toLocalDateTime())//
 				.build();
+		
+		Principal userPrincipal = context.getUserPrincipal();
+		if(userPrincipal != null && userPrincipal.getName() != null && userPrincipal.getName().equals("") == false) {
+			requestMatch.setAccountUsername(userPrincipal.getName());
+		}
 
 		Match match = matchService.updateMatch(id, requestMatch);
 		return Response.ok(MatchDto.builder().bo(match).build()).build();
 	}
+	
+	@DELETE
+	@Path("/{id}")
+	public Response delete(@PathParam("id") long id, @QueryParam("editorCode") String editorCode) throws InvalidEditorCodeException, BadRestRequestException {
+		
+		if (editorCode == null || !matchService.isEditorCodeValid(id, editorCode)) {
+			throw new InvalidEditorCodeException(editorCode, id);
+		}
+		
+		Principal userPrincipal = context.getUserPrincipal();
+		String username = null;
+		if(userPrincipal != null && userPrincipal.getName() != null && userPrincipal.getName().equals("") == false) {
+			username = userPrincipal.getName();
+		}
+		
+		matchService.delete(id, username);
+		return Response.ok().build();
+		
+	}
+	
 
 	private void validateRequestMatch(RequestMatchDto requestMatchDto)
 			throws BadRestRequestException {

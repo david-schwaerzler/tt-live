@@ -25,4 +25,5 @@ export interface RequestLogin {
 export interface LoginResponse {
 	token: string | null,
 	status: "USERNAME_INVALID" | "PASSWORD_INVALID" | "NOT_AUTHENTICATED" | "SUCCESS";
+	account: Account;
 }

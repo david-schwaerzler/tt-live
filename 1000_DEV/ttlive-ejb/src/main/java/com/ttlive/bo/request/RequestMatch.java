@@ -13,4 +13,5 @@ public class RequestMatch {
 	private RequestTeam homeTeam;
 	private RequestTeam guestTeam;
 	private LocalDateTime startDate;
+	private String accountUsername;
 }

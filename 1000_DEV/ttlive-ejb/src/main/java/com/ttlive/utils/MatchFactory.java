@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 import com.ttlive.bo.request.RequestMatch;
+import com.ttlive.persistence.entity.AccountEntity;
 import com.ttlive.persistence.entity.DoublesEntity;
 import com.ttlive.persistence.entity.GameEntity;
 import com.ttlive.persistence.entity.GameStyleEntity;
@@ -16,6 +17,7 @@ import com.ttlive.persistence.entity.TeamEntity;
 public class MatchFactory {
 
 	public static MatchEntity createMatchEntity(
+			AccountEntity account,
 			RequestMatch requestMatch, 
 			RegionEntity regionEntity, 
 			GameStyleEntity gameStyleEntity,
@@ -61,6 +63,7 @@ public class MatchFactory {
 		matchEntity.setEditorCode(CodeFactory.createCode(existingCodes));
 		matchEntity.setStartDate(requestMatch.getStartDate());
 		matchEntity.setState(MatchState.NOT_STARTED);
+		matchEntity.setAccount(account);
 
 		LinkedList<PlayerEntity> homePlayers = new LinkedList<PlayerEntity>();
 		LinkedList<PlayerEntity> guestPlayers = new LinkedList<PlayerEntity>();

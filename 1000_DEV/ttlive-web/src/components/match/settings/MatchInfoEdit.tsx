@@ -1,5 +1,5 @@
-import { Autocomplete, Button, Card, CardActions, CardContent, Collapse, Divider, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
-import { Box, Stack } from "@mui/system";
+import { Autocomplete, Button,  FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Stack } from "@mui/system";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import React from "react";
@@ -11,8 +11,8 @@ import { RequestLeague } from "../../../rest/data/League";
 import { Match, RequestMatch } from "../../../rest/data/Match";
 import { Region } from "../../../rest/data/Region";
 import { RequestTeam } from "../../../rest/data/Team";
-import ExpandButton from "../../utils/ExpandButton";
 import LoadingButton from "../../utils/LoadingButton";
+import BaseSetting from "./BaseSetting";
 
 export interface MatchInfoEditProps {
     match: Match | null;
@@ -92,135 +92,121 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
 
 
     return (
-        <Card>
-            <Typography variant="h5" p={2}>
-                {t('MatchInfoEdit.title')}
-            </Typography>
-            <Collapse in={expanded} timeout="auto" >
-                <Divider />
-                <CardContent>
-                    <Stack gap={2}>
+        <BaseSetting title={t('MatchInfoEdit.title')} expanded={expanded} onExpandedChanged={setExpanded}>
+            <Stack gap={2}>
 
-                        <Typography variant="h6" width="100%" >
-                            {t("MatchInfoEdit.common")}:
-                            <Button sx={{ float: "right" }} onClick={() => onReset(match)}>reset</Button>
-                        </Typography>
-                        <Stack direction="row" gap={1} >
-                            <FormControl sx={{ flexGrow: 1 }}>
-                                <TextField
-                                    label={t("MatchInfoEdit.homeTeamName")}
-                                    value={homeTeamClub}
-                                    onChange={e => setHomeTeamName(e.target.value)}
-                                    error={errorMsgs[Error.HOME_CLUB] != null && errorMsgs[Error.HOME_CLUB] !== ""}
-                                    helperText={errorMsgs[Error.HOME_CLUB]}
-                                />
-                            </FormControl>
-                            <FormControl>
-                                <TextField
-                                    label={t("MatchInfoEdit.teamNumber")}
-                                    type="number"
-                                    value={homeTeamNumber}
-                                    sx={{ maxWidth: { xs: "5em", sm: "inherit" } }}
-                                    onChange={e => parseInt(e.target.value) > 0 && setHomeTeamNumber(parseInt(e.target.value))}
-                                    error={errorMsgs[Error.HOME_NUMBER] != null && errorMsgs[Error.HOME_NUMBER] !== ""}
-                                    helperText={errorMsgs[Error.HOME_NUMBER]}
-                                />
-                            </FormControl>
-                        </Stack>
-                        <Stack direction="row" gap={1} >
-                            <FormControl sx={{ flexGrow: 1 }}>
-                                <TextField
-                                    label={t("MatchInfoEdit.guestTeamName")}
-                                    value={guestTeamClub}
-                                    onChange={e => setGuestTeamName(e.target.value)}
-                                    error={errorMsgs[Error.GUEST_CLUB] != null && errorMsgs[Error.GUEST_CLUB] !== ""}
-                                    helperText={errorMsgs[Error.GUEST_CLUB]}
-                                />
-                            </FormControl>
-                            <FormControl>
-                                <TextField
-                                    label={t("MatchInfoEdit.teamNumber")}
-                                    type="number"
-                                    value={guestTeamNumber}
-                                    sx={{ maxWidth: { xs: "5em", sm: "inherit" } }}
-                                    onChange={e => parseInt(e.target.value) > 0 && setGuestTeamNumber(parseInt(e.target.value))}
-                                    error={errorMsgs[Error.GUEST_NUMBER] != null && errorMsgs[Error.GUEST_NUMBER] !== ""}
-                                    helperText={errorMsgs[Error.GUEST_NUMBER]}
-                                />
-                            </FormControl>
-                        </Stack>
+                <Typography variant="h6" width="100%" >
+                    {t("MatchInfoEdit.common")}:
+                    <Button sx={{ float: "right" }} onClick={() => onReset(match)}>reset</Button>
+                </Typography>
+                <Stack direction="row" gap={1} >
+                    <FormControl sx={{ flexGrow: 1 }}>
+                        <TextField
+                            label={t("MatchInfoEdit.homeTeamName")}
+                            value={homeTeamClub}
+                            onChange={e => setHomeTeamName(e.target.value)}
+                            error={errorMsgs[Error.HOME_CLUB] != null && errorMsgs[Error.HOME_CLUB] !== ""}
+                            helperText={errorMsgs[Error.HOME_CLUB]}
+                        />
+                    </FormControl>
+                    <FormControl>
+                        <TextField
+                            label={t("MatchInfoEdit.teamNumber")}
+                            type="number"
+                            value={homeTeamNumber}
+                            sx={{ maxWidth: { xs: "5em", sm: "inherit" } }}
+                            onChange={e => parseInt(e.target.value) > 0 && setHomeTeamNumber(parseInt(e.target.value))}
+                            error={errorMsgs[Error.HOME_NUMBER] != null && errorMsgs[Error.HOME_NUMBER] !== ""}
+                            helperText={errorMsgs[Error.HOME_NUMBER]}
+                        />
+                    </FormControl>
+                </Stack>
+                <Stack direction="row" gap={1} >
+                    <FormControl sx={{ flexGrow: 1 }}>
+                        <TextField
+                            label={t("MatchInfoEdit.guestTeamName")}
+                            value={guestTeamClub}
+                            onChange={e => setGuestTeamName(e.target.value)}
+                            error={errorMsgs[Error.GUEST_CLUB] != null && errorMsgs[Error.GUEST_CLUB] !== ""}
+                            helperText={errorMsgs[Error.GUEST_CLUB]}
+                        />
+                    </FormControl>
+                    <FormControl>
+                        <TextField
+                            label={t("MatchInfoEdit.teamNumber")}
+                            type="number"
+                            value={guestTeamNumber}
+                            sx={{ maxWidth: { xs: "5em", sm: "inherit" } }}
+                            onChange={e => parseInt(e.target.value) > 0 && setGuestTeamNumber(parseInt(e.target.value))}
+                            error={errorMsgs[Error.GUEST_NUMBER] != null && errorMsgs[Error.GUEST_NUMBER] !== ""}
+                            helperText={errorMsgs[Error.GUEST_NUMBER]}
+                        />
+                    </FormControl>
+                </Stack>
 
-                        <FormControl sx={{ flexGrow: 1 }} error={errorMsgs[Error.START_DATE] != null && errorMsgs[Error.START_DATE] !== ""}>
-                            <DateTimePicker
-                                ampm={false}
-                                label={t("LeagueState.startDate")}
-                                value={startDate}
-                                onChange={date => setStartDate(date)}
-                                renderInput={(params) => 
-                                    <TextField {...params} error={errorMsgs[Error.START_DATE] != null && errorMsgs[Error.START_DATE] !== ""}
-                                    />}
-                                
-                            />
-                            <FormHelperText>{errorMsgs[Error.START_DATE]}</FormHelperText>
-                        </FormControl>
+                <FormControl sx={{ flexGrow: 1 }} error={errorMsgs[Error.START_DATE] != null && errorMsgs[Error.START_DATE] !== ""}>
+                    <DateTimePicker
+                        ampm={false}
+                        label={t("LeagueState.startDate")}
+                        value={startDate}
+                        onChange={date => setStartDate(date)}
+                        renderInput={(params) =>
+                            <TextField {...params} error={errorMsgs[Error.START_DATE] != null && errorMsgs[Error.START_DATE] !== ""}
+                            />}
 
-                        <Typography variant="h6" width="100%" mb={1}>
-                            {t("MatchInfoEdit.league")}:
-                        </Typography>
-                        <Stack direction="row" gap={1}>
-                            <FormControl sx={{ flexGrow: 1 }}>
-                                <TextField
-                                    label={t("MatchInfoEdit.league")}
-                                    value={league}
-                                    onChange={e => setLeague(e.target.value)}
-                                    error={errorMsgs[Error.LEAGUE] != null && errorMsgs[Error.LEAGUE] !== ""}
-                                    helperText={errorMsgs[Error.LEAGUE]}
-                                />
-                            </FormControl>
-                        </Stack>
-                        <Stack direction="row" gap={1}>
-                            <FormControl sx={{ flexGrow: 1 }} error={errorMsgs[Error.REGION] != null && errorMsgs[Error.REGION] !== ""} >
-                                <Autocomplete
-                                    value={region}
-                                    onChange={(e, value) => setRegion(value)}
-                                    options={regions}
-                                    getOptionLabel={option => option.name}
-                                    renderInput={(params) => <TextField {...params} label={t('RegionState.region')} error={false} />}
-                                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                                    autoHighlight={true}
+                    />
+                    <FormHelperText>{errorMsgs[Error.START_DATE]}</FormHelperText>
+                </FormControl>
 
-                                />
-                                <FormHelperText >
-                                    {errorMsgs[Error.REGION]}
-                                </FormHelperText>
-                            </FormControl>
-                            <FormControl sx={{ flexGrow: 1 }} error={errorMsgs[Error.CONTEST] != null && errorMsgs[Error.CONTEST] !== ""}>
-                                <InputLabel id="select-contest">{t('RegionState.contest')}</InputLabel>
-                                <Select
-                                    id="select-contest"
-                                    labelId="select-contest"
-                                    label={t('RegionState.contest')}
-                                    value={contest}
-                                    onChange={e => (e.target.value === "MEN" || e.target.value === "WOMEN") && setContest(e.target.value)}>
-                                    <MenuItem value="WOMEN">{t('RegionState.contestWomen')}</MenuItem>
-                                    <MenuItem value="MEN">{t('RegionState.contestMen')}</MenuItem>
-                                </Select>
-                                <FormHelperText>
-                                    {errorMsgs[Error.CONTEST]}
-                                </FormHelperText>
-                            </FormControl>
-                        </Stack>
-                        <LoadingButton loading={isLoading} variant="outlined" onClick={() => onSave(match)}>Save</LoadingButton>
-                    </Stack>
-                </CardContent>
-            </Collapse>
+                <Typography variant="h6" width="100%" mb={1}>
+                    {t("MatchInfoEdit.league")}:
+                </Typography>
+                <Stack direction="row" gap={1}>
+                    <FormControl sx={{ flexGrow: 1 }}>
+                        <TextField
+                            label={t("MatchInfoEdit.league")}
+                            value={league}
+                            onChange={e => setLeague(e.target.value)}
+                            error={errorMsgs[Error.LEAGUE] != null && errorMsgs[Error.LEAGUE] !== ""}
+                            helperText={errorMsgs[Error.LEAGUE]}
+                        />
+                    </FormControl>
+                </Stack>
+                <Stack direction="row" gap={1}>
+                    <FormControl sx={{ flexGrow: 1 }} error={errorMsgs[Error.REGION] != null && errorMsgs[Error.REGION] !== ""} >
+                        <Autocomplete
+                            value={region}
+                            onChange={(e, value) => setRegion(value)}
+                            options={regions}
+                            getOptionLabel={option => option.name}
+                            renderInput={(params) => <TextField {...params} label={t('RegionState.region')} error={false} />}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
+                            autoHighlight={true}
 
-            <CardActions>
-                <Box sx={{ cursor: "pointer", display: "flex", justifyContent: "center", width: "100%" }} onClick={() => setExpanded(!expanded)}>
-                    <ExpandButton expanded={expanded} />
-                </Box>
-            </CardActions>
-        </Card >
+                        />
+                        <FormHelperText >
+                            {errorMsgs[Error.REGION]}
+                        </FormHelperText>
+                    </FormControl>
+                    <FormControl sx={{ flexGrow: 1 }} error={errorMsgs[Error.CONTEST] != null && errorMsgs[Error.CONTEST] !== ""}>
+                        <InputLabel id="select-contest">{t('RegionState.contest')}</InputLabel>
+                        <Select
+                            id="select-contest"
+                            labelId="select-contest"
+                            label={t('RegionState.contest')}
+                            value={contest}
+                            onChange={e => (e.target.value === "MEN" || e.target.value === "WOMEN") && setContest(e.target.value)}>
+                            <MenuItem value="WOMEN">{t('RegionState.contestWomen')}</MenuItem>
+                            <MenuItem value="MEN">{t('RegionState.contestMen')}</MenuItem>
+                        </Select>
+                        <FormHelperText>
+                            {errorMsgs[Error.CONTEST]}
+                        </FormHelperText>
+                    </FormControl>
+                </Stack>
+                <LoadingButton loading={isLoading} variant="outlined" onClick={() => onSave(match)}>Save</LoadingButton>
+            </Stack>
+        </BaseSetting>
     );
 
     function onReset(match: Match) {
@@ -233,7 +219,7 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
         setErrorMsgs([]);
     }
 
-    async function onSave(match: Match) {        
+    async function onSave(match: Match) {
 
         if (homeTeamClub === "") {
             updateErrors([], Error.HOME_CLUB, "MatchInfoEdit.errorHomeClub");

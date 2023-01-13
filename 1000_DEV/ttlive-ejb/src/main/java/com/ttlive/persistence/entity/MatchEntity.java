@@ -95,6 +95,11 @@ public class MatchEntity {
 	@OneToMany(mappedBy = "match", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH,
 			CascadeType.REMOVE })
 	private List<DoublesEntity> doubles = new LinkedList<DoublesEntity>();
+	
+	@ToString.Exclude
+	@OneToMany(mappedBy = "match", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH,
+			CascadeType.REMOVE })
+	private List<ChatMessageEntity> messages = new LinkedList<ChatMessageEntity>();
 
 	@CreationTimestamp
 	@Column(name = "created_at")
@@ -221,4 +226,41 @@ public class MatchEntity {
 		if (setBoth)
 			doubles.setMatch(null, false);
 	}
+	
+	public void setAccount(AccountEntity account) {
+		setAccount(account, true);
+	}
+	public void setAccount(AccountEntity account, boolean setBoth) {
+		if(this.account != null && setBoth)
+			this.account.removeMatch(this, false);
+			
+		this.account = account;
+		
+		if(setBoth && account != null)
+			this.account.addMatch(this, false);	
+	}
+	
+	public void addMessage(ChatMessageEntity message) {
+		addMessage(message, true);
+	}
+
+	public void addMessage(ChatMessageEntity message, boolean setBoth) {
+		if (!this.messages.contains(message))
+			this.messages.add(message);
+
+		if (setBoth)
+			message.setMatch(this, false);
+	}
+
+	public void removeMessage(ChatMessageEntity message) {
+		removeMessage(message, true);
+	}
+
+	public void removeMessage(ChatMessageEntity message, boolean setBoth) {
+		this.messages.remove(message);
+
+		if (setBoth)
+			message.setMatch(null, false);
+	}
+
 }

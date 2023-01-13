@@ -1,5 +1,6 @@
 import { Button, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
+import { useAuthHeader } from "react-auth-kit";
 import { Trans, useTranslation } from "react-i18next";
 import { Link } from "react-router-dom"
 import ContactForm from "../components/contact/ContactForm";
@@ -9,8 +10,10 @@ export interface HomeViewProps {
 }
 
 export function HomeView(props: HomeViewProps) {
-    const [t] = useTranslation();
+    const [t] = useTranslation()
 
+    const authHeader = useAuthHeader();
+    console.log(authHeader())
     return (
         <Container sx={{ width: "100%", mt: 4 }}>
             <Box m="auto">
@@ -18,7 +21,7 @@ export function HomeView(props: HomeViewProps) {
                     <Trans i18nKey={"HomeView.welcomeText"} />
                 </Typography>
 
-                <Typography variant="h2" mt={6}>
+                <Typography variant="h2" mt={8}>
                     {t("HomeView.goLiveText")}
                 </Typography>
                 <Box mt={2}>
@@ -31,7 +34,7 @@ export function HomeView(props: HomeViewProps) {
                     </Link>
                 </Box>
 
-                <Typography variant="h2" mt={6}>
+                <Typography variant="h2" mt={8}>
                     {t("HomeView.goSearchText")}
                 </Typography>
                 <Box mt={2}>
@@ -44,7 +47,7 @@ export function HomeView(props: HomeViewProps) {
                     </Link>
                 </Box>
             </Box>
-            <ContactForm sx={{ mt: 6 }} />
+            <ContactForm sx={{ mt: 8 }} />
             <Box sx={{ mt: 3, color: theme => theme.palette.primary.main }}>
                 <Link to={"imprint"} style={{ color: "inherit" }}>{t("HomeView.imprint")}</Link>
             </Box>
