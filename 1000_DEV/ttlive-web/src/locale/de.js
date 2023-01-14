@@ -100,8 +100,7 @@ const deDe = {
             "LiveView.fix": "beheben",
 
             "MatchStateLabel.live": "Live",
-            "MatchStateLabel.notStarted": "Bald",
-            "MatchStateLabel.finished": "Beendet",
+            "MatchStateLabel.yesterday": "Gestern",
 
             "MatchCard.linkGame": "zum Spiel",
 

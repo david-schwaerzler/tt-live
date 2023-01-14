@@ -1,84 +1,91 @@
 import { Typography } from "@mui/material";
-import { Box, SxProps } from "@mui/system";
-import dayjs from "dayjs";
-import { useEffect } from "react";
+import { Box } from "@mui/system";
+import dayjs, { Dayjs } from "dayjs";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface MatchStateLabelProps {
     state: "NOT_STARTED" | "LIVE" | "FINISHED";
-    sx?: SxProps;
+    sx?: any;
     variant?: "normal" | "border";
     startDate?: string;
 }
 
 const MatchStateLabel = ({ sx, state, variant = "normal", startDate }: MatchStateLabelProps) => {
     const [t] = useTranslation();
+    const [text, setText] = useState<string>("");
+    const [opacity, setOpacity] = useState<number>(1);
+    const [color, setColor] = useState<string>("");
 
-    const [time, setTime] = useState<string | null>(null);
     useEffect(() => {
-        setTime(dayjs(startDate).format("HH:mm"));
-    }, [startDate])
+        if (state === "LIVE") {
+            setText(t("MatchStateLabel.live"));
+            setColor("red");
+            setOpacity(1);
+            return;
+        } else if (state === "NOT_STARTED") {
+            setColor("green");
+            setOpacity(1);
+        } else {
+            setColor("grey");
+            setOpacity(0.5);
+        }
+
+        let matchDate: Dayjs = dayjs(startDate);
+        let today: Dayjs = dayjs();
+        let yesterday = today.subtract(1, "days");
+
+        console.log(dateEquals(matchDate, today))
+
+        if (dateEquals(matchDate, today)) {
+            setText(matchDate.format("HH:mm"))
+        } else if (dateEquals(matchDate, yesterday)) {
+            setText(t("MatchStateLabel.yesterday"));
+        } else {
+            setText(matchDate.format("DD.MM.YY"));
+        }
+    }, [startDate, state, t])
 
     return (
         <Box sx={{
-            opacity: getOpacity(),
+            opacity: opacity,
             display: "inline-flex",
             justifyContent: "center",
             alignItems: "center",
             border: variant === "border" ? "2px solid" : "hidden",
-            borderColor: getColor(),
+            borderColor: color,
             borderRadius: "10px",
             paddingLeft: "10px",
             paddingRight:
                 "10px",
             ...sx
         }}>
-            {state === "LIVE" && <Box sx={{ height: "10px", width: "10px", backgroundColor: "red", borderRadius: "50%", display: "inline-block" }} />}
-            {state === "LIVE" && <Box>&nbsp;</Box>}
+            {state === "LIVE" &&
+                <React.Fragment>
+                    <Box
+                        sx={{
+                            height: "10px",
+                            width: "10px",
+                            backgroundColor: "red",
+                            borderRadius: "50%",
+                            display: "inline-block"
+                        }} />
+                        <Box>&nbsp;</Box>
+                </React.Fragment>
+            }
             <Typography component="div" >
-                <b>{renderText()}</b>
+                <b>{text}</b>
             </Typography>
         </Box >
     )
 
-    function getColor() {
-        switch (state) {
-            case "LIVE":
-                return "red";
-            case "FINISHED":
-                return "grey";
-            case "NOT_STARTED":
-                return "green";
-            default:
-                console.error(`Invalid matchStateLabel = '${state}. Must be 'LIVE', 'FINISHED', 'NOT_STARTED`);
-        }
-    }
-
-    function getOpacity() {
-        switch (state) {
-            case "LIVE":
-                return 1;
-            case "FINISHED":
-                return 0.5;
-            case "NOT_STARTED":
-                return;
-            default:
-                console.error(`Invalid matchStateLabel = '${state}. Must be 'LIVE', 'FINISHED', 'NOT_STARTED`);
-        }
-    }
-
-    function renderText() {
-        switch (state) {
-            case "LIVE":
-                return t("MatchStateLabel.live");
-            case "FINISHED":
-                return t("MatchStateLabel.finished");
-            case "NOT_STARTED":
-                return time == null ? t("MatchStateLabel.notStarted") : time;
-            default:
-                console.error(`Invalid matchStateLabel = '${state}. Must be 'LIVE', 'FINISHED', 'NOT_STARTED`);
-        }
+    function dateEquals(date1: Dayjs, date2: Dayjs): boolean {
+        console.log(date1.year(), date1.month(), date1.day())
+        console.log(date2.year(), date2.month(), date2.day())
+        return date1.year() === date2.year()
+            && date1.month() === date2.month()
+            && date1.day() === date2.day();
     }
 }
 
