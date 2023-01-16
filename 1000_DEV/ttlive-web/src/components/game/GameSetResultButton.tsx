@@ -2,6 +2,7 @@ import { Button, Dialog, DialogContent, DialogTitle, FormControlLabel, Grid, Rad
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router";
 import { putGameSet } from "../../rest/api/GameApi";
 import { Game } from "../../rest/data/Game";
 import { GameSet } from "../../rest/data/GameSet";
@@ -31,6 +32,8 @@ const GameSetResultButton = ({ disabled, won, set, game, isHome, editorCode, onE
     const [otherScore, setOtherScore] = useState<number>(11);
     const [isLoading, setLoading] = useState(false);
     const [isUnset, setUnset] = useState(false);
+    const [t] = useTranslation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         setHomeState(!isHome)
@@ -52,7 +55,25 @@ const GameSetResultButton = ({ disabled, won, set, game, isHome, editorCode, onE
         }
     }, [show, isHome, set.guestScore, set.homeScore])
 
-    const [t] = useTranslation();
+    useEffect(() => {
+
+        const hashChanged = (ev : HashChangeEvent) => {
+            if (show)
+                if (ev.newURL.includes("#dialog") === false)
+                    setShow(false)
+
+        }
+
+        if (show) {
+            navigate("#dialog");
+            document.addEventListener("hashchange", hashChanged);
+        }
+
+        return () => { 
+            document.removeEventListener(hashChanged);
+        };
+    }, [show]);
+
 
     let buttonScore = isHome ? set.homeScore : set.guestScore;
     return (
@@ -130,7 +151,7 @@ const GameSetResultButton = ({ disabled, won, set, game, isHome, editorCode, onE
         let homeScore = isHomeState ? otherScore : selectedNumber;
         let guestScore = isHomeState ? selectedNumber : otherScore;
 
-        if(isUnset){
+        if (isUnset) {
             homeScore = 0;
             guestScore = 0;
         }

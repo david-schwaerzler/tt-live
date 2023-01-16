@@ -36,8 +36,6 @@ const MatchStateLabel = ({ sx, state, variant = "normal", startDate }: MatchStat
         let today: Dayjs = dayjs();
         let yesterday = today.subtract(1, "days");
 
-        console.log(dateEquals(matchDate, today))
-
         if (dateEquals(matchDate, today)) {
             setText(matchDate.format("HH:mm"))
         } else if (dateEquals(matchDate, yesterday)) {
@@ -81,8 +79,6 @@ const MatchStateLabel = ({ sx, state, variant = "normal", startDate }: MatchStat
     )
 
     function dateEquals(date1: Dayjs, date2: Dayjs): boolean {
-        console.log(date1.year(), date1.month(), date1.day())
-        console.log(date2.year(), date2.month(), date2.day())
         return date1.year() === date2.year()
             && date1.month() === date2.month()
             && date1.day() === date2.day();
