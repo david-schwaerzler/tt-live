@@ -27,17 +27,17 @@ const AccountSetting = ({ match, editorCode }: AccountSettingProps) => {
 
 
     // don't show this setting if the match is already connected to an account
-    if(match.accountId != null)
+    if (match.accountId != null)
         return null;
 
     return (
-        
+
         <BaseSetting title={t("AccountSetting.title")} expanded={expanded} onExpandedChanged={setExpanded}>
 
             <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
                 <DialogTitle>{t("AccountSetting.confirm.title")}</DialogTitle>
-                <DialogContent  sx={[{ "strong": { color: (theme) => theme.palette.primary.main} }, {whiteSpace: "pre-wrap"}]} >
-                    <Trans i18nKey={"AccountSetting.confirm.text"} t={t}/>                                        
+                <DialogContent sx={[{ "strong": { color: (theme) => theme.palette.primary.main } }, { whiteSpace: "pre-wrap" }]} >
+                    <Trans i18nKey={"AccountSetting.confirm.text"} t={t} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setShowDialog(false)}>Cancel</Button>
@@ -53,7 +53,7 @@ const AccountSetting = ({ match, editorCode }: AccountSettingProps) => {
                 </React.Fragment>
             }
 
-            <ErrorMessage msg={errorMsg} sx={{mb: 1}}/>
+            <ErrorMessage msg={errorMsg} sx={{ mb: 1 }} />
 
             {isAuthenticated()
                 ? <LoadingButton loading={loading} variant="outlined" onClick={() => setShowDialog(true)}>{t("AccountSetting.confirm")}</LoadingButton>
@@ -65,11 +65,11 @@ const AccountSetting = ({ match, editorCode }: AccountSettingProps) => {
     async function onConnect() {
         setLoading(true)
         let response = await putConnectMatch(match.id, editorCode);
-        if(response.data != null)
+        if (response.data != null) {
             setErrorMsg("");
-        else
+        } else {
             setErrorMsg(t("AccountSetting.putError"));
-        
+        }
         setShowDialog(false);
         setLoading(false)
     }

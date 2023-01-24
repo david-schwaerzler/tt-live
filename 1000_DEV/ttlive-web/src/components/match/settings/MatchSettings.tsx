@@ -29,7 +29,7 @@ const MatchSettings = ({ match, editorCode, onMatchChanged }: MatchSettingsProps
             <MatchInfoEdit match={match} editorCode={editorCode} />
             {match != null && 
                 <React.Fragment>
-                    <AccountSetting match={match} editorCode={editorCode}/>
+                    <AccountSetting match={match} editorCode={editorCode} />
                     <DeleteMatchSetting match={match} editorCode={editorCode} />
                 </React.Fragment>
             }

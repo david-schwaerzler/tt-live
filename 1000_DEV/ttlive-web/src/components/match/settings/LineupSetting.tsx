@@ -50,6 +50,12 @@ const LineupSetting = ({ match, isHomeTeam, editorCode }: LineupSettingProps) =>
     players.forEach(p => {
         if (p.name !== "" && playerNames.includes(p.name) === false)
             playerNames.push(p.name);
+    });
+    doubles.forEach(d => {
+        if (d.player1 !== "" && playerNames.includes(d.player1) === false)
+            playerNames.push(d.player1);
+            if (d.player2 !== "" && playerNames.includes(d.player2) === false)
+            playerNames.push(d.player2);
     })
 
     return (

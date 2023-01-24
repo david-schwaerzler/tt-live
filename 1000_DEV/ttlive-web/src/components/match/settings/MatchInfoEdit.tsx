@@ -1,4 +1,4 @@
-import { Autocomplete, Button,  FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Autocomplete, Button, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
@@ -113,9 +113,9 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
                         <TextField
                             label={t("MatchInfoEdit.teamNumber")}
                             type="number"
-                            value={homeTeamNumber}
+                            value={homeTeamNumber < 0 ? "" : homeTeamNumber}
                             sx={{ maxWidth: { xs: "5em", sm: "inherit" } }}
-                            onChange={e => parseInt(e.target.value) > 0 && setHomeTeamNumber(parseInt(e.target.value))}
+                            onChange={e => e.target.value === "" ? setHomeTeamNumber(-1) : setHomeTeamNumber(parseInt(e.target.value))}
                             error={errorMsgs[Error.HOME_NUMBER] != null && errorMsgs[Error.HOME_NUMBER] !== ""}
                             helperText={errorMsgs[Error.HOME_NUMBER]}
                         />
@@ -135,9 +135,9 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
                         <TextField
                             label={t("MatchInfoEdit.teamNumber")}
                             type="number"
-                            value={guestTeamNumber}
+                            value={guestTeamNumber < 0 ? "" : guestTeamNumber}
                             sx={{ maxWidth: { xs: "5em", sm: "inherit" } }}
-                            onChange={e => parseInt(e.target.value) > 0 && setGuestTeamNumber(parseInt(e.target.value))}
+                            onChange={e => e.target.value === "" ? setGuestTeamNumber(-1) : setGuestTeamNumber(parseInt(e.target.value))}
                             error={errorMsgs[Error.GUEST_NUMBER] != null && errorMsgs[Error.GUEST_NUMBER] !== ""}
                             helperText={errorMsgs[Error.GUEST_NUMBER]}
                         />
@@ -278,6 +278,7 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
         let response = await putMatch(match.id, requestMatch, editorCode);
         if (response.data != null) {
             setErrorMsgs([]);
+            setExpanded(false)
         } else {
 
         }
