@@ -107,10 +107,10 @@ const LiveView = () => {
             <Box {...swipeHanlder} className="test" position="absolute" top={"10%"} bottom={0} left={0} right={0} zIndex={-10} />
 
             {editorCode != null && isLineupComplete === false &&
-                <Alert sx={{ mb: 1 }} severity="warning" elevation={1} action={
-                    <Button sx={{ mt: "-2px" }} onClick={() => setActiveTab(0)} >{t("LiveView.fix")}</Button>
+                <Alert sx={{ mb: 1, alignItems: "center" }} severity="warning" elevation={1} action={
+                    <Button sx={{mt: "2px"}} onClick={() => setActiveTab(0)} >{t("LiveView.fix")}</Button>
                 }>
-                    <AlertTitle sx={{ mb: 0 }}>{t("LiveView.missingLineup")}</AlertTitle>
+                    <AlertTitle sx={{mb: 0}}>{t("LiveView.missingLineup")}</AlertTitle>
                 </Alert>
             }
 
