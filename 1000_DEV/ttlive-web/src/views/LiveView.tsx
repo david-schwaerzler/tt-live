@@ -59,7 +59,7 @@ const LiveView = () => {
                     setEditorCode(context.editorCode[response.data?.id]);
                 else
                     setEditorCode(null)
-            } 
+            }
         }
         async function fetchChatLocal(id: number) {
             let response = await fetchChatMessages(id)
@@ -108,9 +108,9 @@ const LiveView = () => {
 
             {editorCode != null && isLineupComplete === false &&
                 <Alert sx={{ mb: 1 }} severity="warning" elevation={1} action={
-                    <Button sx={{mt: "-2px"}} onClick={() => setActiveTab(0)} >{t("LiveView.fix")}</Button>
+                    <Button sx={{ mt: "-2px" }} onClick={() => setActiveTab(0)} >{t("LiveView.fix")}</Button>
                 }>
-                    <AlertTitle sx={{mb: 0}}>{t("LiveView.missingLineup")}</AlertTitle>
+                    <AlertTitle sx={{ mb: 0 }}>{t("LiveView.missingLineup")}</AlertTitle>
                 </Alert>
             }
 
@@ -152,7 +152,9 @@ const LiveView = () => {
             editorCode={editorCode}
             matchState={match != null ? match.state : "NOT_STARTED"}
             messages={messages}
-            matchId={match ? match.id : null} />;
+            matchId={match ? match.id : null}
+            onUpdate={game => onGameUpdated(game, match)}
+        />;
     }
 
     function renderLive() {

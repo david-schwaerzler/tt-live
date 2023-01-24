@@ -53,8 +53,8 @@ const ChatAction = ({ matchId, isEditor, onScrollEvent, showAvatar = true }: Cha
         setLoading(true);
         let response = await postChatMessage(matchId, chatMessage)
         if (response.data != null) {
-            setInputValue("");
             onScrollEvent();
+            setInputValue("");
         }
         setLoading(false)
     }, [context, inputValue, matchId, isEditor, onScrollEvent]);

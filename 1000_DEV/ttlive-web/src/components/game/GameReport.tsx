@@ -16,6 +16,7 @@ export interface GameReportProps {
     matchState: "FINISHED" | "NOT_STARTED" | "LIVE"
     messages: Array<ChatMessage>;
     matchId: number | null;
+    onUpdate: (game: Game) => void;
 }
 
 const PlayerCell = styled(Grid)({
@@ -32,7 +33,7 @@ type GameScoreType = Game & { homeTeamScore: number, guestTeamScore: number, typ
 const GAME_INPUT_TYPE_SETTING = "gameInputType"
 
 // TODO fix Render performance Issues
-const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameReportProps) => {
+const GameReport = ({ games, editorCode, matchState, messages, matchId, onUpdate }: GameReportProps) => {
 
     const [t] = useTranslation();
     const context = useContext(AppContext);
@@ -166,7 +167,7 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
                     {game.state === "FINISHED" && <i>{game.homeTeamScore}:{game.guestTeamScore}</i>}
                     {game.state === "LIVE" && <Typography color={theme => theme.palette.primary.main} fontWeight="bold" fontStyle="italic">LIVE</Typography>}
                     {isEditMode === true && editorCode != null && matchId != null &&
-                        <GameLiveEdit editorCode={editorCode} messages={messages} game={game} matchId={matchId} />
+                        <GameLiveEdit editorCode={editorCode} messages={messages} game={game} matchId={matchId} onUpdate={onUpdate} />
                     }
                 </Stack>
             </Box>
@@ -204,7 +205,7 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
                     {game.state === "FINISHED" && <i>{game.homeTeamScore}:{game.guestTeamScore}</i>}
                     {game.state === "LIVE" && <Typography color={theme => theme.palette.primary.main} fontWeight="bold" fontStyle="italic">LIVE</Typography>}
                     {isEditMode === true && editorCode != null && matchId != null &&
-                        <GameLiveEdit editorCode={editorCode} messages={messages} game={game} matchId={matchId} />
+                        <GameLiveEdit editorCode={editorCode} messages={messages} game={game} matchId={matchId} onUpdate={onUpdate} />
                     }
                 </Stack>
             </Box>
@@ -262,6 +263,7 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId }: GameRe
             game={game}
             onError={(msg) => console.log("todo error")}
             matchState={matchState}
+            onUpdate={onUpdate}
         />
 
     }
