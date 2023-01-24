@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import com.ttlive.bo.Account;
+import com.ttlive.bo.GameSet.InvalidGameSetFormat;
 import com.ttlive.dto.AccountDto;
 import com.ttlive.rest.InvalidEditorCodeException;
 import com.ttlive.service.AccountService;
@@ -55,7 +56,7 @@ public class AccountReceiver {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("match/{matchId}/connect")
 	public Response connectMatch(@PathParam("matchId") long id, @QueryParam("editorCode") String editorCode)
-			throws InvalidEditorCodeException, BadRestRequestException {
+			throws InvalidEditorCodeException, BadRestRequestException, InvalidGameSetFormat {
 
 		if (editorCode == null || accountService.isEditorCodeValid(id, editorCode) == false)
 			throw new InvalidEditorCodeException(editorCode, id);

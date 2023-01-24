@@ -113,7 +113,7 @@ public class TTLiveWebSocket {
 						if (socket.isOpen() == false)
 							iter.remove();
 						else
-							socket.getBasicRemote().sendObject(json);
+							socket.getAsyncRemote().sendObject(json);
 					} catch (Exception e) {
 						log.severe("Error sending message to socket. Socket will be removed");
 						iter.remove();
@@ -162,7 +162,7 @@ public class TTLiveWebSocket {
 				Session socket = socketIter.next();
 				try {
 					if (socket.isOpen() == true) {
-						socket.getBasicRemote().sendObject(json);
+						socket.getAsyncRemote().sendObject(json);
 					} else {
 						socket.close();
 						socketIter.remove();
@@ -178,7 +178,6 @@ public class TTLiveWebSocket {
 			}
 		}
 	}
-
 	public long getUserCount(long matchId) {
 		List<Session> users = sessions.get(matchId);
 		if (users == null)
