@@ -47,7 +47,7 @@ const RegisterView = () => {
             <CardContent>
                 <Typography>{t("RegisterView.registeredTitle")}</Typography>
                 <Typography mt={1}>{t("RegisterView.registeredText")}</Typography>
-                <Link to="/login" >
+                <Link to="/login" style={{  textDecoration: "none"}}>
                     <Button variant="outlined" sx={{ mt: 2 }}>
                         {t("RegisterView.toLogin")}
                     </Button>

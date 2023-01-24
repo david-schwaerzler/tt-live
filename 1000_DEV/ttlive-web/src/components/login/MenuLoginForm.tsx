@@ -163,7 +163,7 @@ const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
                             onClick={onLogin}>
                             {t("LoginForm.login")}
                         </WhiteLoadingButton>
-                        <Link to="/register" >
+                        <Link to="/register" style={{  textDecoration: "none"}}>
                             <WhiteButton size="small" sx={{ height: "100%" }} variant="outlined" onClick={() => setLoginAnchor(null)}>
                                 {t("LoginForm.register")}
                             </WhiteButton>
@@ -214,7 +214,7 @@ const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
 
                             <Box>
                                 <LoadingButton loading={loading} sx={{ display: "inline-grid" }} size="small" onClick={onLogin}>{t("LoginForm.login")}</LoadingButton>
-                                <Link to="/register">
+                                <Link to="/register" style={{  textDecoration: "none"}}>
                                     <Button size="small" onClick={() => setLoginAnchor(null)}>{t("LoginForm.register")}</Button>
                                 </Link>
                             </Box>

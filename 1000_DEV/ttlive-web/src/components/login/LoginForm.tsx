@@ -158,7 +158,7 @@ const LoginForm = ({ onLogin, showRegister = true }: LoginFormProps) => {
                     <LoadingButton loading={isLoading} variant="outlined" onClick={onLoginCallback}>{t("LoginForm.login")}</LoadingButton>
                 </Box>
                 {showRegister &&
-                    <Link to="/register">
+                    <Link to="/register" style={{  textDecoration: "none"}}>
                         <Button variant="outlined" sx={{ ml: 1 }}>
                             {t("LoginForm.register")}
                         </Button>
