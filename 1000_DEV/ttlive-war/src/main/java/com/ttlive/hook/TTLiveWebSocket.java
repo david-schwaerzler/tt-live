@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.enterprise.event.ObservesAsync;
 import javax.websocket.CloseReason;
@@ -178,10 +179,28 @@ public class TTLiveWebSocket {
 			}
 		}
 	}
+
 	public long getUserCount(long matchId) {
 		List<Session> users = sessions.get(matchId);
 		if (users == null)
 			return 0;
 		return users.size();
+	}
+	
+	@Schedule(hour = "*", minute = "0", second = "*")
+	private  void cleanupSockets() {
+		try {
+			for(List<Session> sockets : sessions.values()) {
+				synchronized (sockets) {
+					for(Iterator<Session> iter = sockets.iterator(); iter.hasNext();) {
+						Session session = iter.next();
+						if(session.isOpen() == false)
+							iter.remove();
+					}
+				}				
+			}			
+		}catch(Exception e) {
+			log.severe("Error during socket cleanup. error='" + e.toString() + "'");
+		}
 	}
 }
