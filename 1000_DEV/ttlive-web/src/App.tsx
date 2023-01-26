@@ -16,7 +16,6 @@ import { AuthProvider } from 'react-auth-kit';
 import PrivateRoute from './components/utils/PrivateRoute';
 import AuthUtil from './components/utils/AuthUtil';
 import { tokenRefreshApi } from './rest/api/LoginApi';
-;
 
 function App() {
 

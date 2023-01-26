@@ -1,17 +1,28 @@
 import axios from "axios";
 import React, { useEffect } from "react";
-import { useAuthHeader } from "react-auth-kit";
+import { useAuthHeader, useIsAuthenticated } from "react-auth-kit";
 import { Config } from "./Config";
 
 const AuthUtil = () => {
 
     let authHeader = useAuthHeader();
-    
-    useEffect(() => {        
-        axios.defaults.baseURL  = Config.REST_URL;
-        axios.defaults.headers.common['Authorization'] = authHeader();
+    let isAuthenticated = useIsAuthenticated();
+
+    useEffect(() => {
+        const id = axios.interceptors.request.use((config: any) => {
+            if (isAuthenticated()) {
+                config.headers["Authorization"] = authHeader();
+            }          
+            return config;
+        });
+
+        return () => axios.interceptors.request.eject(id);
+    }, [authHeader, isAuthenticated]);
+
+    useEffect(() => {
+        axios.defaults.baseURL = Config.REST_URL;
         axios.defaults.headers.common['Content-Type'] = "application/json";
-    }, [authHeader]);
+    }, []);
 
     return <React.Fragment></React.Fragment>
 }

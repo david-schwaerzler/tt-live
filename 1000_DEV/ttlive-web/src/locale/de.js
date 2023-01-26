@@ -210,7 +210,12 @@ const deDe = {
             "RegisterView.errorEmailValidation": "Email ist im falschen Format",
             "RegisterView.registeredTitle": "Registrierung Erfolgreich",
             "RegisterView.registeredText": "Dein Account wurde erfolgreich erstellt.\nDu kannst dich jetzt über den Login anmelden.",
-            "RegisterView.toLogin": "Zum Login"
+            "RegisterView.toLogin": "Zum Login",
+
+            "CookieBanner.title": "Diese Seite verwendet Cookies",
+            "CookieBanner.content": "Cookies werden verwendet, um Statistiken über den Zugriff und die  Nutzung der Seite zu erheben.",
+            "CookieBanner.accept": "Erlauben",
+            "CookieBanner.decline": "Ablehnen",
         }
     }
 }
