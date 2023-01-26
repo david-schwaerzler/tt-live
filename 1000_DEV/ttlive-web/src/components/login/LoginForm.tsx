@@ -2,11 +2,11 @@ import { Box, Button, Stack, TextField } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
-import { postLogin } from "../../rest/api/AccountApi";
-import { Account, RequestLogin } from "../../rest/data/Account";
+import { Account, LoginResponse, RequestLogin } from "../../rest/data/Account";
 import ErrorMessage from "../utils/ErrorMessage";
 import LoadingButton from "../utils/LoadingButton";
 import { useSignIn } from 'react-auth-kit'
+import { postLogin } from "../../rest/api/LoginApi";
 
 export interface LoginFormProps {
     showRegister?: boolean;
@@ -83,14 +83,17 @@ const LoginForm = ({ onLogin, showRegister = true }: LoginFormProps) => {
                     updateError(errorMsgs, LoginErrors.GENERAL, t("LoginForm.errorNotAuthenticated"));
                     break;
                 case "SUCCESS":
-                    if (response.data.token == null) {
+                    let data : LoginResponse = response.data;
+                    if (data.token == null) {
                         console.error(`Login success but no token was provided.`);
                         updateError(errorMsgs, LoginErrors.GENERAL, t("LoginForm.errorPost"));
                     } else {
                         if (signIn(
                             {
-                                token: response.data.token,
-                                expiresIn: 1,
+                                token: data.token,
+                                expiresIn: data.tokenValidity / 60,
+                                refreshToken: data.refreshToken,
+                                refreshTokenExpireIn: data.refreshTokenValidity / 60,
                                 tokenType: "Bearer",
                                 authState: response.data.account
                             })) {

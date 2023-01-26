@@ -14,6 +14,7 @@ public class AccountDto {
 	private long id;
 	private String username;
 	private String email;
+	private String role;
 	private boolean isAuthenticated;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
@@ -24,6 +25,7 @@ public class AccountDto {
 			this.id = bo.getId();
 			this.username = bo.getUsername();
 			this.email = bo.getEmail();
+			this.role = bo.getRole();
 			this.isAuthenticated = bo.isAuthenticated();
 			this.createdAt = bo.getCreatedAt();
 			this.modifiedAt = bo.getModifiedAt();

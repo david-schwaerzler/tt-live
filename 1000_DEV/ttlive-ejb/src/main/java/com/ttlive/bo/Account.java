@@ -17,6 +17,7 @@ public class Account {
 	private String username;
 	private String password;
 	private String email;
+	private String role;
 	private boolean isAuthenticated;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
@@ -27,6 +28,7 @@ public class Account {
 			this.id = entity.getId();
 			this.username = entity.getUsername();
 			this.password = entity.getPassword();
+			this.role = entity.getRole();
 			this.email = entity.getEmail();
 			this.isAuthenticated = entity.isAuthenticated();
 			this.createdAt = entity.getCreatedAt();

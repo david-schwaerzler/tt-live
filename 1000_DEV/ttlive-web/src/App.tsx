@@ -15,6 +15,7 @@ import RegisterView from './views/RegisterView';
 import { AuthProvider } from 'react-auth-kit';
 import PrivateRoute from './components/utils/PrivateRoute';
 import AuthUtil from './components/utils/AuthUtil';
+import { tokenRefreshApi } from './rest/api/LoginApi';
 ;
 
 function App() {
@@ -92,7 +93,8 @@ function App() {
                             authType={'cookie'}
                             authName={'_auth'}
                             cookieDomain={window.location.hostname}
-                            cookieSecure={window.location.protocol === "https:"}>
+                            cookieSecure={window.location.protocol === "https:"}
+                            refresh={tokenRefreshApi}>
 
                             <AuthUtil />
 

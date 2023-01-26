@@ -40,8 +40,8 @@ const AccountSetting = ({ match, editorCode }: AccountSettingProps) => {
                     <Trans i18nKey={"AccountSetting.confirm.text"} t={t} />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setShowDialog(false)}>Cancel</Button>
-                    <Button onClick={() => onConnect()}>Verknüpfen</Button>
+                    <Button onClick={() => setShowDialog(false)}>{t("AccountSetting.confirm.cancel")}</Button>
+                    <Button onClick={() => onConnect()}>{t("AccountSetting.confirm.connect")}</Button>
                 </DialogActions>
 
             </Dialog>

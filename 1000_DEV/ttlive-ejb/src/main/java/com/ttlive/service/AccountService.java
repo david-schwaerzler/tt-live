@@ -29,6 +29,13 @@ public class AccountService {
 	
 	@EJB
 	private MatchEventObserver eventObserver;
+	
+	public Account findByName(String username) {
+		AccountEntity entity = accountDao.findByName(username);
+		if(entity == null)
+			return null;
+		return getDefault(entity);		
+	}
 
 	public LoginResponse login(String username, String password) {
 		AccountEntity entity = accountDao.findByName(username);

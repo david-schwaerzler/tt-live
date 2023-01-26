@@ -6,8 +6,8 @@ import React, { useCallback, useState } from "react";
 import { useIsAuthenticated, useSignIn, useSignOut } from "react-auth-kit";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import { postLogin } from "../../rest/api/AccountApi";
-import { RequestLogin } from "../../rest/data/Account";
+import { postLogin } from "../../rest/api/LoginApi";
+import { LoginResponse, RequestLogin } from "../../rest/data/Account";
 import LoadingButton from "../utils/LoadingButton";
 import { spacingNormal } from "../utils/StyleVars";
 import { LoginErrors } from "./LoginForm";
@@ -107,14 +107,17 @@ const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
                     redirectError(LoginErrors.GENERAL, "LoginForm.errorNotAuthenticated");
                     break;
                 case "SUCCESS":
-                    if (response.data.token == null) {
+                    let data : LoginResponse = response.data
+                    if (data.token == null) {
                         console.error(`Login success but no token was provided.`);
                         redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
                     } else {
                         if (signIn(
                             {
-                                token: response.data.token,
-                                expiresIn: 1,
+                                token: data.token,
+                                expiresIn: data.tokenValidity / 60,
+                                refreshToken: data.refreshToken,
+                                refreshTokenExpireIn: data.refreshTokenValidity / 60,
                                 tokenType: "Bearer",
                                 authState: response.data.account
                             }) === false) {

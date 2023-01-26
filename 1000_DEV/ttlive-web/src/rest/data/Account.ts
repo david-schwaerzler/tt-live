@@ -4,6 +4,7 @@ export interface Account {
 	id: number;
 	username: string;
 	password: string;
+	role: string;
 	email: string;
 	isAuthenticated: boolean;
 	createdAt: string;
@@ -23,7 +24,14 @@ export interface RequestLogin {
 }
 
 export interface LoginResponse {
-	token: string | null,
 	status: "USERNAME_INVALID" | "PASSWORD_INVALID" | "NOT_AUTHENTICATED" | "SUCCESS";
 	account: Account;
+	token: string | null;
+	tokenValidity: number;
+	refreshToken: string;
+	refreshTokenValidity: number;
+}
+
+export interface RequestRefreshToken {
+	refreshToken: string;
 }

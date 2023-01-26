@@ -8,6 +8,7 @@ import javax.mail.internet.InternetAddress;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -21,14 +22,13 @@ import com.ttlive.bo.LoginResponse;
 import com.ttlive.bo.request.RequestAccount;
 import com.ttlive.dto.AccountDto;
 import com.ttlive.dto.LoginResponseDto;
-import com.ttlive.dto.request.RequestLoginDto;
 import com.ttlive.dto.request.RequestAccountDto;
+import com.ttlive.dto.request.RequestLoginDto;
+import com.ttlive.dto.request.RequestRefreshTokenDto;
 import com.ttlive.rest.JwtFactory;
 import com.ttlive.service.AccountService;
 import com.ttlive.service.AccountService.LoginStatus;
 import com.ttlive.utils.BadRestRequestException;
-
-import net.minidev.json.JSONObject;
 
 @Stateless
 @Produces(MediaType.APPLICATION_JSON)
@@ -42,7 +42,8 @@ public class LoginReceiver {
 	@Context
 	private SecurityContext context;
 
-	private JwtFactory jwtFactory = new JwtFactory();
+	@EJB
+	private JwtFactory jwtFactory;
 
 	@POST
 	@Path("register")
@@ -85,14 +86,17 @@ public class LoginReceiver {
 		LoginResponseDto loginResponseDto;
 		if (loginResponse.getStatus() != LoginStatus.SUCCESS) {
 			loginResponseDto = LoginResponseDto.builder() //
-					.status(loginResponse.getStatus().toString()) //
-					.token(null) //
+					.status(loginResponse.getStatus()) //
 					.build();
 		} else {
-			String token = jwtFactory.createUserJwt(dto.getUsername());
+			String token = jwtFactory.createAuthJwt(loginResponse.getAccount());
+			String refreshToken = jwtFactory.createRefreshJwt(loginResponse.getAccount());
 			loginResponseDto = LoginResponseDto.builder() //
-					.status(loginResponse.getStatus().toString()) //
+					.status(loginResponse.getStatus()) //
 					.token(token) //
+					.tokenValidity(JwtFactory.AUTH_TOKEN_VALIDITY) //
+					.refreshToken(refreshToken) //
+					.refreshTokenValidity(JwtFactory.REFRESH_TOKEN_VALIDITY) //
 					.account(AccountDto.builder().bo(loginResponse.getAccount()).build()) //
 					.build();
 		}
@@ -111,19 +115,37 @@ public class LoginReceiver {
 		return Response.ok(isTaken).build();
 	}
 
-	@POST
-	@Path("/renew")
-	public Response renewToken() throws Exception {
+	@PUT
+	@Path("/")
+	public Response renewToken(RequestRefreshTokenDto requestDto) throws Exception {
 
 		Principal principal = context.getUserPrincipal();
-		if (principal == null)
-			throw new BadRestRequestException("token",
+		if (principal == null || principal.getName().equals("") == true)
+			throw new BadRestRequestException("bearer-token",
 					"Principal coudn't be determined for the request. Make sure to use the Authentifikation Bearer Header");
-
-		String token = jwtFactory.createUserJwt(principal.getName());
-		JSONObject object = new JSONObject();
-		object.put("token", token);
-		return Response.ok(object).build();
+		
+		Account account = service.findByName(principal.getName());
+		if(account == null)
+			throw new BadRestRequestException("bearer-token",
+					"Invalid Bearer Token. User with the username='" + principal.getName() + "' doesn't exist.");
+		
+		if(requestDto.getRefreshToken() == null || requestDto.getRefreshToken().equals("") == true)
+			throw new BadRestRequestException("refreshToken",
+					"No 'refreshToken' has been provided or is empty");
+		
+		if(jwtFactory.validateToken(requestDto.getRefreshToken(), true) == false)
+			throw new BadRestRequestException("refreshToken", "Provided 'refreshToken' is invalid or expired.");
+		
+		LoginResponseDto loginResponseDto = LoginResponseDto.builder() //
+				.status(LoginStatus.SUCCESS) //
+				.token(jwtFactory.createAuthJwt(account)) //
+				.tokenValidity(JwtFactory.AUTH_TOKEN_VALIDITY) //
+				.refreshToken(requestDto.getRefreshToken()) //
+				.refreshTokenValidity(JwtFactory.REFRESH_TOKEN_VALIDITY) //
+				.account(AccountDto.builder().bo(account).build()) //
+				.build();
+		
+		return Response.ok(loginResponseDto).build();
 	}
 
 	private boolean validateEmail(String email) {

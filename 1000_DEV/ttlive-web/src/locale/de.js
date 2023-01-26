@@ -80,7 +80,7 @@ const deDe = {
             "SummaryState.startDate": "Spielbeginn:",
 
             "LoginState.description": "Melde dich an um das Spiel mit deinem Account zu verknüpfen. "
-                + "Nicht verknüpfte Spiele...",                
+                + "Nicht verknüpfte Spiele...",
             "LoginState.deleted": "werden nach <strong>48h gelöscht</strong>.",
             "LoginState.notSearchable": "sind nicht öffentlich und tauchen <strong>nicht in der Spielsuche auf</strong>.",
 
@@ -139,11 +139,13 @@ const deDe = {
 
             "AccountSetting.title": "Account Verknüpfen",
             "AccountSetting.notConnected": "Match nicht verknüpft",
+            "AccountSetting.confirm": "Mit diesem Account Verknüpfen",
             "AccountSetting.putError": "Es ist ein Fehler aufgetreten. Bitte versuchen sie es später erneut",
             "AccountSetting.confirm.title": "Wirklich Verknüpfen?",
             "AccountSetting.confirm.text": "Diese Aktion ist <strong>unumkehrbar</strong>. "
                 + "Ein Match kann nur mit <strong>einem</strong> Account verknüpft werden.",
-            "AccountSetting.confirm": "Mit diesem Account Verknüpfen",
+            "AccountSetting.confirm.connect": "Verknüpfen",
+            "AccountSetting.confirm.cancel": "Abbrechen",
 
             "DeleteMatchSetting.title": "Match Löschen",
             "DeleteMatchSetting.deletable": "Gebe <strong>löschen</strong> ein, um das Spiel zu löschen.\nDiese Aktion ist unumkehrbar.",
