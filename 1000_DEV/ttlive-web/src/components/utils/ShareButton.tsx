@@ -1,7 +1,16 @@
 import ShareIcon from '@mui/icons-material/Share';
-import { ClickAwayListener, IconButton, styled, Tooltip } from '@mui/material';
+
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { ClickAwayListener, IconButton, Menu, MenuItem, Popover, styled, Tooltip, useTheme } from '@mui/material';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Box, Stack } from '@mui/system';
+import {
+    FacebookIcon,
+    FacebookShareButton,
+    WhatsappShareButton,
+    WhatsappIcon
+} from "react-share";
 
 
 export interface ShareButtonProps {
@@ -21,38 +30,80 @@ const StyledButton = styled(IconButton)(({ theme }) => ({
     },
 
     ":hover": {
-        background: theme.palette.primary.main,
         opacity: 0.5
     }
 }));
 
 const ShareButton = ({ matchId }: ShareButtonProps) => {
 
-    const [open, setOpen] = useState(false);
+    const [showTooltip, setShowTooltip] = useState(false);
     const [t] = useTranslation();
+    const [anchor, setAnchor] = useState<null | HTMLElement>(null);
+    const theme = useTheme();
 
     return (
-        <ClickAwayListener onClickAway={() => setOpen(false)}>
-            <Tooltip
-                disableFocusListener
-                disableHoverListener
-                open={open}
-                onClose={() => setOpen(false)}
-                title={t("ShareButton.copyLink")}
-                placement="top"
+        <React.Fragment>
+            <ClickAwayListener onClickAway={() => { setAnchor(null) }}>
+                <Tooltip
+                    disableFocusListener
+                    disableHoverListener
+                    open={showTooltip}
+                    onClose={() => setShowTooltip(false)}
+                    title={t("ShareButton.copyLink")}
+                    placement="left"
+                >
+                    <StyledButton onClick={e => setAnchor(e.currentTarget)} sx={{ background: anchor == null ? "primary" : "inherit" }}>
+                        <ShareIcon />
+                    </StyledButton>
+                </Tooltip>
+            </ClickAwayListener>
 
-            >
-                <StyledButton onClick={onClick} >
-                    <ShareIcon />
-                </StyledButton>
-            </Tooltip>
-        </ClickAwayListener>
+            <Popover
+                id="share-menu"
+                open={anchor != null}
+                anchorEl={anchor}
+                onClose={() => setAnchor(null)}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+                transformOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+                sx={{ mt: theme.spacing(-1) }}
+                PaperProps={{ sx: { background: "unset", boxShadow: "unset" } }}>
+                <Stack gap={1}>
+                    <IconButton sx={{ backgroundColor: theme => theme.palette.primary.main }} onClick={onClick}>
+                        <ContentCopyIcon />
+                    </IconButton>
+
+
+                    <FacebookShareButton url={`www.tt-live.net/#/live?id=${matchId}`} hashtag='TT-Live' >
+                        <FacebookIcon style={{ color: theme.palette.primary.main, borderRadius: "50%", height: "40px", width: "40px" }} />
+                    </FacebookShareButton>
+
+                    <WhatsappShareButton url={`www.tt-live.net/#/live?id=${matchId}`} >
+                        <WhatsappIcon style={{ color: theme.palette.primary.main, borderRadius: "50%", height: "40px", width: "40px" }} />
+                    </WhatsappShareButton>
+                </Stack>
+
+
+            </Popover >
+
+        </React.Fragment >
     );
 
     function onClick() {
+        // this happens when neither localhost or https is used
+        if (navigator.clipboard == null) {
+            return;
+        }
+
         navigator.clipboard.writeText(`www.tt-live.net/#/live?id=${matchId}`)
-        setOpen(true);
-        setTimeout(() => setOpen(false), 2000)
+        setShowTooltip(true);
+        setAnchor(null)
+        setTimeout(() => setShowTooltip(false), 2000)
     }
 }
 
