@@ -77,7 +77,7 @@ const ChatDrawer = ({ match, expanded, isEditor, messages, badgeCounter, onExpan
                 open={expanded}
                 onClose={() => { }}
                 variant={isBig ? "permanent" : "persistent"}
-                PaperProps={{ sx: { transition: "height ease-in 0.1s", bottom: 0, height: { xs: "50vh", md: expanded ? "70vh" : "30vh" }, position: "fixed", top: "auto", width: { xs: "auto", md: "25em" }, right: 0, }, elevation: 5 }}
+                PaperProps={{ sx: { transition: "height ease-in 0.1s", bottom: 0, height: { xs: "50vh", md: expanded ? "50vh" : "10vh" }, position: "fixed", top: "auto", width: { xs: "auto", md: "25em" }, right: 0, }, elevation: 5 }}
                 ModalProps={{ keepMounted: true }}
             >
 

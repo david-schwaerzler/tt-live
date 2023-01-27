@@ -14,8 +14,8 @@ const CookieBanner = () => {
         if (consent == null)
             return;
 
-        if (consent === "true") 
-            setShow(false)        
+        if (consent === "true")
+            setShow(false)
     }, []);
 
     if (show === false)
@@ -23,13 +23,13 @@ const CookieBanner = () => {
 
     return (
         <Box sx={{ position: "fixed", bottom: 0, width: "100%" }}>
-            <Card sx={{ mb: 0, background: "#424242"}} variant="outlined" >
+            <Card sx={{ mb: 0, background: "#424242" }} variant="outlined" >
                 <CardContent>
                     <Typography variant="h5" mb={2}>{t("CookieBanner.title")}</Typography>
-                    <Stack direction={{xs: "column", md: "row"}} gap={2}>
-                        <Typography flexGrow={1}>{t("CookieBanner.content")}</Typography>
+                    <Typography flexGrow={1}>{t("CookieBanner.content")}</Typography>
+                    <Stack direction={{ xs: "column", md: "row" }} gap={2} mt={2} >
                         <Button onClick={() => setConsent(true)} color="primary" variant="contained">{t("CookieBanner.accept")}</Button>
-                        <Button onClick={() => setConsent(false)}  variant="outlined">{t("CookieBanner.decline")}</Button>
+                        <Button onClick={() => setConsent(false)} variant="outlined">{t("CookieBanner.decline")}</Button>
                     </Stack>
                 </CardContent>
             </Card>

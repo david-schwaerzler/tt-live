@@ -137,7 +137,7 @@ const LiveView = () => {
                 />
             }
             {/* This is needed so that the share button will not hide some stuff*/}
-            <Box height="50px" width="100%" />
+            <Box height="100px" width="100%" />
         </Box>
 
     );

@@ -101,6 +101,8 @@ const deDe = {
 
             "MatchStateLabel.live": "Live",
             "MatchStateLabel.yesterday": "Gestern",
+            "MatchStateLabel.finished": "Beendet",
+            "MatchStateLabel.soon": "Bald",
 
             "MatchCard.linkGame": "zum Spiel",
 

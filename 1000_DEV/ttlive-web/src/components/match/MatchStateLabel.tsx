@@ -32,6 +32,18 @@ const MatchStateLabel = ({ sx, state, variant = "normal", startDate }: MatchStat
             setOpacity(0.5);
         }
 
+
+        if (startDate == null) {
+            switch (state) {
+                case "FINISHED":
+                    setText(t("MatchStateLabel.finished"))
+                    return;
+                case "NOT_STARTED":
+                    setText(t("MatchStateLabel.soon"))
+                    return;
+            }
+        }
+
         let matchDate: Dayjs = dayjs(startDate);
         let today: Dayjs = dayjs();
         let yesterday = today.subtract(1, "days");
@@ -69,7 +81,7 @@ const MatchStateLabel = ({ sx, state, variant = "normal", startDate }: MatchStat
                             borderRadius: "50%",
                             display: "inline-block"
                         }} />
-                        <Box>&nbsp;</Box>
+                    <Box>&nbsp;</Box>
                 </React.Fragment>
             }
             <Typography component="div" >
