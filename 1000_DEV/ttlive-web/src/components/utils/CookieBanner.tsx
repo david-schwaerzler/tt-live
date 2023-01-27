@@ -1,25 +1,39 @@
+import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import { Button, Card, CardContent, Typography } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+function isMatomoConsent() {
+    if (Symbol.iterator in window._paq) {
+        for (let entry of window._paq)
+            if (entry[0] === "setConsentGiven")
+                return true;
+    }
+    return false;
+}
+
 const CookieBanner = () => {
 
+    const matomo = useMatomo();
     const [t] = useTranslation();
-
     const [show, setShow] = useState(true);
+
     useEffect(() => {
         let consent = localStorage.getItem("cookie-consent")
 
         if (consent == null)
             return;
 
-        if (consent === "true")
+        if (consent === "true") {
+            if (isMatomoConsent() === false)
+                matomo.pushInstruction("setConsentGiven", true);
             setShow(false)
-    }, []);
-
+        }
+    }, [matomo]);
     if (show === false)
         return <></>;
+
 
     return (
         <Box sx={{ position: "fixed", bottom: 0, width: "100%" }}>
@@ -37,10 +51,11 @@ const CookieBanner = () => {
     );
 
     function setConsent(consent: boolean) {
-        if (consent === true) {
+        if (consent === true) {            
+            if (isMatomoConsent() === false)
+                matomo.pushInstruction("setConsentGiven", true);
             localStorage.setItem("cookie-consent", "true");
         }
-
         setShow(false);
     }
 }

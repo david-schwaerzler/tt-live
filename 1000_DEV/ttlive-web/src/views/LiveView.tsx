@@ -12,6 +12,7 @@ import MatchScore from "../components/match/MatchScore";
 import MatchSettings from "../components/match/settings/MatchSettings";
 import ShareButton from "../components/utils/ShareButton";
 import { spacingNormal } from "../components/utils/StyleVars";
+import { useTrackPage } from "../components/utils/TrackerProvider";
 import WebHookUtil from "../components/utils/WebHookUtil";
 import { fetchChatMessages } from "../rest/api/ChatApi";
 import { fetchMatch } from "../rest/api/MatchApi";
@@ -33,6 +34,8 @@ const LiveView = () => {
     const context = useContext(AppContext)
     const [t] = useTranslation();
     const [searchParams] = useSearchParams();
+
+    useTrackPage("Live", "/live", match?.id == null ? -1 : match?.id);
 
     const swipeHanlder = useSwipeable({
         onSwipedRight: () => setActiveTab(activeTab - 1 < 0 ? 0 : activeTab - 1),

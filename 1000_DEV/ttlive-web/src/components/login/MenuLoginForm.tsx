@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import { AccountCircle } from "@mui/icons-material";
 import { Button, IconButton, Menu, Stack, TextField } from "@mui/material";
 import { Box } from "@mui/system";
@@ -73,6 +74,7 @@ const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
     const signIn = useSignIn();
     const signOut = useSignOut();
     const isAuthenticated = useIsAuthenticated();
+    const {trackEvent} = useMatomo();
 
     const onLogin = useCallback(async () => {
 
@@ -124,6 +126,7 @@ const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
                             console.error(`Error login in. Error from react auth kit`);
                             redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
                         }
+                        trackEvent({category: "login", action: "login"})
                     }
                     break;
                 default:
@@ -137,7 +140,7 @@ const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
         setLoading(false);
         setPassword("");
         setLoginAnchor(null);
-    }, [navigate, password, signIn, username]);
+    }, [navigate, password, signIn, username, trackEvent]);
 
     return (
         <Box sx={{ pl: padding }}>

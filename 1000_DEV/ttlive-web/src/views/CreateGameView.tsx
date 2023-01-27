@@ -1,3 +1,4 @@
+import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Divider, MobileStepper, Step, StepLabel, Stepper } from "@mui/material";
 import { Box, Stack } from "@mui/system";
@@ -35,6 +36,7 @@ function setValidate(validate: ((matchStateObject: MatchStateObject) => boolean)
 const CreateGameView = (props: CreateGameViewProps) => {
 
     const context = useContext(AppContext);
+    const {trackEvent} = useMatomo();
 
     const [currentStep, setCurrentStep] = useState(Steps.REGION);
     const [matchStateObject, setMatchStateObject] = useState<MatchStateObject>({
@@ -245,6 +247,7 @@ const CreateGameView = (props: CreateGameViewProps) => {
         if (response.data != null) {
             context.setMatchId(response.data.id);
             context.setEditorCode(response.data.id, response.data.editorCode);
+            trackEvent({action: "created", category: "match"})
             navigate("/live");
         } else {
             setErrorDialogOpen(true);

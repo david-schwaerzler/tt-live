@@ -3,6 +3,7 @@ import { Box, Container } from "@mui/system";
 import { Trans, useTranslation } from "react-i18next";
 import { Link } from "react-router-dom"
 import ContactForm from "../components/contact/ContactForm";
+import { useTrackPage } from "../components/utils/TrackerProvider";
 
 export interface HomeViewProps {
 
@@ -10,6 +11,8 @@ export interface HomeViewProps {
 
 export function HomeView(props: HomeViewProps) {
     const [t] = useTranslation()
+    useTrackPage("Home", "/home");
+
 
     return (
         <Container sx={{ width: "100%", mt: 4 }}>

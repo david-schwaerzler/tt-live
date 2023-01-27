@@ -1,10 +1,10 @@
 import ShareIcon from '@mui/icons-material/Share';
 
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { ClickAwayListener, IconButton, Menu, MenuItem, Popover, styled, Tooltip, useTheme } from '@mui/material';
+import { ClickAwayListener, IconButton, Popover, styled, Tooltip, useTheme } from '@mui/material';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, Stack } from '@mui/system';
+import { Stack } from '@mui/system';
 import {
     FacebookIcon,
     FacebookShareButton,

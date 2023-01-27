@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 
 export function useBackDialogHandler(show: boolean, setShow: (show: boolean) => void) {
 

@@ -1,3 +1,4 @@
+import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import { Button, Card, CardContent, Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useCallback, useState } from "react";
@@ -30,6 +31,7 @@ const RegisterView = () => {
     const [isLoading, setLoading] = useState<boolean>(false);
     const [isRegistered, setRegistered] = useState<boolean>(false);
     const [t] = useTranslation();
+    const {trackEvent} = useMatomo();
 
     const updateError = useCallback((errorMsgs: Array<string>, index: number, msg: string) => {
         let copy = [...errorMsgs];
@@ -163,6 +165,7 @@ const RegisterView = () => {
         let response = await postAccount(requestAccount);
         if (response.data != null) {
             setRegistered(true);
+            trackEvent({category: "login", action: "register"})
         } else {
             updateError(errorMsgs, Errors.GENERAL, t("RegisterView.errorPost"));
         }

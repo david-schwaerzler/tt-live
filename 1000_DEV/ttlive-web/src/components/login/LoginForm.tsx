@@ -7,6 +7,7 @@ import ErrorMessage from "../utils/ErrorMessage";
 import LoadingButton from "../utils/LoadingButton";
 import { useSignIn } from 'react-auth-kit'
 import { postLogin } from "../../rest/api/LoginApi";
+import { useMatomo } from "@jonkoops/matomo-tracker-react";
 
 export interface LoginFormProps {
     showRegister?: boolean;
@@ -29,6 +30,7 @@ const LoginForm = ({ onLogin, showRegister = true }: LoginFormProps) => {
     const location = useLocation();
 
     const [t] = useTranslation();
+    const {trackEvent} = useMatomo()
 
     const updateError = useCallback((errorMsgs: Array<string>, index: number, msg: string) => {
         let copy = [...errorMsgs];
@@ -97,6 +99,7 @@ const LoginForm = ({ onLogin, showRegister = true }: LoginFormProps) => {
                                 tokenType: "Bearer",
                                 authState: response.data.account
                             })) {
+                            trackEvent({category: "login", action: "login"})
                             onLogin(response.data.account);
                         } else {
                             console.error(`Error login in. Error from react auth kit`);
@@ -115,7 +118,7 @@ const LoginForm = ({ onLogin, showRegister = true }: LoginFormProps) => {
         }
         setLoading(false);
         setPassword("");
-    }, [updateError, password, signIn, username, t, onLogin]);
+    }, [updateError, password, signIn, username, t, onLogin, trackEvent]);
 
 
     useEffect(() => {

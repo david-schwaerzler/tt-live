@@ -1,9 +1,10 @@
 import { Typography } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useTrackPage } from "../components/utils/TrackerProvider";
 
 const ImprintView = () => {
-
+    useTrackPage("Imprint", "/imprint");
     const [t] = useTranslation();
     return <React.Fragment>
         <h1>{t("ImprintView.imprint")}</h1>
