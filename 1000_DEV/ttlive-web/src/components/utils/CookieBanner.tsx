@@ -1,7 +1,7 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import { Button, Card, CardContent, Typography } from "@mui/material";
 import { Box, Stack } from "@mui/system";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 function isMatomoConsent() {
@@ -17,20 +17,24 @@ const CookieBanner = () => {
 
     const matomo = useMatomo();
     const [t] = useTranslation();
-    const [show, setShow] = useState(true);
-
-    useEffect(() => {
-        let consent = localStorage.getItem("cookie-consent")
-
+    const [show, setShow] = useState(() => {
+        let consent = sessionStorage.getItem("cookie-consent");
+        if(consent != null && consent === "false"){ // consent will never happen here. only consent===false is stored
+            return false;
+        }
+        
+        consent = localStorage.getItem("cookie-consent")
         if (consent == null)
-            return;
+            return true;
 
         if (consent === "true") {
             if (isMatomoConsent() === false)
                 matomo.pushInstruction("setConsentGiven", true);
             setShow(false)
         }
-    }, [matomo]);
+    });
+
+
     if (show === false)
         return <></>;
 
@@ -38,7 +42,7 @@ const CookieBanner = () => {
     return (
         <Box sx={{ position: "fixed", bottom: 0, width: "100%" }}>
             <Card sx={{ mb: 0, background: "#424242" }} variant="outlined" >
-                <CardContent>
+                <CardContent sx={{whiteSpace: "pre-wrap"}}>
                     <Typography variant="h5" mb={2}>{t("CookieBanner.title")}</Typography>
                     <Typography flexGrow={1}>{t("CookieBanner.content")}</Typography>
                     <Stack direction={{ xs: "column", md: "row" }} gap={2} mt={2} >
@@ -55,6 +59,8 @@ const CookieBanner = () => {
             if (isMatomoConsent() === false)
                 matomo.pushInstruction("setConsentGiven", true);
             localStorage.setItem("cookie-consent", "true");
+        }else{
+            sessionStorage.setItem("cookie-consent", "false");
         }
         setShow(false);
     }

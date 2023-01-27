@@ -215,7 +215,8 @@ const deDe = {
             "RegisterView.toLogin": "Zum Login",
 
             "CookieBanner.title": "Diese Seite verwendet Cookies",
-            "CookieBanner.content": "Cookies werden verwendet, um Statistiken über den Zugriff und die  Nutzung der Seite zu erheben.",
+            "CookieBanner.content": "Cookies ausschließlich werden verwendet, um Statistiken über den Zugriff und die  Nutzung der Seite zu erheben.\n"
+                + "Alle erhobenen Statistiken sind lokal gespeichert und werden nicht an 3te weitergegeben.",
             "CookieBanner.accept": "Erlauben",
             "CookieBanner.decline": "Ablehnen",
         }
