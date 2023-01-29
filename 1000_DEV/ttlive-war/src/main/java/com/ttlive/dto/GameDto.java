@@ -21,10 +21,7 @@ public class GameDto {
 	private int gameNumber;
 	private boolean isDoubles;
 	private List<GameSetDto> sets;
-	private String set2;
-	private String set3;
-	private String set4;
-	private String set5;
+
 	private int homeSets;
 	private int guestSets;
 	private MatchState state;

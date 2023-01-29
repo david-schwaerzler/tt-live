@@ -30,7 +30,7 @@ const CookieBanner = () => {
         if (consent === "true") {
             if (isMatomoConsent() === false)
                 matomo.pushInstruction("setConsentGiven", true);
-            setShow(false)
+            return false;
         }
     });
 

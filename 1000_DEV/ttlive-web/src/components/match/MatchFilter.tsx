@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { Match } from "../../rest/data/Match";
+import {  SimpleMatch } from "../../rest/data/Match";
 import { Autocomplete, Box, Button, Collapse, FormControl, FormControlLabel, IconButton, InputLabel, MenuItem, Radio, Select, TextField, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Stack } from "@mui/system";
@@ -7,8 +7,8 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { AppContext } from "../../AppContext";
 
 export interface MatchFilterProps {
-    matches: Array<Match>;
-    onFilter: (filteredMatched: Array<Match>) => void;
+    simpleMatches: Array<SimpleMatch>;
+    onFilter: (filteredMatched: Array<SimpleMatch>) => void;
 }
 
 const MATCH_FILTER_SETTING_KEY = "matchFilter";
@@ -23,7 +23,7 @@ interface MatchFilters {
     expanded: boolean
 }
 
-const MatchFilter = ({ matches, onFilter }: MatchFilterProps) => {
+const MatchFilter = ({ simpleMatches, onFilter }: MatchFilterProps) => {
 
     const [regions, setRegions] = useState<Array<string>>([]);
     const [leagues, setLeagues] = useState<Array<string>>([]);
@@ -57,11 +57,11 @@ const MatchFilter = ({ matches, onFilter }: MatchFilterProps) => {
         let leagues: Array<string> = [];
         let regions: Array<string> = [];
 
-        matches.forEach(m => {
-            if (clubs.includes(m.homeTeam.club) === false)
-                clubs.push(m.homeTeam.club);
-            if (clubs.includes(m.guestTeam.club) === false)
-                clubs.push(m.guestTeam.club);
+        simpleMatches.forEach(m => {
+            if (clubs.includes(m.homeClub) === false)
+                clubs.push(m.homeClub);
+            if (clubs.includes(m.guestClub) === false)
+                clubs.push(m.guestClub);
             if (leagues.includes(m.league.name) === false)
                 leagues.push(m.league.name);
             if (regions.includes(m.league.region) === false) {
@@ -71,10 +71,10 @@ const MatchFilter = ({ matches, onFilter }: MatchFilterProps) => {
             setClubs(clubs);
             setRegions(regions);
         });
-    }, [matches])
+    }, [simpleMatches])
 
     useEffect(() => {
-        let filtered = [...matches];
+        let filtered = [...simpleMatches];
 
         // will be set to true if at least one filter has been applied
         let someFiltered = false;
@@ -88,7 +88,7 @@ const MatchFilter = ({ matches, onFilter }: MatchFilterProps) => {
             someFiltered = true;
         }
         if (filter.club != null){
-            filtered = filtered.filter(m => m.homeTeam.club === filter.club || m.guestTeam.club === filter.club)
+            filtered = filtered.filter(m => m.homeClub === filter.club || m.guestClub === filter.club)
             someFiltered = true;
         }
         if (filter.contest !== ""){
@@ -111,7 +111,7 @@ const MatchFilter = ({ matches, onFilter }: MatchFilterProps) => {
         setIconColored(someFiltered);
 
         onFilter(filtered);
-    }, [matches, filter, onFilter])
+    }, [simpleMatches, filter, onFilter])
 
     return (
         <Box>

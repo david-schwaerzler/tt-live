@@ -9,11 +9,23 @@ export interface Game {
     sets: Array<GameSet>;
     homeSets: number;
     guestSets: number;
-    state: "NOT_STARTED" | "LIVE" | "FINISHED"
+    state: "NOT_STARTED" | "LIVE" | "FINISHED";
     modifiedAt: string;
 
     homePlayer: Player;
     guestPlayer: Player;
     homeDoubles: Doubles;
     guestDoubles: Doubles;
+}
+
+export interface SimpleGame {
+    gameNumber: number;
+    homeSets: number;
+    guestSets: number;
+    doubles: boolean;
+    homePlayer1: string;
+    homePlayer2?: string;
+    guestPlayer1: string;
+    guestPlayer2?: string;
+    state: "NOT_STARTED" | "LIVE" | "FINISHED";
 }

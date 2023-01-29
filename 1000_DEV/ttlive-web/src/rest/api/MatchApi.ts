@@ -1,10 +1,11 @@
 import axios from "axios";
-import { Match, RequestMatch, sortMatch } from "../data/Match";
+import { Match, RequestMatch, SimpleMatch, sortMatch, sortSimpleMatch } from "../data/Match";
 import { RequestLineup } from "../data/RequestLineup";
 import { ApiResponse, returnData, returnError } from "./ApiResponse";
 
 type MatchResponse = ApiResponse<Match>;
 type MatchesReponse = ApiResponse<Array<Match>>;
+type SimpleMatchesReponse = ApiResponse<Array<SimpleMatch>>;
 
 export async function postMatch(requestMatch: RequestMatch): Promise<MatchResponse> {
     try {
@@ -34,6 +35,25 @@ export async function fetchMatches(): Promise<MatchesReponse> {
         matches.sort((a, b) => a.startDate === b.startDate ? 0 : a.startDate < b.startDate ? 1 : -1);
         matches = matches.map(m => sortMatch(m));
         return returnData(matches);
+
+    } catch (error) {
+        console.log(`Error fetching matches on Server: ${error}`)
+        return returnError(`${error}`);
+    }
+}
+
+export async function fetchSimpleMatches(): Promise<SimpleMatchesReponse> {
+    try {
+        let response = await axios.get(`/simple_match`);
+        if (response.status !== 200) {
+            console.log(`Error fetching simple matches from the Server: ${response.status}`)
+            return returnError(response.status.toString());
+        }
+
+        let simpleMatches: Array<SimpleMatch> = response.data;
+        simpleMatches.sort((a, b) => a.startDate === b.startDate ? 0 : a.startDate < b.startDate ? 1 : -1);
+        simpleMatches = simpleMatches.map(m => sortSimpleMatch(m));
+        return returnData(simpleMatches);
 
     } catch (error) {
         console.log(`Error fetching matches on Server: ${error}`)

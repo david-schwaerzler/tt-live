@@ -111,9 +111,9 @@ const LiveView = () => {
 
             {editorCode != null && isLineupComplete === false &&
                 <Alert sx={{ mb: 1, alignItems: "center" }} severity="warning" elevation={1} action={
-                    <Button sx={{mt: "2px"}} onClick={() => setActiveTab(0)} >{t("LiveView.fix")}</Button>
+                    <Button sx={{ mt: "2px" }} onClick={() => setActiveTab(0)} >{t("LiveView.fix")}</Button>
                 }>
-                    <AlertTitle sx={{mb: 0}}>{t("LiveView.missingLineup")}</AlertTitle>
+                    <AlertTitle sx={{ mb: 0 }}>{t("LiveView.missingLineup")}</AlertTitle>
                 </Alert>
             }
 
@@ -166,7 +166,14 @@ const LiveView = () => {
                 {match == null ? <Skeleton sx={{ height: { xs: "212px", sm: "200px" } }} variant="rectangular" />
                     : <React.Fragment><Card>
                         <CardContent>
-                            <MatchScore match={match} />
+                            <MatchScore
+                                homeClub={match.homeTeam.club}
+                                guestClub={match.guestTeam.club}
+                                homeNumber={match.homeTeam.number}
+                                guestNumber={match.guestTeam.number}
+                                homeTeamScore={match.homeTeamScore}
+                                guestTeamScore={match.guestTeamScore}
+                            />
                         </CardContent>
                     </Card>
 

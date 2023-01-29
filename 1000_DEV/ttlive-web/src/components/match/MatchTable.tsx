@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { fetchMatches } from "../../rest/api/MatchApi";
-import { Match } from "../../rest/data/Match";
+import { fetchSimpleMatches } from "../../rest/api/MatchApi";
+import { SimpleMatch } from "../../rest/data/Match";
 import { Stack, SxProps } from "@mui/system";
 import { spacingNormal } from "../utils/StyleVars";
 import MatchCard from "./MatchCard";
@@ -15,13 +15,13 @@ export interface MatchTableProps {
 const MatchTable = ({ sx, fetchDelay = 0 }: MatchTableProps) => {
 
     const [t] = useTranslation();
-    const [matches, setMatches] = useState<Array<Match> | null>(null);
-    const [filteredMatches, setFilteredMatches] = useState<Array<Match>>([]);
+    const [simpleMatches, setSimpleMatches] = useState<Array<SimpleMatch> | null>(null);
+    const [filteredMatches, setFilteredMatches] = useState<Array<SimpleMatch>>([]);
     useEffect(() => {
         async function fetch() {
-            let response = await fetchMatches();
+            let response = await fetchSimpleMatches();
             if (response.data != null) {
-                setMatches(response.data);
+                setSimpleMatches(response.data);
             } else {
                 // don't display any error yet 
             }
@@ -43,21 +43,21 @@ const MatchTable = ({ sx, fetchDelay = 0 }: MatchTableProps) => {
 
     }, [fetchDelay, t]);
 
-    const onFilter = useCallback((filtered: Array<Match>) => {
+    const onFilter = useCallback((filtered: Array<SimpleMatch>) => {
         setFilteredMatches(filtered);
     }, [setFilteredMatches]);
 
     return (
         <Stack sx={{ gap: spacingNormal }}>
-            {matches == null
+            {simpleMatches == null
                 ? <React.Fragment>
-                    <MatchCard match={null} />
-                    <MatchCard match={null} />
-                    <MatchCard match={null} />
+                    <MatchCard simpleMatch={null} variant="simple" />
+                    <MatchCard simpleMatch={null} variant="simple" />
+                    <MatchCard simpleMatch={null} variant="simple" />
                 </React.Fragment>
                 : <React.Fragment>
-                    <MatchFilter matches={matches} onFilter={onFilter} />
-                    {filteredMatches.map(match => <MatchCard key={match.id} match={match} />)}
+                    <MatchFilter simpleMatches={simpleMatches} onFilter={onFilter} />
+                    {filteredMatches.map(match => <MatchCard key={match.id} simpleMatch={match} variant="simple" />)}
                 </React.Fragment>
             }
         </Stack>

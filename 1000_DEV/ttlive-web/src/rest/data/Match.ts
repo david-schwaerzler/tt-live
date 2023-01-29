@@ -1,5 +1,5 @@
 import { Doubles } from "./Doubles";
-import { Game } from "./Game";
+import { Game, SimpleGame } from "./Game";
 import { GameStyle } from "./GameStyle";
 import { League, RequestLeague } from "./League";
 import { Player } from "./Player";
@@ -40,6 +40,22 @@ export interface Match {
     guestDoubles: Array<Doubles>;
 }
 
+export interface SimpleMatch {
+    id: number;
+    homeTeamScore : number;
+	guestTeamScore : number;
+	state : "NOT_STARTED" | "LIVE" | "FINISHED";
+	startDate : string;
+	
+	league : League;
+    homeClub : string;
+	homeNumber : number;
+	guestClub : string;
+	guestNumber : number;	
+
+    simpleGames: Array<SimpleGame>;    
+}
+
 export function sortMatch(match: Match){
     match.games.sort((a, b) => a.gameNumber - b.gameNumber);
     match.games.forEach(g => g.sets.sort((a, b) => a.number - b.number));
@@ -47,5 +63,10 @@ export function sortMatch(match: Match){
     match.guestPlayers.sort((a, b) => a.position - b.position);
     match.homeDoubles.sort((a, b) => a.position - b.position);
     match.guestDoubles.sort((a, b) => a.position - b.position);
+    return match;
+}
+
+export function sortSimpleMatch(match: SimpleMatch){
+    match.simpleGames.sort((a, b) => a.gameNumber - b.gameNumber);
     return match;
 }
