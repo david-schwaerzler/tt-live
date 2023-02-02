@@ -1,21 +1,24 @@
 
-import { HomeView } from './views/HomeView';
 import { Routes, Route, Navigate, HashRouter } from "react-router-dom";
-import CreateGameView from './views/CreateGameView';
-import React, { useMemo, useState } from 'react';
+import React, { Suspense, useMemo, useState } from 'react';
 import MainView from './containers/MainView';
-import LoginView from './views/LoginView';
-import LiveView from './views/LiveView';
 import { AppContext, AppContextProps, EditorCode } from './AppContext';
-import LiveSearch from './views/LiveSearchView';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import ImprintView from './views/ImprintView';
-import RegisterView from './views/RegisterView';
 import { AuthProvider } from 'react-auth-kit';
 import PrivateRoute from './components/utils/PrivateRoute';
 import AuthUtil from './components/utils/AuthUtil';
 import { tokenRefreshApi } from './rest/api/LoginApi';
+
+const HomeView = React.lazy(() => import("./views/HomeView"));
+const LoginView = React.lazy(() => import("./views/LoginView"));
+const CreateGameView = React.lazy(() => import("./views/CreateGameView"));
+const RegisterView = React.lazy(() => import("./views/RegisterView"));
+const LiveSearch = React.lazy(() => import("./views/LiveSearchView"));
+const LiveView = React.lazy(() => import("./views/LiveView"));
+const ImprintView = React.lazy(() => import("./views/ImprintView"));
+
+
 
 function App() {
 
@@ -50,7 +53,7 @@ function App() {
         setMatchId: id => { localStorage.setItem("matchId", id == null ? "" : id.toString()); setMatchId(id) },
         setEditorCode: (matchId, newCode) => {
             let copy = { ...editorCode };
-            if(newCode === "")
+            if (newCode === "")
                 delete copy[matchId];
             else
                 copy[matchId] = newCode;
@@ -106,7 +109,7 @@ function App() {
                                     <Route path="live_search" element={renderContent(<LiveSearch />)} />
                                     <Route path="live" element={renderContent(<LiveView />)} />
                                     <Route path="imprint" element={renderContent(<ImprintView />)} />
-                                    
+
                                     <Route path="*" element={<Navigate to="/" />} />
                                 </Routes>
                             </HashRouter>
@@ -118,11 +121,12 @@ function App() {
         </React.StrictMode >
     );
 
+    // TODO Add fallback gif or image
     function renderContent(content: React.ReactNode, secured: boolean = false): JSX.Element {
         if (secured)
-            return <PrivateRoute login='/login'><MainView content={content} /></PrivateRoute>
+            return <Suspense fallback={<h1>Loading</h1>}><PrivateRoute login='/login'><MainView content={content} /></PrivateRoute></Suspense>
 
-        return <MainView content={content} />
+        return <Suspense fallback={<h1>Loading</h1>}><MainView content={content} /></Suspense>
     }
 
 }

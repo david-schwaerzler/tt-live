@@ -1,5 +1,6 @@
 import {  Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import React from "react";
 import { Game } from "../../rest/data/Game";
 import { GameSet } from "../../rest/data/GameSet";
 import GameSetResultButton from "./GameSetResultButton";
@@ -99,4 +100,4 @@ const GameSetScore = ({ set, isHome, isEditMode, inputType, editorCode, game, ma
     }
 }
 
-export default GameSetScore;
+export default React.memo(GameSetScore);

@@ -1,13 +1,13 @@
 import { Stack } from "@mui/material";
 import React from "react";
 
-import { Match } from "../../../rest/data/Match";
-import AccountSetting from "./AccountSetting";
-import CodeSetting from "./CodeSetting";
-import DeleteMatchSetting from "./DeleteMatchSetting";
-import LineupSetting from "./LineupSetting";
-import MatchInfoEdit from "./MatchInfoEdit";
-import NoCodeSetting from "./NoCodeSetting";
+import { Match } from "../../rest/data/Match";
+import AccountSetting from "../match/settings/AccountSetting";
+import CodeSetting from "../match/settings/CodeSetting";
+import DeleteMatchSetting from "../match/settings/DeleteMatchSetting";
+import LineupSetting from "../match/settings/LineupSetting";
+import MatchInfoEdit from "../match/settings/MatchInfoEdit";
+import NoCodeSetting from "../match/settings/NoCodeSetting";
 
 export interface MatchSettingsProps {
     match: Match | null;
@@ -15,7 +15,7 @@ export interface MatchSettingsProps {
     onMatchChanged: (updated: Match) => void;
 }
 
-const MatchSettings = ({ match, editorCode, onMatchChanged }: MatchSettingsProps) => {
+const MatchSettingsTab = ({ match, editorCode, onMatchChanged }: MatchSettingsProps) => {
 
 
     if (editorCode == null)
@@ -37,4 +37,4 @@ const MatchSettings = ({ match, editorCode, onMatchChanged }: MatchSettingsProps
     );
 }
 
-export default MatchSettings;
+export default React.memo(MatchSettingsTab);

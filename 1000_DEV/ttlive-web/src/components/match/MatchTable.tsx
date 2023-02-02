@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { fetchSimpleMatches } from "../../rest/api/MatchApi";
 import { SimpleMatch } from "../../rest/data/Match";
 import { Stack, SxProps } from "@mui/system";
 import { spacingNormal } from "../utils/StyleVars";
 import MatchCard from "./MatchCard";
-import MatchFilter from "./MatchFilter";
+import MatchFilter, { filterMatches, MatchFilterOptions } from "./MatchFilter";
 
 export interface MatchTableProps {
     sx?: SxProps;
@@ -16,7 +16,8 @@ const MatchTable = ({ sx, fetchDelay = 0 }: MatchTableProps) => {
 
     const [t] = useTranslation();
     const [simpleMatches, setSimpleMatches] = useState<Array<SimpleMatch> | null>(null);
-    const [filteredMatches, setFilteredMatches] = useState<Array<SimpleMatch>>([]);
+    const [filterOptions, setFilterOptions] = useState<MatchFilterOptions | null>(null);
+
     useEffect(() => {
         async function fetch() {
             let response = await fetchSimpleMatches();
@@ -43,9 +44,12 @@ const MatchTable = ({ sx, fetchDelay = 0 }: MatchTableProps) => {
 
     }, [fetchDelay, t]);
 
-    const onFilter = useCallback((filtered: Array<SimpleMatch>) => {
-        setFilteredMatches(filtered);
-    }, [setFilteredMatches]);
+    const filtered = useMemo(() => {
+        if(simpleMatches == null || filterOptions == null)
+            return []
+        return  filterMatches(filterOptions, simpleMatches);        
+    }, [simpleMatches, filterOptions])
+    
 
     return (
         <Stack sx={{ gap: spacingNormal }}>
@@ -56,8 +60,8 @@ const MatchTable = ({ sx, fetchDelay = 0 }: MatchTableProps) => {
                     <MatchCard simpleMatch={null} variant="simple" />
                 </React.Fragment>
                 : <React.Fragment>
-                    <MatchFilter simpleMatches={simpleMatches} onFilter={onFilter} />
-                    {filteredMatches.map(match => <MatchCard key={match.id} simpleMatch={match} variant="simple" />)}
+                    <MatchFilter simpleMatches={simpleMatches} onFilterChanged={fo => setFilterOptions(fo)} someFiltered={filtered.length !== simpleMatches.length}/>
+                    {filtered.map(match => <MatchCard key={match.id} simpleMatch={match} variant="simple" />)}
                 </React.Fragment>
             }
         </Stack>

@@ -1,15 +1,11 @@
-import { Alert, AlertTitle, Button, Card, CardContent, Skeleton, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Alert, AlertTitle, Button, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useSearchParams } from "react-router-dom";
 import { useSwipeable } from "react-swipeable";
 import { AppContext } from "../AppContext";
 import ChatDrawer from "../components/chat/ChatDrawer";
-import GameLiveScore from "../components/game/GameLiveScore";
-import GameReport from "../components/game/GameReport";
-import MatchScore from "../components/match/MatchScore";
-import MatchSettings from "../components/match/settings/MatchSettings";
 import ShareButton from "../components/utils/ShareButton";
 import { spacingNormal } from "../components/utils/StyleVars";
 import { useTrackPage } from "../components/utils/TrackerProvider";
@@ -20,6 +16,11 @@ import { ChatMessage, sortChatMessages } from "../rest/data/ChatMessage";
 import { Game } from "../rest/data/Game";
 import { Match, sortMatch } from "../rest/data/Match";
 import { Player } from "../rest/data/Player";
+
+const MatchSettingsTab = React.lazy(() => import("../components/live/MatchSettingsTab"));
+const LiveTab = React.lazy(() => import("../components/live/LiveTab"));
+const GameReportTab = React.lazy(() => import("../components/live/GameReportTab"));
+
 
 const LiveView = () => {
     const [match, setMatch] = useState<Match | null>(null);
@@ -100,12 +101,53 @@ const LiveView = () => {
         }
     }, [match?.homePlayers, match?.guestPlayers, match?.homeDoubles, match?.guestDoubles]);
 
+    const onChatDrawerExpanded = useCallback((expanded: boolean) => {
+        setChatDrawerExpanded(expanded);
+        if (!expanded)
+            setBadgeCounter(0);
+    }, []);
+
+    const onGameUpdated = useCallback((game: Game) => {
+        if (match == null)
+            return;
+
+        let matchCopy = { ...match }; // create a copy of the match        
+        let gamesCopy = [...matchCopy.games];
+
+        gamesCopy = gamesCopy.filter(g => g.id !== game.id); // remove the given game from the array
+        gamesCopy.push(game); // add it to the copy
+        matchCopy.games = gamesCopy // add the copies together
+        sortMatch(matchCopy);
+
+        setReversedGames([...gamesCopy].reverse());
+        setMatch(matchCopy);
+    }, [match]);
+
+    const onMatchUpdated = useCallback((match: Match) => {
+        sortMatch(match)
+        setMatch(match);
+        setReversedGames([...match.games].reverse());
+    }, []);
+
+    const onAddChatMessage = useCallback((message: ChatMessage) => {
+        if (!chatDrawerExpanded)
+            setBadgeCounter(badgeCounter + 1);
+
+        setMessages(messages => {
+            let copy = [...messages];
+            copy.push(message);
+            sortChatMessages(copy);
+            return copy;
+        });
+    }, [chatDrawerExpanded, badgeCounter]);
+
+
     if (context.matchId == null)
         return renderNoMatch();
 
     return (
         <Box {...swipeHanlder} sx={{ ...(chatDrawerExpanded && { height: { xs: "calc(50vh - 64px)", md: "100%" } }), overflow: "auto", m: -2, p: 2 }}>
-            {match != null && <WebHookUtil match={match} onGameUpdated={game => onGameUpdated(game, match)} onMatchUpdated={onMatchUpdated} onAddChatMessage={onAddChatMessage} />}
+            {match != null && <WebHookUtil match={match} onGameUpdated={onGameUpdated} onMatchUpdated={onMatchUpdated} onAddChatMessage={onAddChatMessage} />}
             {/* This is a quick fix to allow swiping on on outside the component */}
             <Box {...swipeHanlder} className="test" position="absolute" top={"10%"} bottom={0} left={0} right={0} zIndex={-10} />
 
@@ -123,9 +165,18 @@ const LiveView = () => {
                 <Tab label={t("LiveView.lineup")} />
             </Tabs>
 
-            <Box display={activeTab === 0 ? "block" : "none"}>{renderSettings()}</Box>
-            <Box display={activeTab === 1 ? "block" : "none"}>{renderLive()}</Box>
-            <Box display={activeTab === 2 ? "block" : "none"}>{renderLinup()}</Box>
+            <React.Suspense>
+                {activeTab === 0 && <Box><MatchSettingsTab match={match} editorCode={editorCode} onMatchChanged={onMatchUpdated} /></Box>}
+                {activeTab === 1 && <Box><LiveTab match={match} games={reversedGames} /></Box>}
+                {activeTab === 2 && <Box><GameReportTab
+                    games={match != null ? match.games : null}
+                    editorCode={editorCode}
+                    matchState={match != null ? match.state : "NOT_STARTED"}
+                    messages={messages}
+                    matchId={match ? match.id : null}
+                    onUpdate={onGameUpdated}
+                /></Box>}
+            </React.Suspense>
 
             {match && <ShareButton matchId={match.id} />}
 
@@ -145,81 +196,6 @@ const LiveView = () => {
 
     );
 
-    function renderSettings() {
-        return <MatchSettings match={match} editorCode={editorCode} onMatchChanged={match => setMatch(match)} />;
-    }
-
-    function renderLinup() {
-        return match && <GameReport
-            games={match != null ? match.games : null}
-            editorCode={editorCode}
-            matchState={match != null ? match.state : "NOT_STARTED"}
-            messages={messages}
-            matchId={match ? match.id : null}
-            onUpdate={game => onGameUpdated(game, match)}
-        />;
-    }
-
-    function renderLive() {
-        return (
-            <Stack direction="column" gap={spacingNormal}>
-                {match == null ? <Skeleton sx={{ height: { xs: "212px", sm: "200px" } }} variant="rectangular" />
-                    : <React.Fragment><Card>
-                        <CardContent>
-                            <MatchScore
-                                homeClub={match.homeTeam.club}
-                                guestClub={match.guestTeam.club}
-                                homeNumber={match.homeTeam.number}
-                                guestNumber={match.guestTeam.number}
-                                homeTeamScore={match.homeTeamScore}
-                                guestTeamScore={match.guestTeamScore}
-                            />
-                        </CardContent>
-                    </Card>
-
-                        {match.state === "NOT_STARTED" && renderNotStarted(match)}
-                    </React.Fragment>
-                }
-
-
-                {reversedGames.filter(game => game.state === "LIVE").map(game =>
-                    <GameLiveScore key={game.id} game={game} />
-                )}
-                {reversedGames.filter(game => game.state === "FINISHED").map(game =>
-                    <GameLiveScore key={game.id} game={game} />
-
-                )}
-            </Stack>
-        );
-    }
-
-    function renderNotStarted(match: Match) {
-
-        let matchDate = new Date(match.startDate);
-        let today = new Date();
-
-
-        let startDate: string | null = null;
-        if (today.toDateString !== matchDate.toDateString) {
-            startDate = matchDate.toLocaleDateString();
-        }
-
-        let startTime = matchDate.toLocaleTimeString();
-
-        return (
-            <Card>
-                <CardContent>
-                    <Stack sx={{ textAlign: "center", gap: 2 }}>
-                        <Typography variant="h3">{t("LiveView.notStartedText")}</Typography>
-
-                        {startDate && <Typography variant="h2">{startDate}</Typography>}
-                        {startTime && <Typography variant="h2" color="primary" fontWeight="bold">{startTime}</Typography>}
-                    </Stack>
-                </CardContent>
-            </Card>
-        );
-    }
-
     function renderNoMatch() {
         return (
             <Box >
@@ -235,43 +211,6 @@ const LiveView = () => {
                 </Box>
             </Box>
         )
-    }
-
-    function onChatDrawerExpanded(expanded: boolean) {
-        setChatDrawerExpanded(expanded);
-        if (!expanded)
-            setBadgeCounter(0);
-    }
-
-    function onGameUpdated(game: Game, match: Match) {
-        if (match == null)
-            return;
-
-        let matchCopy = { ...match }; // create a copy of the match        
-        let gamesCopy = [...matchCopy.games];
-
-        gamesCopy = gamesCopy.filter(g => g.id !== game.id); // remove the given game from the array
-        gamesCopy.push(game); // add it to the copy
-        matchCopy.games = gamesCopy // add the copies together
-        sortMatch(matchCopy);
-
-        setReversedGames([...gamesCopy].reverse());
-        setMatch(matchCopy);
-    }
-
-    function onMatchUpdated(match: Match) {
-        sortMatch(match)
-        setMatch(match);
-        setReversedGames([...match.games].reverse());
-    }
-
-    function onAddChatMessage(message: ChatMessage) {
-        let copy = [...messages];
-        copy.push(message);
-        sortChatMessages(copy);
-        setMessages(copy);
-        if (!chatDrawerExpanded)
-            setBadgeCounter(badgeCounter + 1);
     }
 }
 

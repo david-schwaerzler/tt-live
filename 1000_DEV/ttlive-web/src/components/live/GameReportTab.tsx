@@ -1,13 +1,13 @@
 import { Box, Card, CardContent, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Skeleton, styled, Switch, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AppContext } from "../../AppContext";
 import { ChatMessage } from "../../rest/data/ChatMessage";
 import { Game } from "../../rest/data/Game";
 import { GameSet } from "../../rest/data/GameSet";
-import GameLiveEdit from "./GameLiveEdit";
-import GameSetScore, { InputType } from "./GameSetScore";
+import GameLiveEdit from "../game/GameLiveEdit";
+import GameSetScore, { InputType } from "../game/GameSetScore";
 
 export interface GameReportProps {
     games: Array<Game> | null;
@@ -30,17 +30,17 @@ const PlayerCell = styled(Grid)({
 type GameType = "DOUBLES" | "SINGLES" | "FINISH_DOUBLES";
 type GameScoreType = Game & { homeTeamScore: number, guestTeamScore: number, type: GameType };
 
-const GAME_INPUT_TYPE_SETTING = "gameInputType"
+const GAME_INPUT_TYPE_SETTING = "gameInputType";
+const GAME_EDIT_SETTING = "gameEdit";
 
 // TODO fix Render performance Issues
-const GameReport = ({ games, editorCode, matchState, messages, matchId, onUpdate }: GameReportProps) => {
+const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpdate }: GameReportProps) => {
 
     const [t] = useTranslation();
     const context = useContext(AppContext);
 
 
     const [gameScores, setGameScores] = useState<Array<GameScoreType> | null>(null);
-    const [isEditMode, setEditMode] = useState<boolean>(false);
     const [hasFinishingDoubles, setFinishDoubles] = useState(false);
 
     const [inputType, setInputType] = useState(() => {
@@ -54,6 +54,14 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId, onUpdate
 
         return inputType;
     });
+    const [isEditMode, setEditMode] = useState<boolean>(() => {
+        let isEditModeStr = context.getSetting(GAME_EDIT_SETTING);
+        if (isEditModeStr == null)
+            return false;
+        return isEditModeStr === "true";
+    });
+
+    const onError = useCallback((msg: string) => console.log("todo error"), []);
 
     useEffect(() => {
         if (games == null) {
@@ -235,7 +243,7 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId, onUpdate
                         control={
                             <Switch
                                 checked={isEditMode}
-                                onChange={() => setEditMode(!isEditMode)}
+                                onChange={onEditModeChanged}
                                 name="loading"
                                 color="primary"
                             />
@@ -248,9 +256,15 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId, onUpdate
         )
     }
 
+
+    function onEditModeChanged() {
+        setEditMode((isEditMode) => !isEditMode)
+        context.setSetting(GAME_EDIT_SETTING, !isEditMode ? "true" : "false", true)
+    }
+
     function onInputTypeChanged(e: SelectChangeEvent) {
-        context.setSetting(GAME_INPUT_TYPE_SETTING, e.target.value, true);
         setInputType(parseInt(e.target.value as string));
+        context.setSetting(GAME_INPUT_TYPE_SETTING, inputType.toString(), true)
     }
 
     function renderGameSetScore(set: GameSet, isHome: boolean, game: Game) {
@@ -261,7 +275,7 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId, onUpdate
             isEditMode={isEditMode}
             editorCode={editorCode}
             game={game}
-            onError={(msg) => console.log("todo error")}
+            onError={onError}
             matchState={matchState}
             onUpdate={onUpdate}
         />
@@ -276,4 +290,4 @@ const GameReport = ({ games, editorCode, matchState, messages, matchId, onUpdate
     }
 }
 
-export default GameReport;
+export default React.memo(GameReportTab);

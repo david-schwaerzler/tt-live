@@ -106,4 +106,4 @@ const ChatDrawer = ({ match, expanded, isEditor, messages, badgeCounter, onExpan
     }
 }
 
-export default ChatDrawer;
+export default React.memo(ChatDrawer);

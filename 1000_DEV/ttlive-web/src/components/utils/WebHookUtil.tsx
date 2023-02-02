@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useRef } from "react";
 import { ChatMessage } from "../../rest/data/ChatMessage";
 import { Game } from "../../rest/data/Game";
@@ -75,4 +76,4 @@ const WebHookUtil = ({ match, onGameUpdated, onMatchUpdated, onAddChatMessage }:
     return (<div></div>);
 }
 
-export default WebHookUtil;
+export default React.memo(WebHookUtil);

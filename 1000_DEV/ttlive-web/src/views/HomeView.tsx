@@ -9,7 +9,7 @@ export interface HomeViewProps {
 
 }
 
-export function HomeView(props: HomeViewProps) {
+function HomeView(props: HomeViewProps) {
     const [t] = useTranslation()
     useTrackPage("Home", "/home");
 
@@ -55,3 +55,5 @@ export function HomeView(props: HomeViewProps) {
 
     );
 }
+
+export default HomeView;
