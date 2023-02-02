@@ -1,6 +1,6 @@
 import { Alert, AlertTitle, Button, Tab, Tabs, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useSearchParams } from "react-router-dom";
 import { useSwipeable } from "react-swipeable";
@@ -35,8 +35,11 @@ const LiveView = () => {
     const context = useContext(AppContext)
     const [t] = useTranslation();
     const [searchParams] = useSearchParams();
+    const visitedPages = useRef<Set<number>>(new Set());
 
     useTrackPage("Live", "/live", match?.id == null ? -1 : match?.id);
+
+    useEffect(() => { visitedPages.current.add(activeTab) }, [activeTab]);
 
     const swipeHanlder = useSwipeable({
         onSwipedRight: () => setActiveTab(activeTab - 1 < 0 ? 0 : activeTab - 1),
@@ -166,9 +169,9 @@ const LiveView = () => {
             </Tabs>
 
             <React.Suspense>
-                {activeTab === 0 && <Box><MatchSettingsTab match={match} editorCode={editorCode} onMatchChanged={onMatchUpdated} /></Box>}
-                {activeTab === 1 && <Box><LiveTab match={match} games={reversedGames} /></Box>}
-                {activeTab === 2 && <Box><GameReportTab
+                {(visitedPages.current.has(0) || activeTab === 0) && <Box display={activeTab === 0 ? "block" : "none"}><MatchSettingsTab match={match} editorCode={editorCode} onMatchChanged={onMatchUpdated} /></Box>}
+                {(visitedPages.current.has(1) || activeTab === 1) && <Box display={activeTab === 1 ? "block" : "none"}><LiveTab match={match} games={reversedGames} /></Box>}
+                {(visitedPages.current.has(2) || activeTab === 2) && <Box display={activeTab === 2 ? "block" : "none"}><GameReportTab
                     games={match != null ? match.games : null}
                     editorCode={editorCode}
                     matchState={match != null ? match.state : "NOT_STARTED"}
