@@ -1,6 +1,6 @@
 import { Card, CardContent, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Skeleton, Switch, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useDeferredValue, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AppContext } from "../../AppContext";
 import { ChatMessage } from "../../rest/data/ChatMessage";
@@ -53,6 +53,8 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
             return false;
         return isEditModeStr === "true";
     });
+
+    const  deferredIsEditMode = useDeferredValue(isEditMode);
 
     const onError = useCallback((msg: string) => console.log("todo error"), []);
 
@@ -145,7 +147,7 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
                 guestTeamScore={game.guestTeamScore}
                 homeTeamScore={game.homeTeamScore}
                 inputType={inputType}
-                isEditMode={isEditMode}
+                isEditMode={deferredIsEditMode}
                 matchId={matchId}
                 matchState={matchState}
                 messages={messages}
