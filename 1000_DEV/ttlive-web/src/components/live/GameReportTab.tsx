@@ -1,13 +1,12 @@
-import { Box, Card, CardContent, Divider, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Skeleton, styled, Switch, Typography } from "@mui/material";
+import { Card, CardContent, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Skeleton, Switch, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AppContext } from "../../AppContext";
 import { ChatMessage } from "../../rest/data/ChatMessage";
 import { Game } from "../../rest/data/Game";
-import { GameSet } from "../../rest/data/GameSet";
-import GameLiveEdit from "../game/GameLiveEdit";
-import GameSetScore, { InputType } from "../game/GameSetScore";
+import { InputType } from "../game/GameSetScore";
+import GameReportGameRow from "./GameReportGameRow";
 
 export interface GameReportProps {
     games: Array<Game> | null;
@@ -19,13 +18,7 @@ export interface GameReportProps {
     onUpdate: (game: Game) => void;
 }
 
-const PlayerCell = styled(Grid)({
-    textAlign: "left",
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-    overflow: "hidden",
-    fontSize: "0.9rem"
-})
+
 
 type GameType = "DOUBLES" | "SINGLES" | "FINISH_DOUBLES";
 type GameScoreType = Game & { homeTeamScore: number, guestTeamScore: number, type: GameType };
@@ -112,7 +105,7 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
                     <CardContent>
                         <Typography pb={2} variant="h5" >{t("GameReport.doubles")}</Typography>
                         <Stack gap={3}>
-                            {gameScores.filter(game => game.type === "DOUBLES").map(game => renderDoubles(game))}
+                            {gameScores.filter(game => game.type === "DOUBLES").map(game => renderGame(game))}
                         </Stack>
                     </CardContent>
                 </Card>
@@ -123,7 +116,7 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
                     <CardContent>
                         <Typography pb={2} variant="h5">{t("GameReport.singles")}</Typography>
                         <Stack gap={3}>
-                            {gameScores.filter(game => game.type === "SINGLES").map(game => renderSingles(game))}
+                            {gameScores.filter(game => game.type === "SINGLES").map(game => renderGame(game))}
                         </Stack>
                     </CardContent>
                 </Card>
@@ -134,7 +127,7 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
                     <CardContent>
                         <Typography pb={2} variant="h5">{t("GameReport.lastDouble")}</Typography>
                         <Stack gap={3}>
-                            {gameScores.filter(game => game.type === "FINISH_DOUBLES").map(game => renderDoubles(game))}
+                            {gameScores.filter(game => game.type === "FINISH_DOUBLES").map(game => renderGame(game))}
                         </Stack>
                     </CardContent>
                 </Card>
@@ -142,83 +135,27 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
         </React.Fragment>
     )
 
-    function renderDoubles(game: GameScoreType) {
+    function renderGame(game: GameScoreType) {
 
-        let homeWon = game.state === "FINISHED" && game.homeSets > game.guestSets;
-        let guestWon = game.state === "FINISHED" && game.guestSets > game.homeSets;
         return (
-            <Box key={game.gameNumber} sx={{ display: "flex" }} >
-                <Box sx={{ flexGrow: 1 }}>
-                    <Grid container sx={{ textAlign: "center" }} columns={11}>
-                        <PlayerCell item xs={5} sx={{ fontSize: "0.8rem", fontWeight: homeWon ? 500 : "normal" }}>{renderPlayer(game.homeDoubles.player1)}<br />{renderPlayer(game.homeDoubles.player2)}</PlayerCell>
-                        {game.sets.map(value =>
-                            <Grid key={value.number} sx={{ opacity: isEditMode ? "inherit" : 0.5 }} item xs={1} margin="auto">
-                                {renderGameSetScore(value, true, game)}
-                            </Grid>)
-                        }
-                        <Grid item xs={1} sx={{ fontWeight: "bold", m: "auto" }}>{game.state !== "NOT_STARTED" ? game.homeSets : "-"}</Grid>
-                    </Grid>
-
-                    <Divider />
-
-                    <Grid container sx={{ textAlign: "center" }} columns={11}>
-                        <PlayerCell item xs={5} sx={{ fontSize: "0.8rem", fontWeight: guestWon ? 500 : "normal" }}>{renderPlayer(game.guestDoubles.player1)}<br />{renderPlayer(game.guestDoubles.player2)}</PlayerCell>
-                        {game.sets.map(value =>
-                            <Grid key={value.number} sx={{ opacity: isEditMode ? "inherit" : 0.5 }} item xs={1} margin="auto">
-                                {renderGameSetScore(value, false, game)}
-                            </Grid>
-                        )}
-                        <Grid item xs={1} sx={{ fontWeight: "bold", m: "auto" }}>{game.state !== "NOT_STARTED" ? game.guestSets : "-"}</Grid>
-                    </Grid>
-                </Box>
-                <Stack minWidth="40px" textAlign="right" fontSize="1.1rem" justifyContent="center">
-                    {game.state === "FINISHED" && <i>{game.homeTeamScore}:{game.guestTeamScore}</i>}
-                    {game.state === "LIVE" && <Typography color={theme => theme.palette.primary.main} fontWeight="bold" fontStyle="italic">LIVE</Typography>}
-                    {isEditMode === true && editorCode != null && matchId != null &&
-                        <GameLiveEdit editorCode={editorCode} messages={messages} game={game} matchId={matchId} onUpdate={onUpdate} />
-                    }
-                </Stack>
-            </Box>
+            <GameReportGameRow
+                key={game.gameNumber}
+                editorCode={editorCode}
+                game={game}
+                guestTeamScore={game.guestTeamScore}
+                homeTeamScore={game.homeTeamScore}
+                inputType={inputType}
+                isEditMode={isEditMode}
+                matchId={matchId}
+                matchState={matchState}
+                messages={messages}
+                onError={onError}
+                onUpdate={onUpdate}
+            />
         )
     }
 
-    function renderSingles(game: GameScoreType) {
-        let homeWon = game.state === "FINISHED" && game.homeSets > game.guestSets;
-        let guestWon = game.state === "FINISHED" && game.guestSets > game.homeSets;
 
-        return (
-            <Box key={game.gameNumber} sx={{ display: "flex" }}>
-                <Box sx={{ flexGrow: 1 }}>
-                    <Grid container sx={{ textAlign: "center", mb: "3px" }} columns={11} alignItems="center">
-                        <PlayerCell item xs={5} sx={{ fontWeight: homeWon ? 500 : "normal" }}>{renderPlayer(game.homePlayer.name)}</PlayerCell>
-                        {game.sets.map(value =>
-                            <Grid key={value.number} sx={{ opacity: isEditMode ? "inherit" : 0.5 }} item xs={1} >
-                                {renderGameSetScore(value, true, game)}
-                            </Grid>
-                        )}
-                        <Grid item xs={1} sx={{ fontWeight: "bold" }}>{game.state !== "NOT_STARTED" ? game.homeSets : "-"}</Grid>
-                    </Grid>
-                    <Divider />
-                    <Grid container sx={{ textAlign: "center", mt: "3px" }} columns={11} alignItems="center">
-                        <PlayerCell item xs={5} sx={{ fontWeight: guestWon ? 500 : "normal" }}>{renderPlayer(game.guestPlayer.name)}</PlayerCell>
-                        {game.sets.map(value =>
-                            <Grid key={value.number} sx={{ opacity: isEditMode ? "inherit" : 0.5 }} item xs={1}>
-                                {renderGameSetScore(value, false, game)}
-                            </Grid>
-                        )}
-                        <Grid item xs={1} sx={{ fontWeight: "bold" }}>{game.state !== "NOT_STARTED" ? game.guestSets : "-"}</Grid>
-                    </Grid>
-                </Box>
-                <Stack minWidth="40px" textAlign="right" fontSize="1.1rem" justifyContent="center">
-                    {game.state === "FINISHED" && <i>{game.homeTeamScore}:{game.guestTeamScore}</i>}
-                    {game.state === "LIVE" && <Typography color={theme => theme.palette.primary.main} fontWeight="bold" fontStyle="italic">LIVE</Typography>}
-                    {isEditMode === true && editorCode != null && matchId != null &&
-                        <GameLiveEdit editorCode={editorCode} messages={messages} game={game} matchId={matchId} onUpdate={onUpdate} />
-                    }
-                </Stack>
-            </Box>
-        )
-    }
 
     function renderHeader() {
         return (
@@ -266,28 +203,7 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
         setInputType(parseInt(e.target.value as string));
         context.setSetting(GAME_INPUT_TYPE_SETTING, inputType.toString(), true)
     }
-
-    function renderGameSetScore(set: GameSet, isHome: boolean, game: Game) {
-        return <GameSetScore
-            set={set}
-            isHome={isHome}
-            inputType={inputType}
-            isEditMode={isEditMode}
-            editorCode={editorCode}
-            game={game}
-            onError={onError}
-            matchState={matchState}
-            onUpdate={onUpdate}
-        />
-
-    }
-
-    function renderPlayer(player: string) {
-        if (player === "") {
-            return <i>{t("GameReport.noPlayer")}</i>;
-        }
-        return player;
-    }
 }
+
 
 export default React.memo(GameReportTab);
