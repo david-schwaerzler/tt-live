@@ -55,6 +55,7 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
     });
 
     const  deferredIsEditMode = useDeferredValue(isEditMode);
+    const  deferredInputType = useDeferredValue(inputType);
 
     const onError = useCallback((msg: string) => console.log("todo error"), []);
 
@@ -146,7 +147,7 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
                 game={game}
                 guestTeamScore={game.guestTeamScore}
                 homeTeamScore={game.homeTeamScore}
-                inputType={inputType}
+                inputType={deferredInputType}
                 isEditMode={deferredIsEditMode}
                 matchId={matchId}
                 matchState={matchState}
