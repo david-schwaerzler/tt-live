@@ -63,8 +63,8 @@ public class JwtFactory {
 			Path keystorePath = Paths.get(System.getProperty("jboss.server.config.dir"), "jwt.jks");
 
 			if (Files.exists(keystorePath) == false) {
-				throw new FileNotFoundException(
-						"Keystore file doesn't exist. Use this Command to create it: " + keyStoreCmd);
+				log.severe("Keystore file doesn't exist. Use this Command to create it: " + keyStoreCmd);
+				throw new FileNotFoundException("Keystore file doesn't exist.");
 			}
 
 			KeyStore ks = KeyStore.getInstance("JKS");
@@ -102,8 +102,8 @@ public class JwtFactory {
 	private String createJwt(Account account, boolean isRefreshToken, long tokenValidity) throws Exception {
 
 		if (privateKey == null) {
-			throw new FileNotFoundException(
-					"Keystore file doesn't exist. Use this Command to create it: " + keyStoreCmd);
+			log.severe("Keystore file doesn't exist. Use this Command to create it: " + keyStoreCmd);
+			throw new FileNotFoundException("Keystore file doesn't exist.");
 		}
 
 		JWSSigner signer = new RSASSASigner(privateKey);
@@ -132,8 +132,8 @@ public class JwtFactory {
 		try {
 
 			if (publicKey == null) {
-				throw new FileNotFoundException(
-						"Keystore file doesn't exist. Use this Command to create it: " + keyStoreCmd);
+				log.severe("Keystore file doesn't exist. Use this Command to create it: " + keyStoreCmd);
+				throw new FileNotFoundException("Keystore file doesn't exist.");
 			}
 
 			JWSObject obj = JWSObject.parse(token);

@@ -9,6 +9,8 @@ import { AuthProvider } from 'react-auth-kit';
 import PrivateRoute from './components/utils/PrivateRoute';
 import AuthUtil from './components/utils/AuthUtil';
 import { tokenRefreshApi } from './rest/api/LoginApi';
+import { CircularProgress, Typography } from "@mui/material";
+import { Box } from "@mui/system";
 
 const HomeView = React.lazy(() => import("./views/HomeView"));
 const LoginView = React.lazy(() => import("./views/LoginView"));
@@ -18,7 +20,9 @@ const LiveSearch = React.lazy(() => import("./views/LiveSearchView"));
 const LiveView = React.lazy(() => import("./views/LiveView"));
 const ImprintView = React.lazy(() => import("./views/ImprintView"));
 
-
+function wait(time: number) {
+    return new Promise(resolve => setTimeout(resolve, time))
+}
 
 function App() {
 
@@ -100,6 +104,7 @@ function App() {
 
                             <AuthUtil />
 
+                            <Suspense fallback={<LoadingSpinner />}>
                             <HashRouter>
                                 <Routes>
                                     <Route path="/" element={renderContent(<HomeView />)} />
@@ -113,6 +118,7 @@ function App() {
                                     <Route path="*" element={<Navigate to="/" />} />
                                 </Routes>
                             </HashRouter>
+                            </Suspense>
                         </AuthProvider>
                     </AppContext.Provider>
                 </LocalizationProvider>
@@ -121,14 +127,19 @@ function App() {
         </React.StrictMode >
     );
 
-    // TODO Add fallback gif or image
     function renderContent(content: React.ReactNode, secured: boolean = false): JSX.Element {
         if (secured)
-            return <Suspense fallback={<h1>Loading</h1>}><PrivateRoute login='/login'><MainView content={content} /></PrivateRoute></Suspense>
+            return <PrivateRoute login='/login'><MainView content={content} /></PrivateRoute>
 
-        return <Suspense fallback={<h1>Loading</h1>}><MainView content={content} /></Suspense>
+        return <MainView content={content} />
     }
-
 }
 
+const LoadingSpinner = () => {
+    return (
+        <Box height="100vh" sx={{ backgroundColor: "#121212", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <CircularProgress sx={{ color: "#ef6c00" }} size="60px" />
+        </Box>
+    );
+}
 export default App;

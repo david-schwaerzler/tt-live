@@ -8,6 +8,8 @@ import ChatNameMenu from "./ChatNameMenu";
 import SendIcon from '@mui/icons-material/Send';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Box } from "@mui/system";
+import { useAuthUser, useIsAuthenticated } from "react-auth-kit";
+import { Account } from "../../rest/data/Account";
 
 
 export interface ChatActionProps {
@@ -23,12 +25,13 @@ const ChatAction = ({ matchId, isEditor, onScrollEvent, showAvatar = true }: Cha
 
     const theme = useTheme();
     const isBig = useMediaQuery(theme.breakpoints.up('sm'));
+    const authUser = useAuthUser()
+    const isAuthenticated = useIsAuthenticated();
 
     const [inputValue, setInputValue] = useState<string>("");
     const [isLoading, setLoading] = useState<boolean>(false);
     // anchor to attach the select name dialog
     const [menueAnchor, setMenueAnchor] = useState<HTMLElement | null>(null);
-
 
     const userRef = createRef<HTMLButtonElement>();
     const context = useContext(AppContext);
@@ -38,10 +41,16 @@ const ChatAction = ({ matchId, isEditor, onScrollEvent, showAvatar = true }: Cha
             return;
         }
 
-        let username = context.getSetting(CHAT_USERNAME_SETTING);
-        if (username == null || username === "") {
-            setMenueAnchor(anchor);
-            return;
+        let username = "";
+        let account = authUser() as (Account | null);;
+        if (account != null) {
+            username = account.username;
+        } else {
+            username = context.getSetting(CHAT_USERNAME_SETTING);
+            if (username == null || username === "") {
+                setMenueAnchor(anchor);
+                return;
+            }
         }
 
         let chatMessage: RequestChatMessage = {
@@ -57,7 +66,7 @@ const ChatAction = ({ matchId, isEditor, onScrollEvent, showAvatar = true }: Cha
             setInputValue("");
         }
         setLoading(false)
-    }, [context, inputValue, matchId, isEditor, onScrollEvent]);
+    }, [context, inputValue, matchId, isEditor, onScrollEvent, authUser]);
 
     const keyHandler = useCallback((e: KeyboardEvent) => {
         if (e.code === "Enter" && !e.shiftKey) {
@@ -97,10 +106,14 @@ const ChatAction = ({ matchId, isEditor, onScrollEvent, showAvatar = true }: Cha
                     <Box alignSelf="center" gridRow={1} gridColumn={1}><SendIcon color="primary" sx={{ visibility: isLoading ? "hidden" : "visible", justifySelf: "center" }} /></Box>
                     <Box alignSelf="center" gridRow={1} gridColumn={1}><CircularProgress color="primary" sx={{ visibility: isLoading ? "visible" : "hidden" }} size={24} /></Box>
                 </IconButton>
-                <IconButton onClick={e => setMenueAnchor(e.currentTarget)} sx={{ display: showAvatar ? "inline" : "none" }} ref={userRef} size="small" >
-                    <AccountCircle color="primary" />
-                </IconButton>
-                <ChatNameMenu anchor={menueAnchor} onClose={() => setMenueAnchor(null)} />
+                {isAuthenticated() === false &&
+                    <React.Fragment>
+                        <IconButton onClick={e => setMenueAnchor(e.currentTarget)} sx={{ display: showAvatar ? "inline" : "none" }} ref={userRef} size="small" >
+                            <AccountCircle color="primary" />
+                        </IconButton>
+                        <ChatNameMenu anchor={menueAnchor} onClose={() => setMenueAnchor(null)} />
+                    </React.Fragment>
+                }
             </Stack>
         </React.Fragment >
     );

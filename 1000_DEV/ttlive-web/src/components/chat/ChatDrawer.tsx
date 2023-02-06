@@ -69,7 +69,6 @@ const ChatDrawer = ({ match, expanded, isEditor, messages, badgeCounter, onExpan
                         <GroupIcon />
                     </Badge>
                 </Box>
-
             </Paper>
 
             <Drawer
