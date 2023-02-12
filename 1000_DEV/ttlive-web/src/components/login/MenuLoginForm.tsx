@@ -1,24 +1,110 @@
-import styled from "@emotion/styled";
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
-import { AccountCircle } from "@mui/icons-material";
-import { Button, IconButton, Menu, Stack, TextField } from "@mui/material";
-import { Box } from "@mui/system";
+import { Button, styled, TextField } from "@mui/material";
 import React, { useCallback, useState } from "react";
-import { useIsAuthenticated, useSignIn, useSignOut } from "react-auth-kit";
-import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import { useSignIn } from "react-auth-kit";
+import { useNavigate } from "react-router-dom";
 import { postLogin } from "../../rest/api/LoginApi";
 import { LoginResponse, RequestLogin } from "../../rest/data/Account";
 import LoadingButton from "../utils/LoadingButton";
-import { spacingNormal } from "../utils/StyleVars";
 import { LoginErrors } from "./LoginForm";
 
 export interface MenuLoginFormProps {
-    /* Resposive padding for the Toolbar */
-    padding: any
+    isBig: boolean
 }
 
-const WhiteTextField = styled(TextField)({
+const MenuLoginFormDesktop = React.lazy(() => import("./MenuLoginFormDesktop"));
+const MenuLoginFormMobile = React.lazy(() => import("./MenuLoginFormMobile"));
+
+
+const MenuLoginForm = ({ isBig }: MenuLoginFormProps) => {
+
+    const [username, setUsername] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const navigate = useNavigate();
+    const signIn = useSignIn();
+    const { trackEvent } = useMatomo();
+
+    const onLogin = useCallback(async () => {
+
+        const redirectError = (type: LoginErrors, error: string) => navigate(`/login?error=${error}&username=${username}&type=${type}`);
+
+        if (username === "") {
+            redirectError(LoginErrors.USERNAME, "LoginForm.errorUsernameEmpty");
+            setPassword("");
+            return;
+        }
+        if (password === "") {
+            redirectError(LoginErrors.PASSWORD, "LoginForm.errorPasswordEmpty");
+            setPassword("");
+            return;
+        }
+
+        let requestLogin: RequestLogin = {
+            username: username,
+            password: password
+        };
+
+        let response = await postLogin(requestLogin);
+        if (response.data != null) {
+            switch (response.data.status) {
+                case "USERNAME_INVALID":
+                    redirectError(LoginErrors.USERNAME, "LoginForm.errorWrongUsername");
+                    break;
+                case "PASSWORD_INVALID":
+                    redirectError(LoginErrors.GENERAL, "LoginForm.errorNotAuthenticated");
+                    break;
+                case "SUCCESS":
+                    let data: LoginResponse = response.data
+                    if (data.token == null) {
+                        console.error(`Login success but no token was provided.`);
+                        redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
+                    } else {
+                        if (signIn(
+                            {
+                                token: data.token,
+                                expiresIn: data.tokenValidity / 60,
+                                refreshToken: data.refreshToken,
+                                refreshTokenExpireIn: data.refreshTokenValidity / 60,
+                                tokenType: "Bearer",
+                                authState: response.data.account
+                            }) === false) {
+                            console.error(`Error login in. Error from react auth kit`);
+                            redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
+                        }
+                        trackEvent({ category: "login", action: "login" })
+                    }
+                    break;
+                default:
+                    console.error(`Login returned unknown status. Status=${response.data.status}`);
+                    redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
+                    break;
+            }
+        } else {
+            redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
+        }
+        setPassword("");
+    }, [navigate, password, signIn, username, trackEvent]);
+
+
+    return isBig
+        ? <MenuLoginFormDesktop
+            username={username}
+            password={password}
+            onUsernameChange={setUsername}
+            onPasswordChange={setPassword}
+            onLogin={onLogin} />
+        : <MenuLoginFormMobile
+            username={username}
+            password={password}
+            onUsernameChange={setUsername}
+            onPasswordChange={setPassword}
+            onLogin={onLogin} />
+
+
+}
+
+
+export const WhiteTextField = styled(TextField)({
 
     "& .MuiFormLabel-root": {
         color: "white",
@@ -46,7 +132,7 @@ const WhiteTextField = styled(TextField)({
 });
 
 
-const WhiteButton = styled(Button)({
+export const WhiteButton = styled(Button)({
     color: "white",
     borderColor: "white",
     "&:hover": {
@@ -54,7 +140,7 @@ const WhiteButton = styled(Button)({
     }
 });
 
-const WhiteLoadingButton = styled(LoadingButton)({
+export const WhiteLoadingButton = styled(LoadingButton)({
     color: "white",
     borderColor: "white",
     "&:hover": {
@@ -63,182 +149,4 @@ const WhiteLoadingButton = styled(LoadingButton)({
 });
 
 
-const MenuLoginForm = ({ padding }: MenuLoginFormProps) => {
-
-    const [loginAnchor, setLoginAnchor] = useState<null | HTMLElement>(null);
-    const [t] = useTranslation();
-    const [username, setUsername] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [loading, setLoading] = useState<boolean>(false);
-    const navigate = useNavigate();
-    const signIn = useSignIn();
-    const signOut = useSignOut();
-    const isAuthenticated = useIsAuthenticated();
-    const {trackEvent} = useMatomo();
-
-    const onLogin = useCallback(async () => {
-
-        const redirectError = (type: LoginErrors, error: string) => navigate(`/login?error=${error}&username=${username}&type=${type}`);
-
-        if (username === "") {
-            redirectError(LoginErrors.USERNAME, "LoginForm.errorUsernameEmpty");
-            setLoginAnchor(null);
-            setPassword("");
-            return;
-        }
-        if (password === "") {
-            redirectError(LoginErrors.PASSWORD, "LoginForm.errorPasswordEmpty");
-            setLoginAnchor(null);
-            setPassword("");
-            return;
-        }
-
-        let requestLogin: RequestLogin = {
-            username: username,
-            password: password
-        };
-
-        setLoading(true);
-        let response = await postLogin(requestLogin);
-        if (response.data != null) {
-            switch (response.data.status) {
-                case "USERNAME_INVALID":
-                    redirectError(LoginErrors.USERNAME, "LoginForm.errorWrongUsername");
-                    break;
-                case "PASSWORD_INVALID":
-                    redirectError(LoginErrors.GENERAL, "LoginForm.errorNotAuthenticated");
-                    break;
-                case "SUCCESS":
-                    let data : LoginResponse = response.data
-                    if (data.token == null) {
-                        console.error(`Login success but no token was provided.`);
-                        redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
-                    } else {
-                        if (signIn(
-                            {
-                                token: data.token,
-                                expiresIn: data.tokenValidity / 60,
-                                refreshToken: data.refreshToken,
-                                refreshTokenExpireIn: data.refreshTokenValidity / 60,
-                                tokenType: "Bearer",
-                                authState: response.data.account
-                            }) === false) {
-                            console.error(`Error login in. Error from react auth kit`);
-                            redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
-                        }
-                        trackEvent({category: "login", action: "login"})
-                    }
-                    break;
-                default:
-                    console.error(`Login returned unknown status. Status=${response.data.status}`);
-                    redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
-                    break;
-            }
-        } else {
-            redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
-        }
-        setLoading(false);
-        setPassword("");
-        setLoginAnchor(null);
-    }, [navigate, password, signIn, username, trackEvent]);
-
-    return (
-        <Box sx={{ pl: padding }}>
-            <Box sx={{ display: { xs: "none", md: "flex" }, gap: "1em", flexGrow: 0 }}  >
-                {isAuthenticated() === false ?
-                    <React.Fragment>
-                        <WhiteTextField
-                            size="small"
-                            label={t("LoginForm.username")}
-                            variant="outlined"
-                            onChange={e => setUsername(e.target.value)}
-                            value={username}
-                        />
-                        <WhiteTextField
-                            size="small"
-                            label={t("LoginForm.password")}
-                            variant="outlined"
-                            onChange={e => setPassword(e.target.value)}
-                            value={password}
-                            type="password"
-                        />
-                        <WhiteLoadingButton
-                            loading={loading}
-                            size="small"
-                            variant="outlined"
-                            onClick={onLogin}>
-                            {t("LoginForm.login")}
-                        </WhiteLoadingButton>
-                        <Link to="/register" style={{  textDecoration: "none"}}>
-                            <WhiteButton size="small" sx={{ height: "100%" }} variant="outlined" onClick={() => setLoginAnchor(null)}>
-                                {t("LoginForm.register")}
-                            </WhiteButton>
-                        </Link>
-                    </React.Fragment>
-                    : <WhiteButton size="small" variant="outlined" onClick={onLogout} sx={{ height: "100%", minHeight: "40px" }}>
-                        {t("LoginForm.logout")}
-                    </WhiteButton>}
-            </Box>
-            <Box sx={{ display: { xs: "flex", md: "none" }, flexGrow: 0 }}  >
-                <IconButton onClick={e => setLoginAnchor(e.currentTarget)} sx={{ p: 0, pr: 2 }}>
-                    <AccountCircle sx={{ color: "white" }} />
-                </IconButton>
-            </Box>
-            <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={loginAnchor}
-                anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                }}
-                open={loginAnchor != null}
-                onClose={() => setLoginAnchor(null)}>
-                <Stack direction="column" sx={{ paddingTop: spacingNormal, paddingLeft: spacingNormal, paddingRight: spacingNormal }} spacing={spacingNormal}>
-                    {isAuthenticated() === false ?
-                        <React.Fragment>
-                            <WhiteTextField
-                                size="small"
-                                label={t("LoginForm.username")}
-                                variant="outlined"
-                                onChange={e => setUsername(e.target.value)}
-                                value={username}
-                            />
-                            <WhiteTextField
-                                size="small"
-                                label={t("LoginForm.password")}
-                                variant="outlined"
-                                onChange={e => setPassword(e.target.value)}
-                                value={password}
-                                type="password"
-                            />
-
-                            <Box>
-                                <LoadingButton loading={loading} sx={{ display: "inline-grid" }} size="small" onClick={onLogin}>{t("LoginForm.login")}</LoadingButton>
-                                <Link to="/register" style={{  textDecoration: "none"}}>
-                                    <Button size="small" onClick={() => setLoginAnchor(null)}>{t("LoginForm.register")}</Button>
-                                </Link>
-                            </Box>
-                        </React.Fragment>
-                        : <Button size="small" onClick={onLogout}>{t("LoginForm.logout")}</Button>}
-
-                </Stack>
-            </Menu>
-        </Box >
-    );
-
-    function onLogout() {
-        setLoginAnchor(null)
-        if (signOut() === false) {
-            console.error("Couldn't perform logout for some reason");
-        }
-    }
-}
-
-
-export default MenuLoginForm;
+export default React.memo(MenuLoginForm);

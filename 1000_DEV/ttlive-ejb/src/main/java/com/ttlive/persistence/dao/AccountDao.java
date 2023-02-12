@@ -7,6 +7,7 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 
 import com.ttlive.persistence.entity.AccountEntity;
+import com.ttlive.persistence.entity.MatchEntity;
 import com.ttlive.utils.BaseDao;
 
 @Stateless
@@ -28,5 +29,12 @@ public class AccountDao extends BaseDao<AccountEntity>{
 		}
 		
 		return accounts.get(0);
+	}
+	
+	public List<MatchEntity> findMatches(long accountId) {
+		TypedQuery<MatchEntity> query = em.createNamedQuery("Account.findMatches", MatchEntity.class);
+		query.setParameter("id", accountId);
+		
+		return query.getResultList();
 	}
 }

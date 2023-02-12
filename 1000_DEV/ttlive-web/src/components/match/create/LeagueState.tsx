@@ -44,7 +44,7 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
             let response = await fetch(Config.REST_URL + `/region/${matchStateObject.region.id}/leagues?contest=${matchStateObject.contest}`)
             if (!response.ok) {
                 console.log(`Error fetching leagues. status: "${response.status}"`)
-                updateError(ERROR_GENERAL, t("Common.errorFetch"));
+                updateError(ERROR_GENERAL, t("Common.errorHttp"));
                 return;
             }
             let leagues: Array<League> = await response.json();
@@ -52,7 +52,7 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
 
         } catch (error) {
             console.log(`Error fetching leagues. error: "${error}"`)
-            updateError(ERROR_GENERAL, t("Common.errorFetch"))
+            updateError(ERROR_GENERAL, t("Common.errorHttp"))
         }
     }, [updateError, matchStateObject.region, matchStateObject.contest, t]);
 
@@ -61,14 +61,14 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
             let response = await fetch(Config.REST_URL + "/game_style")
             if (!response.ok) {
                 console.log(`Error fetching gameStyle. status: "${response.status}"`)
-                updateError(ERROR_GENERAL, t("Common.errorFetch"));
+                updateError(ERROR_GENERAL, t("Common.errorHttp"));
                 return;
             }
             let gameStyles: Array<GameStyle> = await response.json();
             setGameStyles(gameStyles);
         } catch (error) {
             console.log(`Error fetching gameStyle. error: "${error}"`)
-            updateError(ERROR_GENERAL, t("Common.errorFetch"))
+            updateError(ERROR_GENERAL, t("Common.errorHttp"))
         }
     }, [updateError, t]);
 

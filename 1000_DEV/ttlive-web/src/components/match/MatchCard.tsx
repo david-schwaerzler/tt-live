@@ -1,17 +1,16 @@
-import { Button, Card, CardActions, CardContent, Collapse, Divider, Skeleton, Stack, Typography } from "@mui/material";
+import { Card, CardActions, CardContent, Collapse, Divider, Skeleton, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Match, SimpleMatch } from "../../rest/data/Match";
 import { spacingNormal, spacingSmall } from "../utils/StyleVars";
 import MatchStateLabel from "./MatchStateLabel";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
-import { AppContext } from "../../AppContext";
+
 import GameScore from "../game/GameScore";
 import MatchScore from "./MatchScore";
 import ExpandButton from "../utils/ExpandButton";
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
+import ToGameButton from "../../modules/common/ToGameButton";
 
 
 export interface MatchCardProps {
@@ -51,25 +50,15 @@ function convertToSimple(match: Match): SimpleMatch {
 const MatchCard = ({ match, simpleMatch, variant }: MatchCardProps) => {
 
     const [expanded, setExpanded] = useState<boolean>(false);
-    const [t] = useTranslation();
-    const navigate = useNavigate();
-    const context = useContext(AppContext);
 
-    const [matchState, setMatchState] = useState<SimpleMatch | null>(() => {
+    const matchState = useMemo(() => {
         if (variant === "simple") {
             return simpleMatch == null ? null : simpleMatch
         } else {
             return match == null ? null : convertToSimple(match);
         }
-    });
 
-    useEffect(() => {
-        if (variant === "simple") {
-            setMatchState(simpleMatch == null ? null : simpleMatch)
-        } else {
-            setMatchState(match == null ? null : convertToSimple(match));
-        }
-    }, [variant, simpleMatch, match])
+    }, [variant, simpleMatch, match]) ;
 
     return (matchState == null
         ? <Box>
@@ -82,19 +71,19 @@ const MatchCard = ({ match, simpleMatch, variant }: MatchCardProps) => {
             <Divider sx={{}} />
             <CardContent >
 
-                <MatchScore 
-                    sx={{ pt: spacingNormal }} 
+                <MatchScore
+                    sx={{ pt: spacingNormal }}
                     homeClub={matchState.homeClub}
                     guestClub={matchState.guestClub}
                     homeNumber={matchState.homeNumber}
                     guestNumber={matchState.guestNumber}
                     homeTeamScore={matchState.homeTeamScore}
-                    guestTeamScore={matchState.guestTeamScore}                    
-                    scoreSize={{ xs: "2rem", md: "3rem" }} 
-                    />
+                    guestTeamScore={matchState.guestTeamScore}
+                    scoreSize={{ xs: "2rem", md: "3rem" }}
+                />
                 <Stack direction={{ xs: "column", md: "column-reverse" }} gap={spacingNormal} sx={{ mt: 2 }}>
                     <Box sx={{ display: "flex", paddingLeft: spacingSmall, paddingRight: spacingSmall, justifyContent: "center" }} >
-                        <Button sx={{ flexGrow: 1, maxWidth: "300px" }} variant="outlined" onClick={() => onLinkGame(matchState)}>{t("MatchCard.linkGame")}</Button>
+                        <ToGameButton sx={{ flexGrow: 1, maxWidth: "300px" }} matchId={matchState.id} />
                     </Box>
 
                     <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -148,11 +137,6 @@ const MatchCard = ({ match, simpleMatch, variant }: MatchCardProps) => {
                 ))}
             </Stack >
         )
-    }
-
-    function onLinkGame(simpleMatch: SimpleMatch) {
-        context.setMatchId(simpleMatch.id);
-        navigate("/live");
     }
 }
 

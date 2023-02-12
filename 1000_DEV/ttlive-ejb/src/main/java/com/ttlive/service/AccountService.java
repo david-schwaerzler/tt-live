@@ -1,11 +1,14 @@
 package com.ttlive.service;
 
+import java.util.List;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import com.ttlive.bo.Account;
 import com.ttlive.bo.GameSet.InvalidGameSetFormat;
 import com.ttlive.bo.LoginResponse;
+import com.ttlive.bo.Match;
 import com.ttlive.bo.request.RequestAccount;
 import com.ttlive.persistence.dao.AccountDao;
 import com.ttlive.persistence.dao.MatchDao;
@@ -98,6 +101,16 @@ public class AccountService {
 		eventObserver.fireMatchEvent(matchService.getDefault(match));
 
 		return getDefault(account);
+	}
+	
+	public List<Match> getMatches(String username) throws BadRestRequestException, InvalidGameSetFormat{
+		AccountEntity account = accountDao.findByName(username);
+		if (account == null)
+			throw new BadRestRequestException("username", "User with the name='" + username + "' doesn't exist");
+
+		List<MatchEntity> matches = accountDao.findMatches(account.getId());
+		return matchService.getDefault(matches);
+		
 	}
 
 	private Account getDefault(AccountEntity account) {

@@ -1,12 +1,15 @@
-import { AppBar, Button, styled, Toolbar, useTheme } from "@mui/material";
+import { AccountCircle } from "@mui/icons-material";
+import { AppBar, Button, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, styled, Toolbar, useMediaQuery, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
-import { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useIsAuthenticated, useSignOut } from "react-auth-kit";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from 'react-router-dom'
 import { AppContext } from "../AppContext";
 import MenuLoginForm from "../components/login/MenuLoginForm";
 import { LogoIcon4 } from "../components/utils/Icons";
-
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import Logout from '@mui/icons-material/Logout';
 
 const HoverButton = styled(Button)(({ theme }) => ({
     color: "white",
@@ -31,7 +34,7 @@ const HoverButton = styled(Button)(({ theme }) => ({
 
 }))
 
-const padding = { xs: 1, sm: 6 };
+const padding = { xs: 1, sm: 5 };
 
 const MenuBar = () => {
 
@@ -39,6 +42,8 @@ const MenuBar = () => {
     const context = useContext(AppContext);
     const location = useLocation();
     const theme = useTheme();
+    const isAuthenticated = useIsAuthenticated();
+    const isBig = useMediaQuery(theme.breakpoints.up('md'));
 
     return (
         <AppBar position="sticky" elevation={2} sx={{ p: 0 }}>
@@ -67,12 +72,116 @@ const MenuBar = () => {
                             </HoverButton>
                         </Link>
                     }
+
+                    {isAuthenticated() && (isBig
+                        ? <MenuBarDesktop />
+                        : <MenuBarMobile />
+                    )}
                 </Box>
 
-                <MenuLoginForm padding={padding} />
+                {isAuthenticated() === false && <MenuLoginForm isBig={isBig} />}
             </Toolbar>
         </AppBar>
     );
+}
+
+const MenuBarMobile = () => {
+
+    const [loginAnchor, setLoginAnchor] = useState<null | HTMLElement>(null);
+    const [t] = useTranslation();
+    const signOut = useSignOut();
+    const location = useLocation();
+
+    useEffect(() => {
+        setLoginAnchor(null);
+        console.log(location.pathname)
+    }, [location.pathname])
+    
+    useEffect(() => {
+        setLoginAnchor(null);
+
+    }, [])
+    return (
+        <React.Fragment>
+            <Box sx={{ mr: 2, flexGrow: 1, display: "flex", justifyContent: "right", alignItems: "center" }}>
+                <IconButton onClick={e => setLoginAnchor(e.currentTarget)} sx={{ p: 0 }}>
+                    <AccountCircle color="primary" />
+                </IconButton>
+            </Box>
+            <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={loginAnchor}
+                anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                }}
+                open={loginAnchor != null}
+                onClose={() => setLoginAnchor(null)}>
+                <Link to="/profile" style={{ textDecoration: 'none', color: "inherit" }} tabIndex={-1} onClick={() => setLoginAnchor(null)}>
+                    <MenuItem >
+                        <ListItemIcon>
+                            <AccountCircle />
+                        </ListItemIcon>
+                        <ListItemText>
+                            {t("MenuBar.myAccount")}
+                        </ListItemText>
+                    </MenuItem>
+                </Link>
+                <Link to="/myGames" style={{ textDecoration: 'none', color: "inherit" }} tabIndex={-1} onClick={() => setLoginAnchor(null)}>
+                    <MenuItem >
+                        <ListItemIcon>
+                            <EmojiEventsIcon />
+                        </ListItemIcon>
+                        <ListItemText>
+                            {t("MenuBar.myGames")}
+                        </ListItemText>
+                    </MenuItem>
+                </Link>
+                <Divider />
+
+                <MenuItem onClick={() => { signOut(); setLoginAnchor(null); }}>
+                    <ListItemIcon>
+                        <Logout />
+                    </ListItemIcon>
+                    <ListItemText>
+                        {t("MenuBar.logout")}
+                    </ListItemText>
+                </MenuItem>
+            </Menu>
+        </React.Fragment >
+    )
+}
+
+const MenuBarDesktop = () => {
+    const [t] = useTranslation();
+    const location = useLocation();
+    const signOut = useSignOut();
+
+    return (
+        <React.Fragment>
+            <Divider orientation="vertical" sx={{ borderRightWidth: "2px", borderColor: "white", borderRadius: "5px", borderRightStyle: "solid" }} flexItem />
+            <Link to="/myGames" style={{ textDecoration: 'none' }} tabIndex={-1}>
+                <HoverButton className={location.pathname === "/myGames" ? "current" : ""}>
+                    {t('MenuBar.myGames')}
+                </HoverButton>
+            </Link>
+            <Link to="/profile" style={{ textDecoration: 'none', flexGrow: 1 }} tabIndex={-1}>
+                <HoverButton className={location.pathname === "/profile" ? "current" : ""}>
+                    {t('MenuBar.profile')}
+                </HoverButton>
+            </Link>
+
+            <HoverButton onClick={() => signOut()}>
+                {t('MenuBar.logout')}
+            </HoverButton>
+        </React.Fragment>
+    )
 }
 
 export default MenuBar;

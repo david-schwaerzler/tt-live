@@ -49,7 +49,7 @@ const TeamState = ({ matchStateObject, onUpdate, setValidate, isHomeTeam }: Team
             let response = await fetch(Config.REST_URL + "/league/" + matchStateObject.league.id + "/teams")
             if (!response.ok) {
                 console.log(`Error fetching teams. status: "${response.status}"`)
-                updateError(ERROR_GENERAL, t("Common.errorFetch"));
+                updateError(ERROR_GENERAL, t("Common.errorHttp"));
                 return;
             }
 
@@ -57,7 +57,7 @@ const TeamState = ({ matchStateObject, onUpdate, setValidate, isHomeTeam }: Team
             setTeams(teams);
         } catch (error) {
             console.log(`Error fetching teams. error: "${error}"`)
-            updateError(ERROR_GENERAL, t("Common.errorFetch"))
+            updateError(ERROR_GENERAL, t("Common.errorHttp"))
         }
     }, [updateError, matchStateObject.league, t])
 

@@ -3,7 +3,7 @@ const deDe = {
         translation: {
             "Common.error": "Fehler",
             "Common.ok": "OK",
-            "Common.errorFetch": "Leider kann der Server nicht erreicht werden. Bitte versuchen sie es später noch einmal",
+            "Common.errorHttp": "Leider kann der Server nicht erreicht werden. Bitte versuchen sie es später noch einmal",
             "Common.reset": "Reset",
             "Common.close": "Schließen",
             "Common.delete": "Löschen",
@@ -11,6 +11,10 @@ const deDe = {
             "MenuBar.home": "Home",
             "MenuBar.live": "Live",
             "MenuBar.games": "Spiele",
+            "MenuBar.profile": "Profil",
+            "MenuBar.myGames": "Mein Spiele",
+            "MenuBar.myAccount": "Profil",
+            "MenuBar.logout": "Logout",
 
             "LoginForm.login": "Login",
             "LoginForm.register": "Registrieren",
@@ -104,7 +108,7 @@ const deDe = {
             "MatchStateLabel.finished": "Beendet",
             "MatchStateLabel.soon": "Bald",
 
-            "MatchCard.linkGame": "zum Spiel",
+            "ToGameButton.linkGame": "zum Spiel",
 
             "GameReport.singles": "Einzel",
             "GameReport.doubles": "Doppel",
@@ -219,6 +223,7 @@ const deDe = {
                 + "Alle erhobenen Statistiken sind lokal gespeichert und werden nicht an 3te weitergegeben.",
             "CookieBanner.accept": "Erlauben",
             "CookieBanner.decline": "Ablehnen",
+
         }
     }
 }

@@ -5,7 +5,7 @@ import { ApiResponse, returnData, returnError } from "./ApiResponse";
 
 type MatchResponse = ApiResponse<Match>;
 type MatchesReponse = ApiResponse<Array<Match>>;
-type SimpleMatchesReponse = ApiResponse<Array<SimpleMatch>>;
+export type SimpleMatchesReponse = ApiResponse<Array<SimpleMatch>>;
 
 export async function postMatch(requestMatch: RequestMatch): Promise<MatchResponse> {
     try {

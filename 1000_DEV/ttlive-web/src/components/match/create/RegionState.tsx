@@ -34,7 +34,7 @@ const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
         if(response.data != null){
             setRegions(response.data);
         }else{
-            updateError(ERROR_GENERAL, t(`Common.errorFetch: ${response.error}`))
+            updateError(ERROR_GENERAL, t(`Common.errorHttp: ${response.error}`))
         }
     }, [updateError, t]);
 

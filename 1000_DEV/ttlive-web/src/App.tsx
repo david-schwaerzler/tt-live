@@ -9,7 +9,7 @@ import { AuthProvider } from 'react-auth-kit';
 import PrivateRoute from './components/utils/PrivateRoute';
 import AuthUtil from './components/utils/AuthUtil';
 import { tokenRefreshApi } from './rest/api/LoginApi';
-import { CircularProgress, Typography } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
 
 const HomeView = React.lazy(() => import("./views/HomeView"));
@@ -19,10 +19,8 @@ const RegisterView = React.lazy(() => import("./views/RegisterView"));
 const LiveSearch = React.lazy(() => import("./views/LiveSearchView"));
 const LiveView = React.lazy(() => import("./views/LiveView"));
 const ImprintView = React.lazy(() => import("./views/ImprintView"));
-
-function wait(time: number) {
-    return new Promise(resolve => setTimeout(resolve, time))
-}
+const MyGamesView = React.lazy(() => import("./modules/my_games/MyGamesView"));
+const ProfileView = React.lazy(() => import("./modules/profile/ProfileView"));
 
 function App() {
 
@@ -114,7 +112,8 @@ function App() {
                                     <Route path="live_search" element={renderContent(<LiveSearch />)} />
                                     <Route path="live" element={renderContent(<LiveView />)} />
                                     <Route path="imprint" element={renderContent(<ImprintView />)} />
-
+                                    <Route path="profile" element={renderContent(<ProfileView />, true)} />
+                                    <Route path="myGames" element={renderContent(<MyGamesView />, true)} />
                                     <Route path="*" element={<Navigate to="/" />} />
                                 </Routes>
                             </HashRouter>

@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -22,7 +23,9 @@ import lombok.ToString;
 @Data
 @Entity
 @Table(name = "account")
-@NamedQuery(name = "Account.findByName", query = "select a from AccountEntity a where a.username = :name")
+@NamedQueries({
+		@NamedQuery(name = "Account.findByName", query = "select a from AccountEntity a where a.username = :name"),
+		@NamedQuery(name = "Account.findMatches", query = "select m from AccountEntity a join a.matches m where a.id = :id") })
 public class AccountEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
