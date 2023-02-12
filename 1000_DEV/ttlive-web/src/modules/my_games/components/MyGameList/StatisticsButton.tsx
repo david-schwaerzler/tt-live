@@ -1,9 +1,9 @@
 import { Dialog, DialogContent, IconButton } from "@mui/material";
-import { Match, SimpleMatch } from "../../../../rest/data/Match";
+import { SimpleMatch } from "../../../../rest/data/Match";
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import React, { useState } from "react";
 import EngineeringIcon from '@mui/icons-material/Engineering';
-import { useBackDialogHandler } from "../../../../components/utils/useBackDialogHandler";
+import { useBackDialogHandler } from "../../../common/hooks/useBackDialogHandler";
 
 
 export interface StatisticsButtonProps {

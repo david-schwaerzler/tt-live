@@ -1,6 +1,6 @@
 import axios from "axios";
 import { createRefresh } from "react-auth-kit";
-import { Config } from "../../components/utils/Config";
+import { Config } from "../../modules/common/utils/Config";
 import { LoginResponse, RequestLogin, RequestRefreshToken } from "../data/Account";
 import { ApiResponse, returnData, returnError } from "./ApiResponse";
 

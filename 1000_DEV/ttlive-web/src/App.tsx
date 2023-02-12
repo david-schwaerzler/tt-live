@@ -1,24 +1,24 @@
 
 import { Routes, Route, Navigate, HashRouter } from "react-router-dom";
 import React, { Suspense, useMemo, useState } from 'react';
-import MainView from './containers/MainView';
+import MainView from './modules/containers/MainView';
 import { AppContext, AppContextProps, EditorCode } from './AppContext';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AuthProvider } from 'react-auth-kit';
-import PrivateRoute from './components/utils/PrivateRoute';
-import AuthUtil from './components/utils/AuthUtil';
+import PrivateRoute from './modules/common/components/utils/PrivateRoute';
 import { tokenRefreshApi } from './rest/api/LoginApi';
 import { CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
+import AuthUtil from "./modules/common/components/utils/AuthUtil";
 
-const HomeView = React.lazy(() => import("./views/HomeView"));
-const LoginView = React.lazy(() => import("./views/LoginView"));
-const CreateGameView = React.lazy(() => import("./views/CreateGameView"));
-const RegisterView = React.lazy(() => import("./views/RegisterView"));
-const LiveSearch = React.lazy(() => import("./views/LiveSearchView"));
-const LiveView = React.lazy(() => import("./views/LiveView"));
-const ImprintView = React.lazy(() => import("./views/ImprintView"));
+const HomeView = React.lazy(() => import("./modules/home/HomeView"));
+const LoginView = React.lazy(() => import("./modules/login/LoginView"));
+const CreateGameView = React.lazy(() => import("./modules/create_match/CreateMatchView"));
+const RegisterView = React.lazy(() => import("./modules/login/RegisterView"));
+const LiveSearch = React.lazy(() => import("./modules/live_search/LiveSearchView"));
+const LiveView = React.lazy(() => import("./modules/live/LiveView"));
+const ImprintView = React.lazy(() => import("./modules/home/components/ImprintView"));
 const MyGamesView = React.lazy(() => import("./modules/my_games/MyGamesView"));
 const ProfileView = React.lazy(() => import("./modules/profile/ProfileView"));
 

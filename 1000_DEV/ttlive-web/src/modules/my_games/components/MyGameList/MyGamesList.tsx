@@ -1,14 +1,11 @@
-import { Button, Card, CardActions, CardContent, IconButton, List, ListItem, Table, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Card, CardActions, CardContent, IconButton } from "@mui/material";
 import { Box, Stack } from "@mui/system";
-import MatchScore from "../../../../components/match/MatchScore";
-import { spacingNormal } from "../../../../components/utils/StyleVars";
+import { spacingNormal } from "../../../common/utils/StyleVars";
 import { SimpleMatch } from "../../../../rest/data/Match";
 import DeleteIcon from '@mui/icons-material/Delete';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import { Link } from "react-router-dom";
-import { useContext } from "react";
-import ToGameButton from "../../../common/ToGameButton";
+import ToGameButton from "../../../common/components/buttons/ToGameButton";
 import StatisticsButton from "./StatisticsButton";
+import MatchScore from "../../../common/components/match/MatchScore";
 
 interface MyGamesListProps {
     matches: Array<SimpleMatch>;

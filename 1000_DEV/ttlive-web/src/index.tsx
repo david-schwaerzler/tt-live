@@ -10,7 +10,7 @@ import '@fontsource/roboto/700.css';
 
 import './i18n';
 import { createInstance, MatomoProvider } from '@jonkoops/matomo-tracker-react';
-import { Config } from './components/utils/Config';
+import { Config } from './modules/common/utils/Config';
 
 
 const instance = createInstance({
