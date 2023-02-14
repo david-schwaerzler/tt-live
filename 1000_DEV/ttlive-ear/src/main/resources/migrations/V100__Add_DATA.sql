@@ -8,7 +8,7 @@ INSERT INTO ttlive.account VALUES (1, 'David', '792aec94757261853bfd692201dfa6e0
 INSERT INTO ttlive.game_style VALUES (1, 'Bundessystem', '4er Mannschaft mit 2 Doppel und 8 Einzeln', 4, 2, 'D1-D1;D2-D2;1-2;2-1;3-4;4-3;1-1;2-2;3-3;4-4', 10, false);
 INSERT INTO ttlive.game_style VALUES (2, 'Sechser-Paarkreuz-System', '6er Mannschaft mit 4 Doppel und 12 Einzel', 6, 3, 'D1-D2;D2-D1;D3-D3;1-2;2-1;3-4;4-3;5-6;6-5;1-1;2-2;3-3;4-4;5-5;6-6;D1-D1', 9, true);
 INSERT INTO ttlive.game_style VALUES (3, 'Dietze-Paarkreuz-System', '4er Mannschaft mit 2 Doppel, 8 Einzel und 2 Schlussdoppel', 4, 2, 'D1-D2;D2-D1;1-2;2-1;3-4;4-3;1-1;2-2;3-3;4-4;D2-D2;D1-D1', 7, true);
-INSERT INTO ttlive.game_style VALUES (3, 'Betriebssport (Hamburg)', '4er Mannschaft mit 2 Doppel, 8 Einzel und 2 Schlussdoppel', 4, 2, 'D1-D2;D2-D1;1-2;2-1;3-4;4-3;1-1;2-2;3-3;4-4;D2-D2;D1-D1', 7, true);
+INSERT INTO ttlive.game_style VALUES (4, 'Betriebssport (Hamburg)', '6er Mannschaft mit 6 Doppel (2 Doppel Runden) und 12 Einzel', 6, 3, 'D1-D1;D2-D3;D3-D2;1-1;2-2;3-3;4-4;5-5;6-6;D1-D2;D2-D1;D3-D3;1-2;2-1;3-4;4-3;5-6;6-5', 18, false);
 
 
 --
@@ -31,6 +31,7 @@ INSERT INTO ttlive.region VALUES (13, 'TTVSA', 'Sachsen-Anhalt');
 INSERT INTO ttlive.region VALUES (14, 'TTTV', 'Thüringen');
 INSERT INTO ttlive.region VALUES (15, 'WTTV', 'NRW');
 INSERT INTO ttlive.region VALUES (16, 'TTBW', 'Baden-Württemberg');
+INSERT INTO ttlive.region VALUES (17, 'BSV HH', 'Betriebssport Hamburg');
 
 
 --
@@ -79,6 +80,23 @@ INSERT INTO ttlive.league VALUES (41, 'Verbandsoberliga ', 'WOMEN', 1, '2022-12-
 INSERT INTO ttlive.league VALUES (1, 'Hamburg Liga', 'MEN', 6, '2022-11-18 15:15:14.870798', '2022-11-18 15:15:14.870798');
 INSERT INTO ttlive.league VALUES (42, 'Verbandsoberliga', 'WOMEN', 1, '2022-12-10 13:16:17.317416', '2022-12-10 13:16:17.317449');
 INSERT INTO ttlive.league VALUES (43, 'Oberliga', 'WOMEN', 1, '2023-01-14 13:56:48.380233', '2023-01-14 13:56:48.380717');
+
+
+INSERT INTO ttlive.league(id, name, contest, region_id) VALUES (44, 'S-Klasse', 'MEN', 17);
+INSERT INTO ttlive.league(id, name, contest, region_id) VALUES (45, 'Staffel A1', 'MEN', 17);
+INSERT INTO ttlive.league(id, name, contest, region_id) VALUES (46, 'Staffel B1', 'MEN', 17);
+INSERT INTO ttlive.league(id, name, contest, region_id) VALUES (47, 'Staffel B2', 'MEN', 17);
+INSERT INTO ttlive.league(id, name, contest, region_id) VALUES (48, 'Staffel B3', 'MEN', 17);
+INSERT INTO ttlive.league(id, name, contest, region_id) VALUES (49, 'Staffel C1', 'MEN', 17);
+INSERT INTO ttlive.league(id, name, contest, region_id) VALUES (50, 'Staffel C2', 'MEN', 17);
+INSERT INTO ttlive.league(id, name, contest, region_id) VALUES (51, 'Staffel C3', 'MEN', 17);
+INSERT INTO ttlive.league(id, name, contest, region_id) VALUES (52, 'Staffel D1', 'MEN', 17);
+INSERT INTO ttlive.league(id, name, contest, region_id) VALUES (53, 'Staffel D2', 'MEN', 17);
+INSERT INTO ttlive.league(id, name, contest, region_id) VALUES (54, 'Staffel D3', 'MEN', 17);
+INSERT INTO ttlive.league(id, name, contest, region_id) VALUES (55, 'Staffel D4', 'MEN', 17);
+INSERT INTO ttlive.league(id, name, contest, region_id) VALUES (56, 'Staffel E1', 'MEN', 17);
+INSERT INTO ttlive.league(id, name, contest, region_id) VALUES (57, 'Staffel E2', 'MEN', 17);
+
 
 
 --
@@ -613,14 +631,14 @@ SELECT pg_catalog.setval('ttlive.game_id_seq', 230, true);
 -- Name: game_style_id_seq; Type: SEQUENCE SET; Schema: ttlive; Owner: ttlive
 --
 
-SELECT pg_catalog.setval('ttlive.game_style_id_seq', 3, true);
+SELECT pg_catalog.setval('ttlive.game_style_id_seq', 4, true);
 
 
 --
 -- Name: league_id_seq; Type: SEQUENCE SET; Schema: ttlive; Owner: ttlive
 --
 
-SELECT pg_catalog.setval('ttlive.league_id_seq', 43, true);
+SELECT pg_catalog.setval('ttlive.league_id_seq', 57, true);
 
 
 --
@@ -641,7 +659,7 @@ SELECT pg_catalog.setval('ttlive.player_id_seq', 180, true);
 -- Name: region_id_seq; Type: SEQUENCE SET; Schema: ttlive; Owner: ttlive
 --
 
-SELECT pg_catalog.setval('ttlive.region_id_seq', 16, true);
+SELECT pg_catalog.setval('ttlive.region_id_seq', 17, true);
 
 
 --
