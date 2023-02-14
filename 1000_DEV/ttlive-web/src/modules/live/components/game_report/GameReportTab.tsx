@@ -1,13 +1,13 @@
-import { Card, CardContent, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Skeleton, Switch, Typography } from "@mui/material";
-import { Stack } from "@mui/system";
-import React, { useCallback, useContext, useDeferredValue, useEffect, useState } from "react";
+import { FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Skeleton, Switch } from "@mui/material";
+import React, {  useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AppContext } from "../../../../AppContext";
 import { ChatMessage } from "../../../../rest/data/ChatMessage";
 import { Game } from "../../../../rest/data/Game";
 import { InputType } from "./edit/GameSetScore";
 
-import GameReportGameRow from "./GameReportGameRow";
+import GameReportSection from "./GameReportSection";
+import { GameScoreType, GameType } from "./GameScoreType";
 
 export interface GameReportProps {
     games: Array<Game> | null;
@@ -21,21 +21,19 @@ export interface GameReportProps {
 
 
 
-type GameType = "DOUBLES" | "SINGLES" | "FINISH_DOUBLES";
-type GameScoreType = Game & { homeTeamScore: number, guestTeamScore: number, type: GameType };
-
 const GAME_INPUT_TYPE_SETTING = "gameInputType";
 const GAME_EDIT_SETTING = "gameEdit";
+
+interface GameReportSectionType {
+    type: GameType;
+    games: Array<GameScoreType>;
+}
 
 // TODO fix Render performance Issues
 const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpdate }: GameReportProps) => {
 
     const [t] = useTranslation();
     const context = useContext(AppContext);
-
-
-    const [gameScores, setGameScores] = useState<Array<GameScoreType> | null>(null);
-    const [hasFinishingDoubles, setFinishDoubles] = useState(false);
 
     const [inputType, setInputType] = useState(() => {
         let inputTypeStr = context.getSetting(GAME_INPUT_TYPE_SETTING);
@@ -55,31 +53,29 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
         return isEditModeStr === "true";
     });
 
-    const  deferredIsEditMode = useDeferredValue(isEditMode);
-    const  deferredInputType = useDeferredValue(inputType);
 
-    const onError = useCallback((msg: string) => console.log("todo error"), []);
 
-    useEffect(() => {
+    const sections = useMemo(() => {
         if (games == null) {
-            setGameScores(null);
-            return;
+            return null;
         }
 
         let homeTeamScore = 0;
         let guestTeamScore = 0;
 
-        let type: GameType = games.length === 0 ? "DOUBLES" : games[0].doubles ? "DOUBLES" : "SINGLES";
-        let gameScores: Array<GameScoreType> = [];
-        let hasFinishingDoubles = false;
+        let sections: Array<GameReportSectionType> = [];
+        let currentSection: GameReportSectionType = {
+            type: games.length === 0 ? "DOUBLES" : games[0].doubles ? "DOUBLES" : "SINGLES",
+            games: []
+        };
 
         for (let g of games) {
-
-            if (g.doubles === false && type === "DOUBLES") {
-                type = "SINGLES";
-            } else if (g.doubles === true && type === "SINGLES") {
-                type = "FINISH_DOUBLES";
-                hasFinishingDoubles = true;
+            if (g.doubles === false && currentSection.type === "DOUBLES") {
+                sections.push(currentSection);
+                currentSection = { type: "SINGLES", games: [] };
+            } else if (g.doubles === true && currentSection.type === "SINGLES") {
+                sections.push(currentSection);
+                currentSection = { type: "DOUBLES", games: [] };
             }
 
             if (g.homeSets >= 3)
@@ -87,79 +83,50 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
             else if (g.guestSets >= 3)
                 guestTeamScore++;
 
-            gameScores.push({
+            currentSection.games.push({
                 ...g,
-                type: type,
                 homeTeamScore: homeTeamScore,
-                guestTeamScore: guestTeamScore
+                guestTeamScore: guestTeamScore,
+                
             });
         };
-        setFinishDoubles(hasFinishingDoubles);
-        setGameScores(gameScores);
+
+        if (currentSection.type === "DOUBLES") {
+            currentSection.type = "FINISH_DOUBLES";
+        }
+        sections.push(currentSection);
+        return sections;
+
     }, [games]);
 
 
     return (
         <React.Fragment>
+
             {editorCode != null && renderHeader()}
 
-            {gameScores == null
-                ? <Skeleton sx={{ height: { xs: "247px", sm: "247px" }, mb: 2 }} variant="rectangular" />
-                : <Card sx={{ mb: 2 }}>
-                    <CardContent>
-                        <Typography pb={2} variant="h5" >{t("GameReport.doubles")}</Typography>
-                        <Stack gap={3}>
-                            {gameScores.filter(game => game.type === "DOUBLES").map(game => renderGame(game))}
-                        </Stack>
-                    </CardContent>
-                </Card>
-            }
-            {gameScores == null
-                ? <Skeleton sx={{ height: { xs: "556px", sm: "556px" } }} variant="rectangular" />
-                : <Card sx={{ mb: 2 }}>
-                    <CardContent>
-                        <Typography pb={2} variant="h5">{t("GameReport.singles")}</Typography>
-                        <Stack gap={3}>
-                            {gameScores.filter(game => game.type === "SINGLES").map(game => renderGame(game))}
-                        </Stack>
-                    </CardContent>
-                </Card>
+            {sections == null
+                ? <React.Fragment>
+                    <Skeleton sx={{ height: { xs: "247px", sm: "247px" }, mb: 2 }} variant="rectangular" />
+                    <Skeleton sx={{ height: { xs: "556px", sm: "556px" } }} variant="rectangular" />
+                </React.Fragment>
+                : sections.map((section, index) =>
+                   <GameReportSection
+                    games={section.games}
+                    type={section.type}
+                    editorCode={editorCode}
+                    inputType={inputType}
+                    isEditMode={isEditMode}
+                    matchId={matchId}
+                    matchState = {matchState}
+                    messages={messages}
+                    onUpdate={onUpdate}
+                    />
+                )
             }
 
-            {gameScores != null && hasFinishingDoubles &&
-                <Card>
-                    <CardContent>
-                        <Typography pb={2} variant="h5">{t("GameReport.lastDouble")}</Typography>
-                        <Stack gap={3}>
-                            {gameScores.filter(game => game.type === "FINISH_DOUBLES").map(game => renderGame(game))}
-                        </Stack>
-                    </CardContent>
-                </Card>
-            }
         </React.Fragment>
-    )
-
-    function renderGame(game: GameScoreType) {
-
-        return (
-            <GameReportGameRow
-                key={game.gameNumber}
-                editorCode={editorCode}
-                game={game}
-                guestTeamScore={game.guestTeamScore}
-                homeTeamScore={game.homeTeamScore}
-                inputType={deferredInputType}
-                isEditMode={deferredIsEditMode}
-                matchId={matchId}
-                matchState={matchState}
-                messages={messages}
-                onError={onError}
-                onUpdate={onUpdate}
-            />
-        )
-    }
-
-
+    );
 
     function renderHeader() {
         return (
@@ -197,7 +164,6 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
         )
     }
 
-
     function onEditModeChanged() {
         setEditMode((isEditMode) => !isEditMode)
         context.setSetting(GAME_EDIT_SETTING, !isEditMode ? "true" : "false", true)
@@ -205,7 +171,7 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
 
     function onInputTypeChanged(e: SelectChangeEvent) {
         setInputType(parseInt(e.target.value as string));
-        context.setSetting(GAME_INPUT_TYPE_SETTING, inputType.toString(), true)
+        context.setSetting(GAME_INPUT_TYPE_SETTING, e.target.value.toString(), true)
     }
 }
 

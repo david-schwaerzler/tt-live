@@ -1,11 +1,10 @@
 import { IconButton } from "@mui/material";
 import React, { useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
-import { useBackDialogHandler } from "../../../../common/hooks/useBackDialogHandler";
-import { ChatMessage } from "../../../../../rest/data/ChatMessage";
-import { Game } from "../../../../../rest/data/Game";
+import { ChatMessage } from "../../../../rest/data/ChatMessage";
+import { Game } from "../../../../rest/data/Game";
+import { useBackDialogHandler } from "../../../common/hooks/useBackDialogHandler";
 import GameLiveEditDialog from "./GameLiveEditDialog";
-
 
 export interface GameLiveEditProps {
     game: Game;

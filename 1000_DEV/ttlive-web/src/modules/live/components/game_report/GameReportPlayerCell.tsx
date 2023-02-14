@@ -28,7 +28,7 @@ const GameReportPlayerCell = ({ player1, player2, won }: GameReportPlayerCellPro
                 : player1
             }
             {player2 != null && (player2 === ""
-                ? <i>{t("GameReport.noPlayer")}</i>
+                ? <React.Fragment><br /><i>{t("GameReport.noPlayer")}</i> </React.Fragment >
                 : <React.Fragment><br />{player2}</React.Fragment>
             )}
         </Grid>

@@ -53,7 +53,7 @@ export interface SimpleMatch {
 	guestClub : string;
 	guestNumber : number;	
 
-    simpleGames: Array<SimpleGame>;    
+    simpleGames: Array<SimpleGame> | null;    
 }
 
 export function sortMatch(match: Match){
@@ -67,6 +67,7 @@ export function sortMatch(match: Match){
 }
 
 export function sortSimpleMatch(match: SimpleMatch){
-    match.simpleGames.sort((a, b) => a.gameNumber - b.gameNumber);
+    if(match.simpleGames != null)
+        match.simpleGames.sort((a, b) => a.gameNumber - b.gameNumber);
     return match;
 }

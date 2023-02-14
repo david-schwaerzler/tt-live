@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.ttlive.bo.Game;
 import com.ttlive.bo.Match;
-import com.ttlive.dto.SimpleMatchDto.SimpleGameDto.SimpleGameDtoBuilder;
 import com.ttlive.utils.MatchState;
 
 import lombok.Builder;
@@ -31,49 +30,59 @@ public class SimpleMatchDto {
 	private LinkedList<SimpleGameDto> simpleGames;
 
 	public static class SimpleMatchDtoBuilder {
-		public SimpleMatchDtoBuilder bo(Match bo) {
+		public SimpleMatchDtoBuilder bo(Match bo, String[] fields) {
 
-			this.id = bo.getId();
-			this.homeTeamScore = bo.getHomeTeamScore();
-			this.guestTeamScore = bo.getGuestTeamScore();
-			this.state = bo.getState();
-			this.startDate = bo.getStartDate();
-			this.league = LeagueDto.builder().bo(bo.getLeague()).build();
-			this.homeClub = bo.getHomeTeam().getClub();
-			this.homeNumber = bo.getHomeTeam().getNumber();
-			this.guestClub = bo.getGuestTeam().getClub();
-			this.guestNumber = bo.getGuestTeam().getNumber();
+			if (fields == null) {
+				fields = new String[] { "id", "homeTeamScore", "guestTeamScore", "state", "startDate", "league",
+						"homeClub", "homeNumber", "guestClub", "guestNumber" };
+			}
 
-			this.simpleGames = new LinkedList<>();
-			for (Game game : bo.getGames()) {
-				SimpleGameDtoBuilder simpleGame = SimpleGameDto.builder() //
-						.gameNumber(game.getGameNumber()) //
-						.homeSets(game.getHomeSets()) //
-						.guestSets(game.getGuestSets()) //
-						.state(game.getState()) //
-						.isDoubles(game.isDoubles());
-
-				if (game.isDoubles()) {
-					simpleGame = simpleGame.homePlayer1(game.getHomeDoubles().getPlayer1()) //
-							.homePlayer2(game.getHomeDoubles().getPlayer2()) //
-							.guestPlayer1(game.getGuestDoubles().getPlayer1()) //
-							.guestPlayer2(game.getGuestDoubles().getPlayer2());
-				} else {
-					simpleGame = simpleGame.homePlayer1(game.getHomePlayer().getName()) //
-							.guestPlayer1(game.getGuestPlayer().getName());
+			for (String field : fields) {
+				switch (field) {
+				case "id":
+					this.id = bo.getId();
+					break;
+				case "homeTeamScore":
+					this.homeTeamScore = bo.getHomeTeamScore();
+					break;
+				case "guestTeamScore":
+					this.guestTeamScore = bo.getGuestTeamScore();
+					break;
+				case "state":
+					this.state = bo.getState();
+					break;
+				case "startDate":
+					this.startDate = bo.getStartDate();
+					break;
+				case "league":
+					this.league = LeagueDto.builder().bo(bo.getLeague()).build();
+					break;
+				case "homeClub":
+					this.homeClub = bo.getHomeTeam().getClub();
+					break;
+				case "homeNumber":
+					this.homeNumber = bo.getHomeTeam().getNumber();
+					break;
+				case "guestClub":
+					this.guestClub = bo.getGuestTeam().getClub();
+					break;
+				case "guestNumber":
+					this.guestNumber = bo.getGuestTeam().getNumber();
+					break;
+				case "games":
+					this.simpleGames = SimpleGameDto.fromBos(bo.getGames(), null);
+					break;
 				}
-
-				this.simpleGames.add(simpleGame.build());
 			}
 
 			return this;
 		}
 	}
 
-	public static LinkedList<SimpleMatchDto> fromBos(List<Match> matches) {
+	public static LinkedList<SimpleMatchDto> fromBos(List<Match> matches, String[] fields) {
 		LinkedList<SimpleMatchDto> ret = new LinkedList<>();
 		for (Match match : matches) {
-			ret.add(SimpleMatchDto.builder().bo(match).build());
+			ret.add(SimpleMatchDto.builder().bo(match, fields).build());
 		}
 		return ret;
 	}
@@ -90,6 +99,36 @@ public class SimpleMatchDto {
 		private String guestPlayer1;
 		private String guestPlayer2;
 		private MatchState state;
+
+		public static class SimpleGameDtoBuilder {
+			public SimpleGameDtoBuilder bo(Game game, String[] fields) {
+				this.gameNumber = game.getGameNumber();
+				this.homeSets = game.getHomeSets();
+				this.guestSets = game.getGuestSets();
+				this.state = game.getState();
+				this.isDoubles = game.isDoubles();
+
+				if (game.isDoubles()) {
+					this.homePlayer1 = game.getHomeDoubles().getPlayer1();
+					this.homePlayer2 = game.getHomeDoubles().getPlayer2();
+					this.guestPlayer1 = game.getGuestDoubles().getPlayer1();
+					this.guestPlayer2 = game.getGuestDoubles().getPlayer2();
+				} else {
+					this.homePlayer1 = game.getHomePlayer().getName();
+					this.guestPlayer1 = game.getGuestPlayer().getName();
+				}
+
+				return this;
+			}
+		}
+
+		public static LinkedList<SimpleGameDto> fromBos(List<Game> games, String[] fields) {
+			LinkedList<SimpleGameDto> ret = new LinkedList<>();
+			for (Game game : games) {
+				ret.add(SimpleGameDto.builder().bo(game, fields).build());
+			}
+			return ret;
+		}
 	}
 
 }

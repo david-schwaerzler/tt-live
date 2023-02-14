@@ -1,4 +1,4 @@
-import { IconButton, styled } from "@mui/material";
+import { CircularProgress, IconButton, styled } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box } from "@mui/system";
 
@@ -62,9 +62,10 @@ const StyledBox = styled(Box)(({ theme }) => ({
 
 export interface ExpandButtonProps {
     expanded: boolean
+    loading?: boolean;
 }
 
-const ExpandButton = ({ expanded }: ExpandButtonProps) => {
+const ExpandButton = ({ expanded, loading = false }: ExpandButtonProps) => {
     return (
         <StyledBox sx={{ display: "grid" }}>
             <StyledButton
@@ -73,7 +74,10 @@ const ExpandButton = ({ expanded }: ExpandButtonProps) => {
                 aria-label="show more"
                 sx={{ gridColumn: 1, gridRow: 1 }}
             >
-                <ExpandMoreIcon sx={{ zIndex: 100 }} />
+                {loading
+                    ? <CircularProgress color="primary" size={24} />
+                    : <ExpandMoreIcon sx={{ zIndex: 100 }} />
+                }
             </StyledButton>
         </StyledBox>
     )

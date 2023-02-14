@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, FormControlLabel, Grid, Radio, Slider, TextField, Typography } from "@mui/material";
+import { Box, Dialog, DialogContent, DialogTitle, FormControlLabel, Grid, IconButton, Radio, Slider, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import React from "react";
 import { useEffect, useState } from "react";
@@ -8,7 +8,7 @@ import { Game } from "../../../../../rest/data/Game";
 import { GameSet } from "../../../../../rest/data/GameSet";
 import { RequestGameSet } from "../../../../../rest/data/RequestGameSet";
 import LoadingButton from "../../../../common/components/buttons/LoadingButton";
-
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 
 export interface GameSetResultDialogProps {
     set: GameSet;
@@ -21,7 +21,7 @@ export interface GameSetResultDialogProps {
     onClose: () => void;
 }
 
-const GameSetResultDialog = ({set, isHome, show, game, editorCode, onClose, onError, onUpdate }: GameSetResultDialogProps) => {
+const GameSetResultDialog = ({ set, isHome, show, game, editorCode, onClose, onError, onUpdate }: GameSetResultDialogProps) => {
 
     const [selectedNumber, setSelectedNumber] = useState<number>(() => {
         if (set.homeScore === 0 && set.guestScore === 0) {
@@ -33,7 +33,7 @@ const GameSetResultDialog = ({set, isHome, show, game, editorCode, onClose, onEr
     const [otherScore, setOtherScore] = useState<number>(selectedNumber > 9 ? selectedNumber + 2 : 11);
     const [isLoading, setLoading] = useState(false);
     const [isUnset, setUnset] = useState(false);
-    const [t] = useTranslation();    
+    const [t] = useTranslation();
 
     useEffect(() => {
         setHomeState(!isHome)
@@ -56,31 +56,38 @@ const GameSetResultDialog = ({set, isHome, show, game, editorCode, onClose, onEr
 
     return (
         <Dialog open={show} onClose={() => onClose()} fullWidth maxWidth="md" PaperProps={{ sx: { position: "fixed", top: theme => theme.spacing(5) } }}>
-            <DialogTitle>Set backup account</DialogTitle>
-
-            <Stack direction="row" gap={2} alignItems="center" justifyContent="center">
-                <FormControlLabel value="female" control={<Radio checked={!isHomeState} onClick={() => setHomeState(!isHomeState)} />} label={t("GameSetResult.isHome")} />
-                <FormControlLabel value="reset" control={<Radio checked={isUnset} onClick={() => setUnset(!isUnset)} />} label={t("GameSetResult.unset")} />
-            </Stack>
-
+            <DialogTitle>
+                {t("GameSetResult.title")}
+                <FormControlLabel sx={{ float: "right" }} value="reset" control={<Radio checked={isUnset} onClick={() => setUnset(!isUnset)} />} label={t("GameSetResult.unset")} />
+            </DialogTitle>
 
             <DialogContent sx={{ mt: 1 }}>
                 <Stack gap={2}>
                     <Grid container rowSpacing={2} columnSpacing={1}>
                         <Grid item xs={6} textAlign="center"><Typography fontSize={{ xs: game.doubles ? "0.9rem" : "1rem", sm: "2rem" }}>{renderPlayer(true)}</Typography></Grid>
                         <Grid item xs={6} textAlign="center"><Typography fontSize={{ xs: game.doubles ? "0.9rem" : "1rem", sm: "2rem" }}>{renderPlayer(false)}</Typography></Grid>
-                        <Grid item xs={6} textAlign="center">
+
+                        <Grid item xs={1} />
+                        <Grid item xs={4} display="flex" justifyContent="center" alignItems="center">
                             {isHomeState
                                 ? <Typography fontSize="2rem" fontWeight="bold">{isUnset ? 0 : otherScore}</Typography>
                                 : renderInput()
                             }
                         </Grid>
-                        <Grid item xs={6} textAlign="center">
+                        <Grid item xs={2} display="flex" justifyContent="center" alignItems="center">
+                            <IconButton onClick={() => setHomeState(!isHomeState)}>
+                                <SwapHorizIcon color="primary"/>
+                            </IconButton>
+                        </Grid>
+                        <Grid item xs={4} display="flex" justifyContent="center" alignItems="center" textAlign="center">
                             {isHomeState
                                 ? renderInput()
-                                : <Typography fontSize="2rem" fontWeight="bold">{isUnset ? 0 : otherScore}</Typography>
+                                : <Box >
+                                    <Typography fontSize="2rem" fontWeight="bold" m="auto">{isUnset ? 0 : otherScore}</Typography>
+                                </Box>
                             }
                         </Grid>
+                        <Grid item xs={1} />
                     </Grid>
 
                     <Slider min={0} max={11} value={isUnset ? 0 : selectedNumber} onChange={(e, value) => setSelectedNumber(value as number)} sx={{ mr: 2 }} />
@@ -101,7 +108,14 @@ const GameSetResultDialog = ({set, isHome, show, game, editorCode, onClose, onEr
                 setSelectedNumber(number)
         }
 
-        return <TextField autoFocus value={isUnset ? "0" : selectedNumber === -1 ? "" : selectedNumber} onChange={onChange} type="number" />;
+        return <TextField
+            sx={{ width: "60px" }}
+            inputProps={{ style: { textAlign: "center", fontSize: "2rem", fontWeight: "bold", padding: "5px 0px" } }}
+            autoFocus
+            value={isUnset ? "0" : selectedNumber === -1 ? "" : selectedNumber}
+            onChange={onChange}
+            type="tel"
+        />;
     }
 
     function renderPlayer(isHome: boolean) {

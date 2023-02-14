@@ -25,7 +25,7 @@ const GameSetResultButton = ({ disabled, won, set, game, isHome, editorCode, onE
     return (
         <React.Fragment>
             {show === true &&
-                < GameSetResultDialog
+                <GameSetResultDialog
                     editorCode={editorCode}
                     game={game}
                     set={set}

@@ -5,16 +5,21 @@
 # KLeinigkeiten
 
 # Feature Request:
-    - Match Editierung in den Settings:     
-        - löschen
-        - Account Verknüpfen
     - Mehrere Live Matches:
         - Live tab ist dropdown (oder per sidebar)
         - Es können sich mehrere Live spiele gemerkt werden   
-    - Spieler vorschläge
     - Statistics about the game (number of messages, average live users, peak live users, number of unique users, ...)
-    - Connect Google Analytics
-    - Cookie banner
+
+    - Emails versenden
+        - Bei erstellen eines Accounts
+        - Wenn Kontaktanfrage gesendet wird
+
+    - Match nur über Suche findbar, wenn auch mit Account verknüpft
+        - Sichbarkeit für die Suche in Settings einstellbar
+    - Matches ohne Account nach 3 Tagen löschen
+
+    - Switch icon Button um zwischen home und nicht home im edit dialog zu wechseln 
+    
 
 ## game creations
 

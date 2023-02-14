@@ -53,7 +53,7 @@ public class AccountReceiver {
 
 		List<Match> matches = accountService.getMatches(principal.getName());
 
-		return Response.ok(SimpleMatchDto.fromBos(matches)).build();
+		return Response.ok(SimpleMatchDto.fromBos(matches, null)).build();
 	}
 
 	@PUT

@@ -1,4 +1,4 @@
-import { Card, CardActions, CardContent, Collapse, Divider, Skeleton, Stack, Typography } from "@mui/material";
+import { Card, CardActions, CardContent, Divider, Skeleton, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useMemo, useState } from "react";
 import { Match, SimpleMatch } from "../../../rest/data/Match";
@@ -8,16 +8,14 @@ import ExpandButton from "../../common/components/buttons/ExpandButton";
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import ToGameButton from "../../common/components/buttons/ToGameButton";
-import GameScore from "../../common/components/match/GameScore";
 import MatchScore from "../../common/components/match/MatchScore";
 import MatchStateLabel from "../../common/components/match/MatchStateLabel";
-
+import MatchCardGameCollapse from "./MatchCardGameCollapse";
 
 export interface MatchCardProps {
     variant: "simple" | "normal";
     match?: Match | null;
     simpleMatch?: SimpleMatch | null;
-
 }
 
 function convertToSimple(match: Match): SimpleMatch {
@@ -50,6 +48,7 @@ function convertToSimple(match: Match): SimpleMatch {
 const MatchCard = ({ match, simpleMatch, variant }: MatchCardProps) => {
 
     const [expanded, setExpanded] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const matchState = useMemo(() => {
         if (variant === "simple") {
@@ -58,7 +57,7 @@ const MatchCard = ({ match, simpleMatch, variant }: MatchCardProps) => {
             return match == null ? null : convertToSimple(match);
         }
 
-    }, [variant, simpleMatch, match]) ;
+    }, [variant, simpleMatch, match]);
 
     return (matchState == null
         ? <Box>
@@ -86,21 +85,26 @@ const MatchCard = ({ match, simpleMatch, variant }: MatchCardProps) => {
                         <ToGameButton sx={{ flexGrow: 1, maxWidth: "300px" }} matchId={matchState.id} />
                     </Box>
 
-                    <Collapse in={expanded} timeout="auto" unmountOnExit>
-                        {renderGames(matchState)}
-                    </Collapse>
+                    <MatchCardGameCollapse match={matchState} expanded={expanded} loading={loading} onLoadingChanged={setLoading} />
+
                 </Stack>
 
             </CardContent>
             <CardActions>
                 {matchState != null && matchState.state !== "NOT_STARTED" &&
-                    <Box sx={{ cursor: "pointer", display: "flex", justifyContent: "center", width: "100%" }} onClick={() => setExpanded(!expanded)}>
-                        <ExpandButton expanded={expanded} />
+                    <Box sx={{ cursor: "pointer", display: "flex", justifyContent: "center", width: "100%" }} onClick={onExpand}>
+                        <ExpandButton expanded={expanded} loading={loading} />
                     </Box>
                 }
             </CardActions>
         </Card >);
 
+
+    function onExpand(){
+        if(!expanded)
+            setLoading(true) 
+        setExpanded(!expanded);        
+    }
 
     function renderHeader(simpleMatch: SimpleMatch) {
         return (
@@ -114,29 +118,6 @@ const MatchCard = ({ match, simpleMatch, variant }: MatchCardProps) => {
                 {simpleMatch.league.contest === "MEN" ? <MaleIcon sx={{ ml: 1 }} color="success" /> : <FemaleIcon sx={{ ml: 1 }} color="primary" />}
             </Box>
         );
-    }
-
-    function renderGames(simpleMatch: SimpleMatch) {
-        // TODO Put displayed games in the state variable (with useEffect)
-        let simpleGames = simpleMatch.simpleGames;
-        let displayGames = simpleGames.filter(g => g.state === "LIVE" || g.state === "FINISHED");
-
-        let notStartedGames = simpleGames.filter(g => g.state === "NOT_STARTED");
-
-        if (notStartedGames.length >= 2) {
-            displayGames.push(notStartedGames[0])
-            displayGames.push(notStartedGames[1])
-        } else if (notStartedGames.length >= 1) {
-            displayGames.push(notStartedGames[1])
-        }
-
-        return (
-            <Stack sx={{ gap: 2 }} >
-                {displayGames.map(simpleGame => (
-                    <GameScore key={simpleGame.gameNumber} simpleGame={simpleGame} />
-                ))}
-            </Stack >
-        )
     }
 }
 

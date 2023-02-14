@@ -1,19 +1,19 @@
-import { Dialog, DialogContent, Stack, Box, Grid, Typography, Divider, DialogActions } from "@mui/material";
+import { Dialog, DialogContent, Stack, Box, Divider, DialogActions, IconButton } from "@mui/material";
 import React, { createRef, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-
 import GameLiveEditSpinner from "./GameLiveEditSpinner";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { spacingSmall } from "../../../../common/utils/StyleVars";
-import { putGameSet } from "../../../../../rest/api/GameApi";
-import { ChatMessage } from "../../../../../rest/data/ChatMessage";
-import { Game } from "../../../../../rest/data/Game";
-import { GameSet } from "../../../../../rest/data/GameSet";
-import { RequestGameSet } from "../../../../../rest/data/RequestGameSet";
-import ChatAction from "../../../../chat/components/ChatActions";
-import ChatMessageList from "../../../../chat/components/ChatMessageList";
-import LoadingButton from "../../../../common/components/buttons/LoadingButton";
-
+import { putGameSet } from "../../../../rest/api/GameApi";
+import { ChatMessage } from "../../../../rest/data/ChatMessage";
+import { Game } from "../../../../rest/data/Game";
+import { GameSet } from "../../../../rest/data/GameSet";
+import { RequestGameSet } from "../../../../rest/data/RequestGameSet";
+import ChatAction from "../../../chat/components/ChatActions";
+import ChatMessageList from "../../../chat/components/ChatMessageList";
+import LoadingButton from "../../../common/components/buttons/LoadingButton";
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import GameLiveEditScore from "./GameLiveEditScore";
+import GameLiveEditPlayer from "./GameLiveEditPlayer";
 
 export interface GameLiveEditDialogProps {
     game: Game;
@@ -30,6 +30,7 @@ const GameLiveEditDialog = ({ game, show, matchId, messages, editorCode, onClose
     const [isLoading, setLoading] = useState(false);
     const [isTmp, setTmp] = useState(false);
     const chatRef = createRef<HTMLUListElement>();
+    const [isSwitched, setSwitched] = useState<boolean>(false);
     const [gameSet, setGameSet] = useState<GameSet>(() => {
         if (game.state === "FINISHED") {
             let finishedSets = game.sets.filter(s => s.state === "FINISHED");
@@ -112,97 +113,47 @@ const GameLiveEditDialog = ({ game, show, matchId, messages, editorCode, onClose
                     </LoadingButton>
                 </Stack>
 
-                <Grid container sx={{ justifyContent: "center", textAlign: "center", paddingBottom: spacingSmall, mt: 2 }} columnSpacing={2} rowSpacing={1} >
-                    <Grid item xs={6} mb={1}>
-                        <Box sx={{ fontSize: { xs: "1.1rem", sm: "1.5rem" }, whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>
-                            {game.doubles ?
-                                <React.Fragment>{game.homeDoubles.player1}<br />{game.homeDoubles.player2}</React.Fragment>
-                                : game.homePlayer.name
-                            }
-                        </Box>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Box sx={{ fontSize: { xs: "1.1rem", sm: "1.5rem" }, whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>
-                            {game.doubles ?
-                                <React.Fragment>{game.guestDoubles.player1}<br />{game.guestDoubles.player2}</React.Fragment>
-                                : game.guestPlayer.name
-                            }
-                        </Box>
-                    </Grid>
+                <Stack  direction={isSwitched ? "row-reverse" : "row"} mt={2}>
+                    <GameLiveEditPlayer
+                        sx={{ flex: "1 1 0" }}
+                        player1={game.doubles ? game.homeDoubles.player1 : game.homePlayer.name}
+                        player2={game.doubles ? game.homeDoubles.player2 : null}
+                        sets={game.homeSets}
+                    />
 
-                    <Grid item xs={6}>
-                        <Typography fontSize="1.5rem" fontWeight="bold" textAlign="center">{game.homeSets}</Typography>
+                    <GameLiveEditPlayer
+                        sx={{ flex: "1 1 0" }}
+                        player1={game.doubles ? game.guestDoubles.player1 : game.guestPlayer.name}
+                        player2={game.doubles ? game.guestDoubles.player2 : null}
+                        sets={game.guestSets}
+                    />
 
-                    </Grid>
+                </Stack>
+             
+                <Stack direction={isSwitched ? "row-reverse" : "row"} mt={3} gap={1} mb={3} justifyContent="center">
 
-                    <Grid item xs={6} mb={2}>
-                        <Typography fontSize="1.5rem" fontWeight="bold">{game.guestSets}</Typography>
-                    </Grid>
+                    <GameLiveEditScore
+                        isLoading={isLoading}
+                        score={gameSet.homeScore}
+                        otherScore={gameSet.guestScore}
+                        onUpdateScore={score => onUpdateScore(score, gameSet.guestScore)}
+                    />
 
-                    <Grid item xs={2} />
-                    <Grid item xs={4}>
-                        <LoadingButton
-                            loading={isLoading}
-                            variant="outlined"
-                            disabled={isChangeScoreDisabled(true, true)}
-                            onClick={() => onUpdateScore(gameSet.homeScore + 1, gameSet.guestScore)}
-                            sx={{ m: "auto" }}
-                        >
-                            <ExpandMoreIcon sx={{ transform: "rotate(180deg)" }} />
-                        </LoadingButton>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <LoadingButton
-                            loading={isLoading}
-                            variant="outlined"
-                            disabled={isChangeScoreDisabled(true, false)}
-                            onClick={() => onUpdateScore(gameSet.homeScore, gameSet.guestScore + 1)}
-                            sx={{ m: "auto" }}
-                        >
-                            <ExpandMoreIcon sx={{ transform: "rotate(180deg)" }} />
-                        </LoadingButton>
-                    </Grid>
-                    <Grid item xs={2} />
+                    <Box display="flex" alignItems="center" justifyContent="center">
+                        <IconButton sx={{ flexShrink: 1 }} onClick={e => setSwitched(!isSwitched)}>
+                            <SwapHorizIcon color="primary" />
+                        </IconButton>
+                    </Box>
 
+                    <GameLiveEditScore
+                        isLoading={isLoading}
+                        score={gameSet.guestScore}
+                        otherScore={gameSet.homeScore}
+                        onUpdateScore={score => onUpdateScore(gameSet.homeScore, score)}
+                    />
 
-                    <Grid item xs={2} />
-                    <Grid item xs={4}>
-                        <Typography fontSize="2rem" fontWeight="bold">{gameSet.homeScore}</Typography>
-                    </Grid>
+                </Stack>
 
-                    <Grid item xs={4}>
-                        <Typography fontSize="2rem" fontWeight="bold">{gameSet.guestScore}</Typography>
-                    </Grid>
-                    <Grid item xs={2} />
-
-                    <Grid item xs={2} />
-                    <Grid item xs={4}>
-                        <LoadingButton
-                            loading={isLoading}
-                            variant="outlined"
-                            disabled={gameSet.homeScore <= 0 || isChangeScoreDisabled(false, true)}
-                            onClick={() => onUpdateScore(gameSet.homeScore - 1, gameSet.guestScore)}
-                            sx={{ m: "auto" }}
-                        >
-                            <ExpandMoreIcon />
-                        </LoadingButton>
-                    </Grid>
-
-                    <Grid item xs={4}>
-                        <LoadingButton
-                            loading={isLoading}
-                            variant="outlined"
-                            disabled={gameSet.guestScore <= 0 || isChangeScoreDisabled(false, false)}
-                            onClick={() => onUpdateScore(gameSet.homeScore, gameSet.guestScore - 1)}
-                            sx={{ m: "auto" }}
-                        >
-                            <ExpandMoreIcon />
-                        </LoadingButton>
-                    </Grid>
-                    <Grid item xs={2} />
-
-
-                </Grid>
                 <GameLiveEditSpinner startTime={startTime} onTimerEnd={() => onSendUpdate()} />
                 <Divider sx={{ mt: 1 }} />
                 <ChatMessageList messages={messages} ref={chatRef} sx={{ height: "10em" }} />
@@ -214,25 +165,6 @@ const GameLiveEditDialog = ({ game, show, matchId, messages, editorCode, onClose
         </Dialog >
     );
 
-    function isChangeScoreDisabled(add: boolean, isHome: boolean) {
-
-        let homeWon = gameSet.homeScore >= 11 && gameSet.homeScore - gameSet.guestScore >= 2;
-        let guestWon = gameSet.guestScore >= 11 && gameSet.guestScore - gameSet.homeScore >= 2;
-
-        if (homeWon) {
-            if (isHome && !add)
-                return false;
-            return true;
-        }
-
-        if (guestWon) {
-            if (!isHome && !add)
-                return false;
-            return true;
-        }
-        return false;
-
-    }
     function isSetChangeDisabled(nextSetNumber: number) {
         if (nextSetNumber > 5 || nextSetNumber < 1)
             return true;

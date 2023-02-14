@@ -1,4 +1,5 @@
 import axios from "axios";
+import { SimpleGame } from "../data/Game";
 import { Match, RequestMatch, SimpleMatch, sortMatch, sortSimpleMatch } from "../data/Match";
 import { RequestLineup } from "../data/RequestLineup";
 import { ApiResponse, returnData, returnError } from "./ApiResponse";
@@ -6,6 +7,7 @@ import { ApiResponse, returnData, returnError } from "./ApiResponse";
 type MatchResponse = ApiResponse<Match>;
 type MatchesReponse = ApiResponse<Array<Match>>;
 export type SimpleMatchesReponse = ApiResponse<Array<SimpleMatch>>;
+type SimpleGamesReponse = ApiResponse<Array<SimpleGame>>;
 
 export async function postMatch(requestMatch: RequestMatch): Promise<MatchResponse> {
     try {
@@ -56,7 +58,25 @@ export async function fetchSimpleMatches(): Promise<SimpleMatchesReponse> {
         return returnData(simpleMatches);
 
     } catch (error) {
-        console.log(`Error fetching matches on Server: ${error}`)
+        console.log(`Error fetching simple matches on Server: ${error}`)
+        return returnError(`${error}`);
+    }
+}
+
+export async function fetchSimpleMatchGames(matchId: number): Promise<SimpleGamesReponse> {
+    try {
+        let response = await axios.get(`/simple_match/${matchId}/games`);
+        if (response.status !== 200) {
+            console.log(`Error fetching games of simple match from the Server: ${response.status}`)
+            return returnError(response.status.toString());
+        }
+
+        let simpleGames: Array<SimpleGame> = response.data;
+        simpleGames.sort((a, b) => a.gameNumber - b.gameNumber);
+        return returnData(simpleGames);
+
+    } catch (error) {
+        console.log(`Error fetching games of simple match on Server: ${error}`)
         return returnError(`${error}`);
     }
 }

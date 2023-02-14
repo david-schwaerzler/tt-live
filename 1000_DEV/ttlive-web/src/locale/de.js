@@ -170,6 +170,7 @@ const deDe = {
 
             "GameSetResult.isHome": "Heim?",
             "GameSetResult.unset": "0:0?",
+            "GameSetResult.title": "Satzergebnis",
 
             "ImprintView.imprint": "Impressum:",
             "ImprintView.contact": "Kontaktaufnahme:",
@@ -187,14 +188,14 @@ const deDe = {
 
             "ContactForm.header": "Kontakt",
             "ContactForm.introduction": "Moin,\n"
-                + "TT-Live ist ein kleine Projekt, welches ich in meiner Freizeit neben meinem Studium entwickel.\n"
+                + "TT-Live ist ein kleines Projekt, welches ich neben meinem Studium in der Freizeit entsanden ist.\n"
                 + "Hast du Feedback, Verbesserungsvorschläge oder\n"
-                + "sind Fehler aufgetreten, lassen sie es mich gerne wissen.",
+                + "sind Fehler aufgetreten, lassen es mich gerne wissen.",
             "ContactForm.text": "Deine Nachricht",
-            "ContactForm.recipient": "Email (otional)",
+            "ContactForm.recipient": "Email (optional)",
             "ContactForm.submit": "Senden",
             "ContactForm.confirmTitle": "Erfolgreich",
-            "ContactForm.confirmText": "Deome Nachricht wurde erfolgreich versendet.\nVielen Dank für ihr Feedback.",
+            "ContactForm.confirmText": "Deine Nachricht wurde erfolgreich versendet.\nVielen Dank für ihr Feedback.",
             "ContactForm.errorTextLength": "Der Text darf nur maximal 4096 Zeichen umfassen",
             "ContactForm.errorTextEmpty": "Sie müssen schon etwas schreiben",
             "ContactForm.errorRecipientLength": "Maximale länge 265 Zeichn",

@@ -3,7 +3,7 @@ import React from "react";
 import { ChatMessage } from "../../../../rest/data/ChatMessage";
 import { Game } from "../../../../rest/data/Game";
 import { GameSet } from "../../../../rest/data/GameSet";
-import GameLiveEdit from "./edit/GameLiveEdit";
+import GameLiveEdit from "../live_edit/GameLiveEdit";
 import GameSetScore, { InputType } from "./edit/GameSetScore";
 
 import GameReportPlayerCell from "./GameReportPlayerCell";
