@@ -124,7 +124,7 @@ public class MatchReceiver {
 	@Path("/{id}/validate")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response isEditorCodlineupeValid(@PathParam("id") long id, @QueryParam("editorCode") String editorCode)
+	public Response isEditorCodeValid(@PathParam("id") long id, @QueryParam("editorCode") String editorCode)
 			throws BadRestRequestException {
 		if (editorCode == null)
 			return Response.status(Status.BAD_REQUEST).entity("No editorCode was provided in the path").build();

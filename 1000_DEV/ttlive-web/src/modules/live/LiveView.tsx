@@ -16,6 +16,7 @@ import { Game } from "../../rest/data/Game";
 import { Match, sortMatch } from "../../rest/data/Match";
 import { Player } from "../../rest/data/Player";
 import ChatDrawer from "../chat/ChatDrawer";
+import { useEditorCode } from "./hooks/useEditorCode";
 
 const MatchSettingsTab = React.lazy(() => import("./components/settings/MatchSettingsTab"));
 const LiveTab = React.lazy(() => import("./components/live/LiveTab"));
@@ -24,7 +25,6 @@ const GameReportTab = React.lazy(() => import("./components/game_report/GameRepo
 
 const LiveView = () => {
     const [match, setMatch] = useState<Match | null>(null);
-    const [editorCode, setEditorCode] = useState<string | null>(null)
     const [reversedGames, setReversedGames] = useState<Array<Game>>([]); // games of the match in reversed order (higher game number is first)
     const [activeTab, setActiveTab] = useState<number>(1);
     const [chatDrawerExpanded, setChatDrawerExpanded] = useState(false);
@@ -36,6 +36,8 @@ const LiveView = () => {
     const [t] = useTranslation();
     const [searchParams] = useSearchParams();
     const visitedPages = useRef<Set<number>>(new Set());
+
+    const editorCode = useEditorCode(match?.id ?? null)
 
     useTrackPage("Live", "/live", match?.id == null ? -1 : match?.id);
 
@@ -55,17 +57,13 @@ const LiveView = () => {
     }, [searchParams, context])
 
 
+
     useEffect(() => {
         async function fetchMatchLocal(id: number) {
             let response = await fetchMatch(id);
             if (response.data != null) {
                 setReversedGames([...response.data.games].reverse());
-                setMatch(response.data);
-
-                if (context.editorCode[response.data?.id] != null)
-                    setEditorCode(context.editorCode[response.data?.id]);
-                else
-                    setEditorCode(null)
+                setMatch(response.data);              
             }
         }
         async function fetchChatLocal(id: number) {
@@ -91,7 +89,7 @@ const LiveView = () => {
             if (intervalId != null)
                 clearInterval(intervalId);
         }
-    }, [context.matchId, context.editorCode])
+    }, [context.matchId])
 
     useEffect(() => {
         if (match?.homePlayers != null && match.guestPlayers != null && match.homeDoubles != null && match.guestDoubles != null) {

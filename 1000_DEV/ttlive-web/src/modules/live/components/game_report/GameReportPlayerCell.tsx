@@ -13,13 +13,14 @@ const GameReportPlayerCell = ({ player1, player2, won }: GameReportPlayerCellPro
 
     return (
         <Grid
-            style={{
+            sx={{
                 textAlign: "left",
                 whiteSpace: "nowrap",
                 textOverflow: "ellipsis",
                 overflow: "hidden",
                 fontSize: "0.9rem",
-                fontWeight: won ? 500 : "normal"
+                fontWeight: won ? 500 : "normal",
+                pr: 1                
             }}
             item
             xs={5}>

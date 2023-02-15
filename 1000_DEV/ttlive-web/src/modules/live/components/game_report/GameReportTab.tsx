@@ -1,5 +1,5 @@
 import { FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Skeleton, Switch } from "@mui/material";
-import React, {  useContext, useMemo, useState } from "react";
+import React, {  useContext, useDeferredValue, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AppContext } from "../../../../AppContext";
 import { ChatMessage } from "../../../../rest/data/ChatMessage";
@@ -53,6 +53,8 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
         return isEditModeStr === "true";
     });
 
+    const deferredIsEditMode = useDeferredValue(isEditMode);
+    const deferredInputType = useDeferredValue(inputType);
 
 
     const sections = useMemo(() => {
@@ -112,11 +114,12 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
                 </React.Fragment>
                 : sections.map((section, index) =>
                    <GameReportSection
+                    key={index}
                     games={section.games}
                     type={section.type}
                     editorCode={editorCode}
-                    inputType={inputType}
-                    isEditMode={isEditMode}
+                    inputType={deferredInputType}
+                    isEditMode={deferredIsEditMode}
                     matchId={matchId}
                     matchState = {matchState}
                     messages={messages}

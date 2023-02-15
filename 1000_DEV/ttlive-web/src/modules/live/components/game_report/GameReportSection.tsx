@@ -1,5 +1,5 @@
 import { Card, CardContent, Typography, Stack } from "@mui/material";
-import { useCallback, useDeferredValue } from "react";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { ChatMessage } from "../../../../rest/data/ChatMessage";
 import { Game } from "../../../../rest/data/Game";
@@ -22,8 +22,7 @@ export interface GameReportSectionProps {
 const GameReportSection = ({ games, type,editorCode, isEditMode, inputType, matchId, messages, matchState, onUpdate}: GameReportSectionProps) => {
 
     const [t] = useTranslation();
-    const deferredIsEditMode = useDeferredValue(isEditMode);
-    const deferredInputType = useDeferredValue(inputType);
+
 
     const onError = useCallback((msg: string) => console.log("todo error"), []);
 
@@ -39,8 +38,8 @@ const GameReportSection = ({ games, type,editorCode, isEditMode, inputType, matc
                             game={game}
                             guestTeamScore={game.guestTeamScore}
                             homeTeamScore={game.homeTeamScore}
-                            inputType={deferredInputType}
-                            isEditMode={deferredIsEditMode}
+                            inputType={inputType}
+                            isEditMode={isEditMode}
                             matchId={matchId}
                             matchState={matchState}
                             messages={messages}
