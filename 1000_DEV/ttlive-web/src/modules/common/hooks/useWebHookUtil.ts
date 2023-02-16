@@ -1,4 +1,3 @@
-import React from "react";
 import { useEffect, useRef } from "react";
 import { ChatMessage } from "../../../rest/data/ChatMessage";
 import { Game } from "../../../rest/data/Game";
@@ -6,17 +5,16 @@ import { Match } from "../../../rest/data/Match";
 import { UpdateAction } from "../../../rest/data/UpdateAction";
 import { Config } from "../utils/Config";
 
-export interface WebHookUtilProps {
-    match: Match;
-    onGameUpdated: (game: Game) => void;
-    onMatchUpdated: (match: Match) => void;
-    onAddChatMessage: (message : ChatMessage) => void;
-}
 
 // how often the socket is checked (in seconds)
 const RETRY_TIMOUT = 10;
 
-const WebHookUtil = ({ match, onGameUpdated, onMatchUpdated, onAddChatMessage }: WebHookUtilProps) => {
+export function useWebHookUtil(
+    match: Match | null,
+    onGameUpdated: (game: Game) => void,
+    onMatchUpdated: (match: Match) => void,
+    onAddChatMessage: (message: ChatMessage) => void) {
+
     const ws = useRef<WebSocket | null>(null);
 
     useEffect(() => {
@@ -33,6 +31,10 @@ const WebHookUtil = ({ match, onGameUpdated, onMatchUpdated, onAddChatMessage }:
 
             return ws.current;
         }
+
+        if(match?.id == null)
+            return;
+
         let wsCurrent = initWs();
 
         const intevalId = setInterval(() => {
@@ -44,7 +46,7 @@ const WebHookUtil = ({ match, onGameUpdated, onMatchUpdated, onAddChatMessage }:
             clearInterval(intevalId);
         }
 
-    }, [match.id])
+    }, [match?.id])
 
     useEffect(() => {
         if (ws.current) {
@@ -62,8 +64,8 @@ const WebHookUtil = ({ match, onGameUpdated, onMatchUpdated, onAddChatMessage }:
                         return;
                     }
                     onGameUpdated(action.game);
-                }else if(action.action === "CHAT"){
-                    if(action.chat == null){
+                } else if (action.action === "CHAT") {
+                    if (action.chat == null) {
                         console.error("Received websocket event for update chat but no chat was provided")
                         return;
                     }
@@ -73,7 +75,4 @@ const WebHookUtil = ({ match, onGameUpdated, onMatchUpdated, onAddChatMessage }:
         }
     }, [onMatchUpdated, onGameUpdated, onAddChatMessage])
 
-    return (<div></div>);
 }
-
-export default React.memo(WebHookUtil);
