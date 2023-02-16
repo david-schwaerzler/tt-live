@@ -41,7 +41,7 @@ export const tokenRefreshApi = createRefresh({
                     return {
                         isSuccess: true,
                         newAuthToken: data.token,
-                        newAuthTokenExpireIn: data.tokenValidity,
+                        newAuthTokenExpireIn: data.tokenValidity / 60,
                         newAuthUserState: data.account
                     };
                 }

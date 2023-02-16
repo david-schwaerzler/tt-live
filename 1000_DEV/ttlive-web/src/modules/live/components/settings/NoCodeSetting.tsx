@@ -58,7 +58,7 @@ const NoCodeSetting = ({ match }: NoCodeSettingProps) => {
         let response = await fetchValidateErrorCode(match.id, newEditorCode);
         if (response.data != null) {
             if (response.data === true) {
-                context.setEditorCode(match.id, newEditorCode);
+                context.setEditorCode(match.id, newEditorCode, true);
                 setErrorMsgs([]);
             } else {
                 updateError(Errors.VALIDATE_CODE, t("MatchSettings.errorInvalidCode"));

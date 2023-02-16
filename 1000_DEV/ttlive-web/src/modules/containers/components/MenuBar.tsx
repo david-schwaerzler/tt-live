@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from 'react-router-dom'
 import { AppContext } from "../../../AppContext";
 import MenuLoginForm from "./MenuLoginForm";
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import Logout from '@mui/icons-material/Logout';
 import { LogoIcon } from "../../common/components/utils/Icons";
 
@@ -96,7 +95,7 @@ const MenuBarMobile = () => {
         setLoginAnchor(null);
         console.log(location.pathname)
     }, [location.pathname])
-    
+
     useEffect(() => {
         setLoginAnchor(null);
 
@@ -133,16 +132,6 @@ const MenuBarMobile = () => {
                         </ListItemText>
                     </MenuItem>
                 </Link>
-                <Link to="/myGames" style={{ textDecoration: 'none', color: "inherit" }} tabIndex={-1} onClick={() => setLoginAnchor(null)}>
-                    <MenuItem >
-                        <ListItemIcon>
-                            <EmojiEventsIcon />
-                        </ListItemIcon>
-                        <ListItemText>
-                            {t("MenuBar.myGames")}
-                        </ListItemText>
-                    </MenuItem>
-                </Link>
                 <Divider />
 
                 <MenuItem onClick={() => { signOut(); setLoginAnchor(null); }}>
@@ -165,12 +154,7 @@ const MenuBarDesktop = () => {
 
     return (
         <React.Fragment>
-            <Divider orientation="vertical" sx={{ borderRightWidth: "2px", borderColor: "white", borderRadius: "5px", borderRightStyle: "solid" }} flexItem />
-            <Link to="/myGames" style={{ textDecoration: 'none' }} tabIndex={-1}>
-                <HoverButton className={location.pathname === "/myGames" ? "current" : ""}>
-                    {t('MenuBar.myGames')}
-                </HoverButton>
-            </Link>
+            <Divider orientation="vertical" sx={{ borderRightWidth: "2px", borderColor: "white", borderRadius: "5px", borderRightStyle: "solid" }} flexItem />           
             <Link to="/profile" style={{ textDecoration: 'none', flexGrow: 1 }} tabIndex={-1}>
                 <HoverButton className={location.pathname === "/profile" ? "current" : ""}>
                     {t('MenuBar.profile')}

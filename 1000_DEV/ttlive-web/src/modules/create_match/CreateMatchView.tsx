@@ -246,7 +246,7 @@ const CreateMatchView = (props: CreateMatchViewProps) => {
         let response = await postMatch(requestMatch);
         if (response.data != null) {
             context.setMatchId(response.data.id);
-            context.setEditorCode(response.data.id, response.data.editorCode);
+            context.setEditorCode(response.data.id, response.data.editorCode, true);
             trackEvent({action: "created", category: "match"})
             navigate("/live");
         } else {

@@ -1,12 +1,8 @@
-import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import { Button, styled, TextField } from "@mui/material";
 import React, { useCallback, useState } from "react";
-import { useSignIn } from "react-auth-kit";
 import { useNavigate } from "react-router-dom";
-import { postLogin } from "../../../rest/api/LoginApi";
-import { LoginResponse, RequestLogin } from "../../../rest/data/Account";
 import LoadingButton from "../../common/components/buttons/LoadingButton";
-import { LoginErrors } from "../../common/components/login/LoginForm";
+import { LoginErrors, useLogin } from "../../common/hooks/useLogin";
 
 export interface MenuLoginFormProps {
     isBig: boolean
@@ -21,69 +17,19 @@ const MenuLoginForm = ({ isBig }: MenuLoginFormProps) => {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const navigate = useNavigate();
-    const signIn = useSignIn();
-    const { trackEvent } = useMatomo();
+
+    const login = useLogin();
 
     const onLogin = useCallback(async () => {
 
         const redirectError = (type: LoginErrors, error: string) => navigate(`/login?error=${error}&username=${username}&type=${type}`);
-
-        if (username === "") {
-            redirectError(LoginErrors.USERNAME, "LoginForm.errorUsernameEmpty");
+        const status = await login(username, password);
+        if(status.error != null){
             setPassword("");
-            return;
+            redirectError(status.error, status.errorMsg);
         }
-        if (password === "") {
-            redirectError(LoginErrors.PASSWORD, "LoginForm.errorPasswordEmpty");
-            setPassword("");
-            return;
-        }
-
-        let requestLogin: RequestLogin = {
-            username: username,
-            password: password
-        };
-
-        let response = await postLogin(requestLogin);
-        if (response.data != null) {
-            switch (response.data.status) {
-                case "USERNAME_INVALID":
-                    redirectError(LoginErrors.USERNAME, "LoginForm.errorWrongUsername");
-                    break;
-                case "PASSWORD_INVALID":
-                    redirectError(LoginErrors.GENERAL, "LoginForm.errorNotAuthenticated");
-                    break;
-                case "SUCCESS":
-                    let data: LoginResponse = response.data
-                    if (data.token == null) {
-                        console.error(`Login success but no token was provided.`);
-                        redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
-                    } else {
-                        if (signIn(
-                            {
-                                token: data.token,
-                                expiresIn: data.tokenValidity / 60,
-                                refreshToken: data.refreshToken,
-                                refreshTokenExpireIn: data.refreshTokenValidity / 60,
-                                tokenType: "Bearer",
-                                authState: response.data.account
-                            }) === false) {
-                            console.error(`Error login in. Error from react auth kit`);
-                            redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
-                        }
-                        trackEvent({ category: "login", action: "login" })
-                    }
-                    break;
-                default:
-                    console.error(`Login returned unknown status. Status=${response.data.status}`);
-                    redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
-                    break;
-            }
-        } else {
-            redirectError(LoginErrors.GENERAL, "LoginForm.errorPost");
-        }
-        setPassword("");
-    }, [navigate, password, signIn, username, trackEvent]);
+      
+    }, [navigate, password, username, login]);
 
 
     return isBig
@@ -99,10 +45,7 @@ const MenuLoginForm = ({ isBig }: MenuLoginFormProps) => {
             onUsernameChange={setUsername}
             onPasswordChange={setPassword}
             onLogin={onLogin} />
-
-
 }
-
 
 export const WhiteTextField = styled(TextField)({
 

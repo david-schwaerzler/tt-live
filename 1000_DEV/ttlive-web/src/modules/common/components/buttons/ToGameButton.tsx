@@ -7,16 +7,17 @@ import { AppContext } from "../../../../AppContext"
 export interface ToGameButtonProps {
     sx?: SxProps;
     matchId: number;
+    variant? : "outlined" | "text" | "contained" | undefined
 }
 
 
-const ToGameButton = ({ sx, matchId }: ToGameButtonProps) => {
+const ToGameButton = ({ sx, matchId, variant= "outlined" }: ToGameButtonProps) => {
 
     const context = useContext(AppContext);
     const navigate = useNavigate();
     const [t] = useTranslation();
 
-    return <Button variant="outlined" sx={sx} onClick={(() => onLinkGame())}>
+    return <Button variant={variant} sx={sx} onClick={(() => onLinkGame())}>
         {t("ToGameButton.linkGame")}
     </Button>
 

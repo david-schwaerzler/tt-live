@@ -8,7 +8,6 @@ import { AppContext } from "../../AppContext";
 import ShareButton from "./components/live/ShareButton";
 import { spacingNormal } from "../common/utils/StyleVars";
 import { useTrackPage } from "../common/hooks/useTrackerProvider";
-import WebHookUtil from "../common/hooks/WebHookUtil";
 import { fetchChatMessages } from "../../rest/api/ChatApi";
 import { fetchMatch } from "../../rest/api/MatchApi";
 import { ChatMessage, sortChatMessages } from "../../rest/data/ChatMessage";
@@ -17,6 +16,7 @@ import { Match, sortMatch } from "../../rest/data/Match";
 import { Player } from "../../rest/data/Player";
 import ChatDrawer from "../chat/ChatDrawer";
 import { useEditorCode } from "./hooks/useEditorCode";
+import { useWebHookUtil } from "../common/hooks/useWebHookUtil";
 
 const MatchSettingsTab = React.lazy(() => import("./components/settings/MatchSettingsTab"));
 const LiveTab = React.lazy(() => import("./components/live/LiveTab"));
@@ -42,6 +42,11 @@ const LiveView = () => {
     useTrackPage("Live", "/live", match?.id == null ? -1 : match?.id);
 
     useEffect(() => { visitedPages.current.add(activeTab) }, [activeTab]);
+
+
+
+
+
 
     const swipeHanlder = useSwipeable({
         onSwipedRight: () => setActiveTab(activeTab - 1 < 0 ? 0 : activeTab - 1),
@@ -143,12 +148,16 @@ const LiveView = () => {
     }, [chatDrawerExpanded, badgeCounter]);
 
 
+    useWebHookUtil(match, onGameUpdated, onMatchUpdated, onAddChatMessage);
+
+
+
     if (context.matchId == null)
         return renderNoMatch();
 
     return (
         <Box {...swipeHanlder} sx={{ ...(chatDrawerExpanded && { height: { xs: "calc(50vh - 64px)", md: "100%" } }), overflow: "auto", m: -2, p: 2 }}>
-            {match != null && <WebHookUtil match={match} onGameUpdated={onGameUpdated} onMatchUpdated={onMatchUpdated} onAddChatMessage={onAddChatMessage} />}
+            
             {/* This is a quick fix to allow swiping on on outside the component */}
             <Box {...swipeHanlder} className="test" position="absolute" top={"10%"} bottom={0} left={0} right={0} zIndex={-10} />
 

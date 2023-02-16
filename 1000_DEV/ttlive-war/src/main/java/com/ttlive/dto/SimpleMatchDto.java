@@ -36,12 +36,9 @@ public class SimpleMatchDto {
 				fields = new String[] { "id", "homeTeamScore", "guestTeamScore", "state", "startDate", "league",
 						"homeClub", "homeNumber", "guestClub", "guestNumber" };
 			}
-
+			this.id = bo.getId();
 			for (String field : fields) {
-				switch (field) {
-				case "id":
-					this.id = bo.getId();
-					break;
+				switch (field) {				
 				case "homeTeamScore":
 					this.homeTeamScore = bo.getHomeTeamScore();
 					break;

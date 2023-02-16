@@ -225,6 +225,8 @@ const deDe = {
             "CookieBanner.accept": "Erlauben",
             "CookieBanner.decline": "Ablehnen",
 
+            "MyGameList.myGames": "Meine Spiele"
+
         }
     }
 }

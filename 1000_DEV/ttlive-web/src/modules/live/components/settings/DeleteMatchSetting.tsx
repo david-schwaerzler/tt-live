@@ -1,14 +1,12 @@
-import { TextField, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { useAuthUser } from "react-auth-kit";
 import { Trans, useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { AppContext } from "../../../../AppContext";
-import { deleteMatch } from "../../../../rest/api/MatchApi";
 import { Account } from "../../../../rest/data/Account";
 import { Match } from "../../../../rest/data/Match";
-import LoadingButton from "../../../common/components/buttons/LoadingButton";
-import ErrorMessage from "../../../common/components/utils/ErrorMessage";
+import MatchDeleteForm from "../../../common/components/match/MatchDeleteForm";
 
 import BaseSetting from "./BaseSetting";
 
@@ -21,9 +19,6 @@ const DeleteMatchSetting = ({ match, editorCode }: DeleteMatchSettingProps) => {
 
     const [expanded, setExpanded] = useState<boolean>(false);
     const [isDeletable, setDeletable] = useState<boolean>(false);
-    const [inputValue, setInputValue] = useState<string>("");
-    const [isLoading, setLoading] = useState<boolean>(false);
-    const [errorMsg, setErrorMsg] = useState<string>("");
     const [t] = useTranslation();
     const loginData = useAuthUser();
     const context = useContext(AppContext);
@@ -62,22 +57,7 @@ const DeleteMatchSetting = ({ match, editorCode }: DeleteMatchSettingProps) => {
                 <Typography sx={[{ "& strong": { color: theme => theme.palette.primary.main } }]} mb={2} >
                     <Trans i18nKey={"DeleteMatchSetting.deletable"} t={t} />
                 </Typography>
-                <ErrorMessage msg={errorMsg} sx={{ mb: 1 }} />
-                <TextField
-                    sx={{}}
-                    label="löschen"
-                    placeholder="Löschen"
-                    value={inputValue}
-                    onChange={e => setInputValue(e.target.value)}
-                />
-
-
-                <LoadingButton
-                    sx={{ mt: 2 }}
-                    loading={isLoading}
-                    variant="outlined"
-                    onClick={onDelete}
-                >{t("Common.delete")}</LoadingButton>
+                <MatchDeleteForm matchId={match.id}  editorCode={editorCode} onDeleted={onDeleted} />
             </React.Fragment>
         );
     }
@@ -99,31 +79,11 @@ const DeleteMatchSetting = ({ match, editorCode }: DeleteMatchSettingProps) => {
 
     }
 
-    async function onDelete() {
-
-        if (editorCode == null)
-            return;
-
-        if (inputValue.toLowerCase() !== "löschen") {
-            setErrorMsg(t("DeleteMatchSetting.inputError"))
-            return;
-        }
-
-        setLoading(true);
-        let response = await deleteMatch(match.id, editorCode)
-        if (response.error != null) {
-            setErrorMsg(t("DeleteMatchSetting.deleteError"))
-        } else {
-            setErrorMsg("");
-            context.setEditorCode(match.id, "");
-            context.setMatchId(null);
-            navigate("/");
-        }
-        setLoading(false);
+    async function onDeleted() {
+        context.setEditorCode(match.id, "", true);
+        context.setMatchId(null);
+        navigate("/");
     }
-
-
-
 }
 
 export default DeleteMatchSetting;

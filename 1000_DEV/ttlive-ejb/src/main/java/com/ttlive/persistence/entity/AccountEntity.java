@@ -58,6 +58,7 @@ public class AccountEntity {
 	@OneToMany(mappedBy = "account")
 	private List<MatchEntity> matches = new LinkedList<MatchEntity>();
 
+
 	public void addMatch(MatchEntity match) {
 		addMatch(match, true);
 	}

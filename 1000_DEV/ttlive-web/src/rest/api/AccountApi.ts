@@ -37,9 +37,15 @@ export async function fetchIsUsernameTaken(username: string): Promise<ApiRespons
     }
 }
 
-export async function fetchAccountMatches(): Promise<SimpleMatchesReponse> {
+export async function fetchAccountMatches(fields?: Array<string>): Promise<SimpleMatchesReponse> {
     try {
-        let response = await axios.get(`/secured/account/match`);
+
+        let params = "";
+        if (fields != null)
+            params = "?fields=" + fields.join(",");
+
+
+        let response = await axios.get(`/secured/account/match${params}`);
         if (response.status !== 200) {
             console.log(`Error fetching account matches from the Server: ${response.status}`)
             return returnError(response.status.toString());
@@ -53,7 +59,7 @@ export async function fetchAccountMatches(): Promise<SimpleMatchesReponse> {
     }
 }
 
-export async function putConnectMatch(matchId : number, editorCode: string) : Promise<AccountResponse>{
+export async function putConnectMatch(matchId: number, editorCode: string): Promise<AccountResponse> {
     try {
         let response = await axios.put(`/secured/account/match/${matchId}/connect?editorCode=${editorCode}`);
         if (response.status !== 200) {
@@ -65,6 +71,22 @@ export async function putConnectMatch(matchId : number, editorCode: string) : Pr
 
     } catch (error) {
         console.log(`Error requesting login on Server: ${error}`)
+        return returnError(`${error}`);
+    }
+}
+
+export async function fetchEditorCodes(): Promise<ApiResponse<Array<{ matchId: number, editorCode: string }>>> {
+    try {
+        let response = await axios.get(`/secured/account/editorCode`);
+        if (response.status !== 200) {
+            console.log(`Error fetching editor codes from the Server: ${response.status}`)
+            return returnError(response.status.toString());
+        }
+
+        return returnData(response.data)
+
+    } catch (error) {
+        console.log(`Error fetching editor codes from the Server: ${error}`)
         return returnError(`${error}`);
     }
 }
