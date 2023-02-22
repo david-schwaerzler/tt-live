@@ -1,42 +1,24 @@
-import { Autocomplete, FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { spacingNormal, spacingSmall } from "../../common/utils/StyleVars";
-import { fetchRegions } from "../../../rest/api/RegionApi";
-import { Region } from "../../../rest/data/Region";
 import { MatchStateObject } from "./MatchStateObject";
 import { StateProps } from "./StateProps";
 import ErrorMessage from "../../common/components/utils/ErrorMessage";
+import RegionAutocomplete from "../../common/components/autocomplete/RegionSelectAutocomplete";
+import ContestSelect from "../../common/components/autocomplete/ContestSelect";
+import { useErrorArrays } from "../../common/hooks/useErrorArrays";
+import { Region } from "../../../rest/data/Region";
 
 const ERROR_GENERAL = 0;
 const ERROR_REGION = 1;
 const ERROR_CONTEST = 2;
 
 const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) => {
-    const [regions, setRegions] = useState<Array<Region>>([]);
-    const [errorMsgs, setErrorMsgs] = useState<Array<string>>([]);
-    const [regionInput, setRegionInput] = useState<string>('')
-    const hasFetchedData = useRef(false);
-
     const [t] = useTranslation();
 
-    const updateError = useCallback((code: number, msg: string) => {
-        let updated = [...errorMsgs]
-        updated[code] = msg;
-        setErrorMsgs(updated);
-    }, [errorMsgs]);
-
-
-    const fetchRegionsLocal = useCallback(async () => {
-
-        let response = await fetchRegions();
-        if(response.data != null){
-            setRegions(response.data);
-        }else{
-            updateError(ERROR_GENERAL, t(`Common.errorHttp: ${response.error}`))
-        }
-    }, [updateError, t]);
+    const [errorMsgs, updateError] = useErrorArrays();
 
 
     useEffect(() => {
@@ -50,13 +32,10 @@ const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
             }
             return true;
         };
-        if (hasFetchedData.current === false) {
-            setErrorMsgs([])
-            setValidate(onValidate);
-            fetchRegionsLocal();
-            hasFetchedData.current = true;
-        }
-    }, [setValidate, fetchRegionsLocal, updateError, t])
+
+        setValidate(onValidate);
+
+    }, [setValidate, updateError, t]);
 
     return (
         <Box sx={{ width: "100%", margin: "auto" }}>
@@ -68,38 +47,21 @@ const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
             <ErrorMessage msg={errorMsgs[ERROR_GENERAL]} centered sx={{ paddingBottom: spacingSmall }} />
 
             <Stack sx={{ flexDirection: { xs: "column", sm: "row" }, alignItems: { xs: "center", sm: "flex-start" }, gap: spacingNormal }} justifyContent="space-evenly" >
-                <FormControl >
-                    <Autocomplete
-                        id="auto-region"
-                        sx={{ minWidth: "200px", alignSelf: "center" }}
-                        value={matchStateObject.region}
-                        onChange={(e, value) => onRegionSelected(value)}
-                        options={regions}
-                        getOptionLabel={option => option.name}
-                        inputValue={regionInput}
-                        onInputChange={(e, value) => setRegionInput(value)}
-                        renderInput={(params) => <TextField {...params} label={t('RegionState.region')} error={errorMsgs[ERROR_REGION] != null && errorMsgs[ERROR_REGION] !== ""} />}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                        autoHighlight={true}
-                    />
-                    <FormHelperText error={errorMsgs[ERROR_REGION] != null && errorMsgs[ERROR_REGION] !== ""} >{errorMsgs[ERROR_REGION]}</FormHelperText>
-                </FormControl>
-                <FormControl >
-                    <FormControl sx={{ minWidth: "200px", alignSelf: "center" }} error={errorMsgs[ERROR_CONTEST] != null && errorMsgs[ERROR_REGION] !== ""} >
-                        <InputLabel id="select-contest">{t('RegionState.contest')}</InputLabel>
-                        <Select
-                            id="select-contest"
-                            labelId="select-contest"
-                            label={t('RegionState.contest')}
-                            value={matchStateObject.contest == null ? '' : matchStateObject.contest}
-                            onChange={e => onContestSelected(e.target.value)}>
-                            <MenuItem value="WOMEN">{t('RegionState.contestWomen')}</MenuItem>
-                            <MenuItem value="MEN">{t('RegionState.contestMen')}</MenuItem>
-                        </Select>
-                        <FormHelperText>{errorMsgs[ERROR_CONTEST]}</FormHelperText>
+                <RegionAutocomplete
+                    sx={{ minWidth: "200px", alignSelf: "center" }}
+                    region={matchStateObject.region ?? ""}
+                    onChanged={onRegionSelected}
+                    error={errorMsgs[ERROR_REGION]}
+                    onError={error => updateError(ERROR_REGION, error)}
+                />
+                <ContestSelect
+                    sx={{ minWidth: "200px", alignSelf: "center" }}
+                    contest={matchStateObject.contest}
+                    onChanged={onContestSelected}
+                    error={errorMsgs[ERROR_CONTEST]}
+                    onError={error => updateError(ERROR_CONTEST, error)}
+                />
 
-                    </FormControl>
-                </FormControl>
             </Stack>
         </Box >
     );

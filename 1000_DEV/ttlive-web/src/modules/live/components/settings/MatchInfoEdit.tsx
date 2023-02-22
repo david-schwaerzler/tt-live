@@ -1,17 +1,20 @@
-import { Autocomplete, Button, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import {  Button, FormControl, FormHelperText, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import React from "react";
-import { useCallback, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { putMatch } from "../../../../rest/api/MatchApi";
-import { fetchRegions } from "../../../../rest/api/RegionApi";
 import { RequestLeague } from "../../../../rest/data/League";
 import { Match, RequestMatch } from "../../../../rest/data/Match";
 import { Region } from "../../../../rest/data/Region";
 import { RequestTeam } from "../../../../rest/data/Team";
+import ContestSelect from "../../../common/components/autocomplete/ContestSelect";
+import RegionAutocomplete from "../../../common/components/autocomplete/RegionSelectAutocomplete";
 import LoadingButton from "../../../common/components/buttons/LoadingButton";
+import ErrorMessage from "../../../common/components/utils/ErrorMessage";
+import { useErrorArrays } from "../../../common/hooks/useErrorArrays";
 
 import BaseSetting from "./BaseSetting";
 
@@ -21,6 +24,7 @@ export interface MatchInfoEditProps {
 }
 
 enum Error {
+    GENERAL,
     HOME_CLUB,
     HOME_NUMBER,
     GUEST_CLUB,
@@ -42,9 +46,7 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
     const [league, setLeague] = useState<string>(match == null ? "" : match.league.name);
     const [contest, setContest] = useState<"MEN" | "WOMEN">(match == null ? "MEN" : match.league.contest)
     const [region, setRegion] = useState<Region | null>(null);
-    const [regions, setRegions] = useState<Array<Region>>([]);
     const [isLoading, setLoading] = useState<boolean>(false);
-    const [errorMsgs, setErrorMsgs] = useState<Array<string>>([]);
 
     const [t] = useTranslation();
 
@@ -61,41 +63,20 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
         setGuestTeamNumber(match.guestTeam.number);
         setStartDate(dayjs(match.startDate));
         setLeague(match.league.name);
+        setRegion(null)
 
     }, [match, expanded]);
 
-    useEffect(() => {
-        async function fetchRegionLocal() {
-            let response = await fetchRegions();
-            if (response.data != null) {
-                setRegions(response.data);
-                if (match) {
-                    let region = response.data.filter(r => match.league.region === r.name);
-                    if (region.length > 0)
-                        setRegion(region[0]);
-                }
-            }
 
-        }
-        if (regions.length != null)
-            fetchRegionLocal();
-    }, [match, regions.length])
-
-    const updateErrors = useCallback((errorMsgs: Array<string>, key: Error, msg: string) => {
-        let tmp = [...errorMsgs];
-        tmp[key] = msg;
-        setErrorMsgs(tmp);
-    }, [setErrorMsgs]);
-
+    const [errorMsgs, updateError, clearErrors] = useErrorArrays();
 
     if (match == null)
         return <React.Fragment />;
 
-
-    return (
+        return (
         <BaseSetting title={t('MatchInfoEdit.title')} expanded={expanded} onExpandedChanged={setExpanded}>
+            <ErrorMessage msg={errorMsgs[Error.GENERAL]} />
             <Stack gap={2}>
-
                 <Typography variant="h6" width="100%" >
                     {t("MatchInfoEdit.common")}:
                     <Button sx={{ float: "right" }} onClick={() => onReset(match)}>reset</Button>
@@ -113,7 +94,7 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
                     <FormControl>
                         <TextField
                             label={t("MatchInfoEdit.teamNumber")}
-                            type="number"
+                            type="tel"
                             value={homeTeamNumber < 0 ? "" : homeTeamNumber}
                             sx={{ maxWidth: { xs: "5em", sm: "inherit" } }}
                             onChange={e => e.target.value === "" ? setHomeTeamNumber(-1) : setHomeTeamNumber(parseInt(e.target.value))}
@@ -135,7 +116,7 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
                     <FormControl>
                         <TextField
                             label={t("MatchInfoEdit.teamNumber")}
-                            type="number"
+                            type="tel"
                             value={guestTeamNumber < 0 ? "" : guestTeamNumber}
                             sx={{ maxWidth: { xs: "5em", sm: "inherit" } }}
                             onChange={e => e.target.value === "" ? setGuestTeamNumber(-1) : setGuestTeamNumber(parseInt(e.target.value))}
@@ -174,36 +155,21 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
                     </FormControl>
                 </Stack>
                 <Stack direction="row" gap={1}>
-                    <FormControl sx={{ flexGrow: 1 }} error={errorMsgs[Error.REGION] != null && errorMsgs[Error.REGION] !== ""} >
-                        <Autocomplete
-                            value={region}
-                            onChange={(e, value) => setRegion(value)}
-                            options={regions}
-                            getOptionLabel={option => option.name}
-                            renderInput={(params) => <TextField {...params} label={t('RegionState.region')} error={false} />}
-                            isOptionEqualToValue={(option, value) => option.id === value.id}
-                            autoHighlight={true}
+                    <RegionAutocomplete
+                        region={region == null ? match.league.region : region}
+                        onChanged={r => setRegion(r)}
+                        error={errorMsgs[Error.REGION]}
+                        onError={msg => updateError(Error.REGION, msg)}
+                        sx={{ flexGrow: 1 }}
+                    />
 
-                        />
-                        <FormHelperText >
-                            {errorMsgs[Error.REGION]}
-                        </FormHelperText>
-                    </FormControl>
-                    <FormControl sx={{ flexGrow: 1 }} error={errorMsgs[Error.CONTEST] != null && errorMsgs[Error.CONTEST] !== ""}>
-                        <InputLabel id="select-contest">{t('RegionState.contest')}</InputLabel>
-                        <Select
-                            id="select-contest"
-                            labelId="select-contest"
-                            label={t('RegionState.contest')}
-                            value={contest}
-                            onChange={e => (e.target.value === "MEN" || e.target.value === "WOMEN") && setContest(e.target.value)}>
-                            <MenuItem value="WOMEN">{t('RegionState.contestWomen')}</MenuItem>
-                            <MenuItem value="MEN">{t('RegionState.contestMen')}</MenuItem>
-                        </Select>
-                        <FormHelperText>
-                            {errorMsgs[Error.CONTEST]}
-                        </FormHelperText>
-                    </FormControl>
+                    <ContestSelect
+                        contest={contest}
+                        onChanged={setContest}
+                        error={errorMsgs[Error.CONTEST]}
+                        onError={msg => updateError(Error.CONTEST, msg)}
+                        sx={{ flexGrow: 1 }}
+                    />
                 </Stack>
                 <LoadingButton loading={isLoading} variant="outlined" onClick={() => onSave(match)}>Save</LoadingButton>
             </Stack>
@@ -217,34 +183,34 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
         setGuestTeamNumber(match.guestTeam.number);
         setStartDate(dayjs(match.startDate));
         setLeague(match.league.name);
-        setErrorMsgs([]);
+        clearErrors();
     }
 
     async function onSave(match: Match) {
-
+        clearErrors();
         if (homeTeamClub === "") {
-            updateErrors([], Error.HOME_CLUB, "MatchInfoEdit.errorHomeClub");
+            updateError(Error.HOME_CLUB, "MatchInfoEdit.errorHomeClub");
             return;
         } else if (homeTeamNumber < 0) {
-            updateErrors([], Error.HOME_NUMBER, "MatchInfoEdit.errorHomeNumber");
+            updateError(Error.HOME_NUMBER, "MatchInfoEdit.errorHomeNumber");
             return;
         } else if (guestTeamClub === "") {
-            updateErrors([], Error.GUEST_CLUB, "MatchInfoEdit.errorGuestClub");
+            updateError(Error.GUEST_CLUB, "MatchInfoEdit.errorGuestClub");
             return;
         } else if (guestTeamNumber < 0) {
-            updateErrors([], Error.GUEST_NUMBER, "MatchInfoEdit.errorGuestNumber");
+            updateError(Error.GUEST_NUMBER, "MatchInfoEdit.errorGuestNumber");
             return;
         } else if (startDate == null || startDate.isValid() === false) {
-            updateErrors([], Error.START_DATE, "MatchInfoEdit.errorStartDate");
+            updateError(Error.START_DATE, "MatchInfoEdit.errorStartDate");
             return;
         } else if (league === "") {
-            updateErrors([], Error.LEAGUE, "MatchInfoEdit.errorLeague");
+            updateError(Error.LEAGUE, "MatchInfoEdit.errorLeague");
             return;
-        } else if (region === null || regions.some(r => region.id === r.id) === false) {
-            updateErrors([], Error.REGION, "MatchInfoEdit.errorRegion");
+        } else if (region === null) {
+            updateError(Error.REGION, "MatchInfoEdit.errorRegion");
             return;
         } else if (contest !== "MEN" && contest !== "WOMEN") {
-            updateErrors([], Error.CONTEST, "MatchInfoEdit.errorContest");
+            updateError(Error.CONTEST, "MatchInfoEdit.errorContest");
             return;
         }
 
@@ -278,10 +244,9 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
         setLoading(true);
         let response = await putMatch(match.id, requestMatch, editorCode);
         if (response.data != null) {
-            setErrorMsgs([]);
             setExpanded(false)
         } else {
-
+            updateError(Error.GENERAL, t("Common.errorHttp"))
         }
         setLoading(false);
     }
