@@ -33,7 +33,5 @@ export function useEditorCodes(): [editorCode: EditorCode, onChange: (matchId: n
 
     const editorCodes = useMemo(() => ({ ...editorCodesStore, ...editorCodesState }), [editorCodesState, editorCodesStore]);
 
-    console.log({ "ec": editorCodes, "state": editorCodesState, "store": editorCodesStore });
-
     return [editorCodes, onChange];
 }

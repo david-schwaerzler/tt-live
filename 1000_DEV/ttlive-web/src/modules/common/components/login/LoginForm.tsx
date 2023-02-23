@@ -71,7 +71,7 @@ const LoginForm = ({ onLogin, showRegister = true }: LoginFormProps) => {
 
     return (
 
-        <Stack direction="column" gap={2}  >
+        <Stack gap={2} alignItems="center">
             <ErrorMessage msg={errorMsgs[LoginErrors.GENERAL]} />
             <TextField
                 label={t("LoginForm.username")}

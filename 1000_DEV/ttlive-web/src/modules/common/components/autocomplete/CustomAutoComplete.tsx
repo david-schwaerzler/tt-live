@@ -32,7 +32,7 @@ const CustomAutoComplete = <Type,>({ value, options, label, error, sx, onChange,
 
     return (
         <Autocomplete
-            sx={sx}
+            sx={{ flexGrow: 1}}
             value={value}
             onChange={(e, value) => onValueSelected(e, value)}
             options={tmpOptions}

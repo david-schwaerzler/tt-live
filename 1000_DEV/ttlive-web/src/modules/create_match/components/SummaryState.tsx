@@ -33,7 +33,7 @@ const SummaryState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =
     return (
         <Box sx={{ width: "100%", margin: "auto" }}>
 
-            <Typography variant="h5" sx={{ textAlign: "center", paddingBottom: spacingNormal }}>
+            <Typography variant="h5" sx={{ textAlign: "center", mb: 4 }}>
                 {t('CreateGameView.stepSummary')}
             </Typography>
 

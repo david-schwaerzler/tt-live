@@ -40,7 +40,7 @@ const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
     return (
         <Box sx={{ width: "100%", margin: "auto" }}>
 
-            <Typography variant="h5" sx={{ textAlign: "center", paddingBottom: spacingNormal }}>
+            <Typography variant="h5" sx={{ textAlign: "center", mb: 4 }}>
                 {t('CreateGameView.stepRegion')}
             </Typography>
 
@@ -48,14 +48,14 @@ const RegionState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
 
             <Stack sx={{ flexDirection: { xs: "column", sm: "row" }, alignItems: { xs: "center", sm: "flex-start" }, gap: spacingNormal }} justifyContent="space-evenly" >
                 <RegionAutocomplete
-                    sx={{ minWidth: "200px", alignSelf: "center" }}
+                    sx={{ width: "200px", alignSelf: "center" }}
                     region={matchStateObject.region ?? ""}
                     onChanged={onRegionSelected}
                     error={errorMsgs[ERROR_REGION]}
                     onError={error => updateError(ERROR_REGION, error)}
                 />
                 <ContestSelect
-                    sx={{ minWidth: "200px", alignSelf: "center" }}
+                    sx={{ width: "200px", alignSelf: "center" }}
                     contest={matchStateObject.contest}
                     onChanged={onContestSelected}
                     error={errorMsgs[ERROR_CONTEST]}

@@ -31,7 +31,7 @@ const ClubSelector = ({ onUpdate, updateError, isHomeTeam, matchStateObject, tea
 
     return (
         <CustomAutoComplete<string>
-            sx={{ minWidth: "200px", alignSelf: "center" }}
+            sx={{ width: "200px", alignSelf: "center" }}
             accessor={value => value}
             onCreateType={value => value}
             onChange={onClubSelected}

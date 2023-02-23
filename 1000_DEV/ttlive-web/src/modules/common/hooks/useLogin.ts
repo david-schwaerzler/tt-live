@@ -45,7 +45,7 @@ export function useLogin() {
             case "USERNAME_INVALID":
                 return { account: null, error: LoginErrors.USERNAME, errorMsg: t("LoginForm.errorWrongUsername") };
             case "PASSWORD_INVALID":
-                return { account: null, error: LoginErrors.PASSWORD, errorMsg: t("LoginForm.errorWrongPasswor") };
+                return { account: null, error: LoginErrors.PASSWORD, errorMsg: t("LoginForm.errorWrongPassword") };
             case "NOT_AUTHENTICATED":
                 return { account: null, error: LoginErrors.GENERAL, errorMsg: t("LoginForm.errorNotAuthenticated") };
             case "SUCCESS":

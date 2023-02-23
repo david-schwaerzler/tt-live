@@ -86,12 +86,12 @@ const TeamState = ({ matchStateObject, onUpdate, setValidate, isHomeTeam }: Team
     return (
         <Box sx={{ width: "100%" }}>
 
-            <Typography variant="h5" sx={{ textAlign: "center", paddingBottom: spacingNormal }}>
+            <Typography variant="h5" sx={{ textAlign: "center", mb: 4 }}>
                 {isHomeTeam ? t('CreateGameView.stepHomeTeam') : t('CreateGameView.stepGuestTeam')}
             </Typography>
             <ErrorMessage msg={errorMsgs[ERROR_GENERAL]} centered sx={{ paddingBottom: spacingNormal }} />
-            <Stack sx={{ flexDirection: { xs: "column", sm: "row" }, alignItems: { xs: "center", sm: "flex-start" },  gap: spacingNormal  }} justifyContent="space-evenly" >
-                <FormControl>
+            <Stack sx={{ flexDirection: { xs: "column", sm: "row" }, alignItems: "center",  gap: spacingNormal  }} justifyContent="space-evenly" >
+                <FormControl sx={{minWidth: "300px"}}>
                     <ClubSelector
                         isHomeTeam={isHomeTeam}
                         matchStateObject={matchStateObject}
@@ -103,7 +103,7 @@ const TeamState = ({ matchStateObject, onUpdate, setValidate, isHomeTeam }: Team
                     <FormHelperText error={errorMsgs[ERROR_CLUB] != null && errorMsgs[ERROR_CLUB] !== ""} >{errorMsgs[ERROR_CLUB]}</FormHelperText>
 
                 </FormControl>
-                <FormControl>
+                <FormControl sx={{minWidth: "100px"}}>
                     <TeamNumberSelector
                         isHomeTeam={isHomeTeam}
                         matchStateObject={matchStateObject}

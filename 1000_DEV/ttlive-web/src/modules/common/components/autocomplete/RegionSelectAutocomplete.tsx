@@ -9,11 +9,10 @@ export interface RegionAutocompleteProps {
     onChanged: (region: Region | null) => void;
     error: string
     onError: (error: string) => void;
-    autoHighlight?: boolean;
     sx?: SxProps;
 }
 
-const RegionAutocomplete = ({ region, onChanged, sx, error, onError, autoHighlight = false }: RegionAutocompleteProps) => {
+const RegionAutocomplete = ({ region, onChanged, sx, error, onError }: RegionAutocompleteProps) => {
 
     const [regions, setRegions] = useState<Array<Region>>([]);
     const [isLoading, setLoading] = useState<boolean>(false);
@@ -65,7 +64,7 @@ const RegionAutocomplete = ({ region, onChanged, sx, error, onError, autoHighlig
                 getOptionLabel={option => option.name}
                 renderInput={(params) => <TextField {...params} label={t('RegionAutocomplete.region')} error={false} />}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
-                autoHighlight={autoHighlight}
+                autoHighlight={true}
                 loading={isLoading}
             />
             <FormHelperText >

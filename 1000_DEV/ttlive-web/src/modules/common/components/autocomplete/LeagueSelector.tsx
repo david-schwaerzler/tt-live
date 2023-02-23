@@ -29,15 +29,14 @@ const LeagueSelector = ({ onUpdate, updateError, leagues, matchStateObject, erro
 
 
     return (
-        <CustomAutoComplete<League>
-            sx={{ minWidth: "200px", alignSelf: "center" }}
+        <CustomAutoComplete<League>            
             value={matchStateObject.league}
             onChange={onLeagueSelected}
             options={leagues}
             accessor={league => league.name}
             label={t("LeagueState.league")}
             onCreateType={onCreate}
-            error={error}
+            error={error}            
         />
     );
 

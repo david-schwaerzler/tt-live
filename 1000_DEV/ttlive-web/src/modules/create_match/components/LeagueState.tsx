@@ -104,14 +104,14 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
     return (
         <Box sx={{ width: "100%" }}>
 
-            <Typography variant="h5" sx={{ textAlign: "center", paddingBottom: spacingNormal }}>
+            <Typography variant="h5" sx={{ textAlign: "center", mb: 4 }}>
                 {t('CreateGameView.stepLeague')}
             </Typography>
 
             <ErrorMessage msg={errorMsgs[ERROR_GENERAL]} centered sx={{ paddingBottom: spacingSmall }} />
 
             <Stack sx={{ flexDirection: { xs: "column", sm: "row" }, alignItems: { xs: "center", sm: "flex-start" }, gap: spacingNormal }} justifyContent="space-evenly" >
-                <FormControl sx={{ minWidth: "200px" }}  >
+                <FormControl sx={{ width: "200px" }}  >
                     <LeagueSelector
                         matchStateObject={matchStateObject}
                         leagues={leagues}
@@ -121,35 +121,33 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
                     />
                     <FormHelperText error={errorMsgs[ERROR_LEAGUE] != null && errorMsgs[ERROR_LEAGUE] !== ""}>{errorMsgs[ERROR_LEAGUE]}</FormHelperText>
                 </FormControl>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
-                    <FormControl sx={{ minWidth: "200px" }} error={errorMsgs[ERROR_GAME_STYLE] != null && errorMsgs[ERROR_GAME_STYLE] !== ""}   >
-                        <InputLabel id="select-gameStyle">{t("LeagueState.gameStyle")}</InputLabel>
-                        <Select
-                            id="select-gameStyle"
-                            labelId="select-gameStyle"
-                            label={t("LeagueState.gameStyle")}
-                            value={matchStateObject.gameStyle == null || gameStyles.length === 0 ? "" : matchStateObject.gameStyle.id}
-                            onChange={e => onGameStyleSelected(e.target.value)}>
-                            {gameStyles.map((value, index) =>
-                                <MenuItem key={index} value={value.id}>{value.name}</MenuItem>
-                            )}
+                <FormControl sx={{ minWidth: "200px" }} error={errorMsgs[ERROR_GAME_STYLE] != null && errorMsgs[ERROR_GAME_STYLE] !== ""}   >
+                    <InputLabel id="select-gameStyle">{t("LeagueState.gameStyle")}</InputLabel>
+                    <Select
+                        id="select-gameStyle"
+                        labelId="select-gameStyle"
+                        label={t("LeagueState.gameStyle")}
+                        value={matchStateObject.gameStyle == null || gameStyles.length === 0 ? "" : matchStateObject.gameStyle.id}
+                        onChange={e => onGameStyleSelected(e.target.value)}>
+                        {gameStyles.map((value, index) =>
+                            <MenuItem key={index} value={value.id}>{value.name}</MenuItem>
+                        )}
 
-                        </Select>
-                        <FormHelperText>{errorMsgs[ERROR_GAME_STYLE]}</FormHelperText>
-                    </FormControl>
-                </Box>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: spacingSmall }}>
-                    <FormControl sx={{ width: "200px", alignSelf: "center" }}  >
-                        <DateTimePicker
-                            ampm={false}
-                            label={t("LeagueState.startDate")}
-                            value={matchStateObject.startDate}
-                            onChange={onStartDateSelected}
-                            renderInput={(params) => <TextField {...params} error={errorMsgs[ERROR_START_DATE] != null && errorMsgs[ERROR_START_DATE] !== ""} />}
-                        />
-                        <FormHelperText error={errorMsgs[ERROR_START_DATE] != null && errorMsgs[ERROR_START_DATE] !== ""} >{errorMsgs[ERROR_START_DATE]}</FormHelperText>
-                    </FormControl>
-                </Box>
+                    </Select>
+                    <FormHelperText>{errorMsgs[ERROR_GAME_STYLE]}</FormHelperText>
+                </FormControl>
+
+                <FormControl sx={{ width: "200px" }}  >
+                    <DateTimePicker
+                        ampm={false}
+                        label={t("LeagueState.startDate")}
+                        value={matchStateObject.startDate}
+                        onChange={onStartDateSelected}
+                        renderInput={(params) => <TextField {...params} error={errorMsgs[ERROR_START_DATE] != null && errorMsgs[ERROR_START_DATE] !== ""} />}
+                    />
+                    <FormHelperText error={errorMsgs[ERROR_START_DATE] != null && errorMsgs[ERROR_START_DATE] !== ""} >{errorMsgs[ERROR_START_DATE]}</FormHelperText>
+                </FormControl>
+
             </Stack>
 
 
