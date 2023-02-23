@@ -28,7 +28,7 @@ function HomeView(props: HomeViewProps) {
                     <Link to="/create" style={{ textDecoration: "none" }}>
                         <Button sx={{ flexGrow: 0 }} variant="outlined" size="large">
                             <Typography variant="h3">
-                                <b>{t("HomeView.createMatch")}</b>
+                                <b>{t("HomeView.create")}</b>
                             </Typography>
                         </Button>
                     </Link>

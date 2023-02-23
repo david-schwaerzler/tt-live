@@ -115,14 +115,14 @@ const GameLiveEditDialog = ({ game, show, matchId, messages, editorCode, onClose
 
                 <Stack  direction={isSwitched ? "row-reverse" : "row"} mt={2}>
                     <GameLiveEditPlayer
-                        sx={{ flex: "1 1 0" }}
+                        sx={{ flex: "1 1 0", maxWidth: "50%" }}
                         player1={game.doubles ? game.homeDoubles.player1 : game.homePlayer.name}
                         player2={game.doubles ? game.homeDoubles.player2 : null}
                         sets={game.homeSets}
                     />
 
                     <GameLiveEditPlayer
-                        sx={{ flex: "1 1 0" }}
+                        sx={{ flex: "1 1 0", maxWidth: "50%" }}
                         player1={game.doubles ? game.guestDoubles.player1 : game.guestPlayer.name}
                         player2={game.doubles ? game.guestDoubles.player2 : null}
                         sets={game.guestSets}

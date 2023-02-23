@@ -44,7 +44,7 @@ const MenuLoginFormMobile = ({ onLogin, username, password, onUsernameChange, on
                 }}
                 open={loginAnchor != null}
                 onClose={() => setLoginAnchor(null)}>
-                <Stack direction="column" sx={{ paddingTop: spacingNormal, paddingLeft: spacingNormal, paddingRight: spacingNormal }} spacing={spacingNormal}>
+                <Stack p={2} pb={0} spacing={2}>
 
                     <WhiteTextField
                         size="small"

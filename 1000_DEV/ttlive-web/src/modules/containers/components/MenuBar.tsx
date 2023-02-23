@@ -93,7 +93,6 @@ const MenuBarMobile = () => {
 
     useEffect(() => {
         setLoginAnchor(null);
-        console.log(location.pathname)
     }, [location.pathname])
 
     useEffect(() => {
