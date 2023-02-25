@@ -89,6 +89,7 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
                             onChange={e => setHomeTeamName(e.target.value)}
                             error={errorMsgs[Error.HOME_CLUB] != null && errorMsgs[Error.HOME_CLUB] !== ""}
                             helperText={errorMsgs[Error.HOME_CLUB]}
+                            autoComplete="off"
                         />
                     </FormControl>
                     <FormControl>
@@ -100,6 +101,7 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
                             onChange={e => e.target.value === "" ? setHomeTeamNumber(-1) : setHomeTeamNumber(parseInt(e.target.value))}
                             error={errorMsgs[Error.HOME_NUMBER] != null && errorMsgs[Error.HOME_NUMBER] !== ""}
                             helperText={errorMsgs[Error.HOME_NUMBER]}
+                            autoComplete="off"
                         />
                     </FormControl>
                 </Stack>
@@ -111,6 +113,7 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
                             onChange={e => setGuestTeamName(e.target.value)}
                             error={errorMsgs[Error.GUEST_CLUB] != null && errorMsgs[Error.GUEST_CLUB] !== ""}
                             helperText={errorMsgs[Error.GUEST_CLUB]}
+                            autoComplete="off"
                         />
                     </FormControl>
                     <FormControl>
@@ -122,6 +125,7 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
                             onChange={e => e.target.value === "" ? setGuestTeamNumber(-1) : setGuestTeamNumber(parseInt(e.target.value))}
                             error={errorMsgs[Error.GUEST_NUMBER] != null && errorMsgs[Error.GUEST_NUMBER] !== ""}
                             helperText={errorMsgs[Error.GUEST_NUMBER]}
+                            autoComplete="off"
                         />
                     </FormControl>
                 </Stack>
@@ -131,7 +135,7 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
                         ampm={false}
                         label={t("LeagueState.startDate")}
                         value={startDate}
-                        onChange={date => setStartDate(date)}
+                        onChange={date => setStartDate(date)}                        
                         renderInput={(params) =>
                             <TextField {...params} error={errorMsgs[Error.START_DATE] != null && errorMsgs[Error.START_DATE] !== ""}
                             />}
@@ -151,6 +155,7 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
                             onChange={e => setLeague(e.target.value)}
                             error={errorMsgs[Error.LEAGUE] != null && errorMsgs[Error.LEAGUE] !== ""}
                             helperText={errorMsgs[Error.LEAGUE]}
+                            autoComplete="off"
                         />
                     </FormControl>
                 </Stack>

@@ -1,7 +1,6 @@
 package com.ttlive.dto;
 
 import java.time.LocalDateTime;
-import java.util.LinkedList;
 
 import com.ttlive.bo.Account;
 
@@ -18,7 +17,6 @@ public class AccountDto {
 	private boolean isAuthenticated;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
-//	private LinkedList<MatchDto> matches;
 	
 	public static class AccountDtoBuilder {		
 		public AccountDtoBuilder bo(Account bo) {
@@ -29,7 +27,6 @@ public class AccountDto {
 			this.isAuthenticated = bo.isAuthenticated();
 			this.createdAt = bo.getCreatedAt();
 			this.modifiedAt = bo.getModifiedAt();
-	//		this.matches = MatchDto.fromBos(bo.getMatches());
 			return this;
 		}
 	}

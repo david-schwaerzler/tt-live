@@ -1,23 +1,24 @@
 import { useEffect } from "react";
 
-export function useBackDialogHandler(show: boolean, setShow: (show: boolean) => void) {
+export function useBackDialogHandler(show: boolean, setShow: (show: boolean) => void, hash: string = "dialog") {
 
     useEffect(() => {
         const changeListener = (ev: HashChangeEvent) => {
-            console.log(ev.newURL)
             if (show)
-                if (ev.newURL.includes("?dialog") === false)
+                if (ev.newURL.includes("?" + hash) === false){
                     setShow(false)
+                }
         };
 
-        if (show) {
-            if (window.location.hash.includes("?dialog") === false)
-                window.location.hash += "?dialog";
+        if (show) {            
+            if (window.location.hash.includes("?" + hash) === false){
+                window.location.hash += "?" + hash;
+            }
 
             window.addEventListener("hashchange", changeListener);
         } else {
-            if(window.location.hash.includes("?dialog") === true)
-                window.location.hash = window.location.hash.replace("?dialog", "")
+            if(window.location.hash.includes("?" + hash) === true)
+                window.location.hash = window.location.hash.replace("?" + hash, "")
         }
 
         return () => {

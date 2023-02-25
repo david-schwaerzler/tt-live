@@ -73,6 +73,7 @@ const ChatNameMenu = ({ onClose, anchor }: ChatNameMenuProps) => {
                 value={username}
                 onChange={e => setUsername(e.target.value.substring(0, 60))}
                 autoFocus
+                autoComplete="off"
             />
             <Button variant="outlined" size="small" onClick={onSave} >{t("ChatDrawer.save")}</Button>
         </Stack>

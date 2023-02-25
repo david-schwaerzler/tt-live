@@ -1,13 +1,18 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import enEn from './locale/en';
-import deDe from './locale/de';
+import translationDe from './locale/de';
 // don't want to use this?
 // have a look at the Quick start guide 
 // for passing in lng and translations on init
 
-const resources = {...deDe, ...enEn};
+const deDe  = {
+  de: {
+    translation: translationDe
+  }
+}
+
+const resources = { ...deDe };
 
 i18n
   .use(initReactI18next)

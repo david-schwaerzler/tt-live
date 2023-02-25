@@ -10,7 +10,7 @@ const ErrorMessage = ({ msg, centered = false, sx }: ErrorMessageProps) => {
     if (msg == null || msg === "")
         return <></>;
 
-    let style: any = { color: "red", fontStyle: "italic" }
+    let style: any = { color: "orange", fontStyle: "italic" }
     if (centered === true) {
         style.textAlign = "center";
         style.width = "100%"

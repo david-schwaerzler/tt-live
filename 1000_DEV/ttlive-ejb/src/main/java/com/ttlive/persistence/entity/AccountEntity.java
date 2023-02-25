@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -58,6 +59,10 @@ public class AccountEntity {
 	@OneToMany(mappedBy = "account")
 	private List<MatchEntity> matches = new LinkedList<MatchEntity>();
 
+	@ToString.Exclude
+	@OneToMany(mappedBy = "account", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH,
+			CascadeType.REMOVE }, orphanRemoval = true)
+	private List<AccountFilterSetEntity> filterSets = new LinkedList<AccountFilterSetEntity>();
 
 	public void addMatch(MatchEntity match) {
 		addMatch(match, true);
@@ -80,6 +85,26 @@ public class AccountEntity {
 		this.matches.remove(match);
 		if (setBoth)
 			match.setAccount(null, false);
+	}
 
+	public void addFilterSet(AccountFilterSetEntity filter) {
+		addFilterSet(filter, true);
+	}
+
+	public void addFilterSet(AccountFilterSetEntity filterSet, boolean setBoth) {
+		if (!filterSets.contains(filterSet))
+			filterSets.add(filterSet);
+		if (setBoth)
+			filterSet.setAccount(this, false);
+	}
+
+	public void removeFilterSet(AccountFilterSetEntity filterSet) {
+		removeFilterSet(filterSet, true);
+	}
+
+	public void removeFilterSet(AccountFilterSetEntity filterSet, boolean setBoth) {
+		filterSets.remove(filterSet);
+		if (setBoth)
+			filterSet.setAccount(null, false);
 	}
 }

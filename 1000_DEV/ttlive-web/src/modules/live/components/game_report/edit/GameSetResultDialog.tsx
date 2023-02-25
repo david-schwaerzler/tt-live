@@ -115,6 +115,7 @@ const GameSetResultDialog = ({ set, isHome, show, game, editorCode, onClose, onE
             value={isUnset ? "0" : selectedNumber === -1 ? "" : selectedNumber}
             onChange={onChange}
             type="tel"
+            autoComplete="off"
         />;
     }
 

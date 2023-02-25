@@ -25,7 +25,11 @@ export async function postLogin(requestLogin: RequestLogin): Promise<LoginRespon
 
 export const tokenRefreshApi = createRefresh({
     interval: Config.TOKEN_REFRESH_INTERVAL,
-    refreshApiCallback: ({ refreshToken }) => {
+    refreshApiCallback: ({ authToken,
+        authTokenExpireAt,
+        refreshToken,
+        refreshTokenExpiresAt,
+        authUserState }) => {
         console.log("refresh")
         let requestData: RequestRefreshToken = { refreshToken: refreshToken == null ? "" : refreshToken };
         return axios.put("/login", requestData)

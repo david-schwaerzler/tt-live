@@ -156,7 +156,7 @@ const MatchFilter = ({ simpleMatches, onFilterChanged, someFiltered }: MatchFilt
                                 onChange={(e, value) => context.setSetting(MATCH_FILTER_SETTING_KEY, JSON.stringify({ ...filter, club: value }), false)}
                                 options={clubs}
                                 renderInput={(params) => <TextField {...params} label={t('MatchFilter.club')} error={false} />}
-                                sx={{ minWidth: "200px" }}
+                                sx={{ width: "200px" }}
                             />
                         </FormControl>
                     </Stack>

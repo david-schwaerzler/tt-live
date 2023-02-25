@@ -29,6 +29,7 @@ const MatchDeleteForm = ({ matchId, editorCode, onDeleted }: MatchDeleteFormProp
                 placeholder="Löschen"
                 value={inputValue}
                 onChange={e => setInputValue(e.target.value)}
+                autoComplete="off"
             />
             <LoadingButton
                 sx={{ mt: 2 }}

@@ -17,7 +17,7 @@ const MyAvatar = () => {
     const account = authUser() as Account | null;
 
     if (account == null) // this should never happen, because of the private route
-        return <ErrorMessage msg={t("MyAvatar.notLoggedIn")} />
+        return <ErrorMessage msg={t("Common.notLoggedIn")} />
 
     return (
         <Stack direction="row" alignItems="center" gap={{ xs: 5, md: 10 }}>

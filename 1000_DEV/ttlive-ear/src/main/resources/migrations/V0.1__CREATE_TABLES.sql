@@ -130,7 +130,7 @@ CREATE TABLE chat_message (
 	username VARCHAR(64),
 	is_editor BOOLEAN NOT NULL DEFAULT false,
 	account_id BIGINT REFERENCES account(id),
-	match_id BIGINT NOT NULL REFERENCES match(id)	,
+	match_id BIGINT NOT NULL REFERENCES match(id),
 	created_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
@@ -138,4 +138,19 @@ CREATE TABLE contact (
 	 id BIGSERIAL PRIMARY KEY,
 	 text VARCHAR(4096),
 	 recipient VARCHAR(256)
+);
+
+CREATE TABLE account_filter_set (
+	id BIGSERIAl PRIMARY KEY,
+	name VARCHAR(256) NOT NULL,
+	is_active BOOLEAN NOT NULL DEFAULT false,
+	is_default BOOLEAN NOT NULL DEFAULT false,
+	account_id BIGINT NOT NULL REFERENCES account(id)
+);
+
+CREATE TABLE account_filter (
+	id BIGSERIAl PRIMARY KEY,
+	type VARCHAR(64) NOT NULL,
+	value VARCHAR(256) NOT NULL,
+	set_id BIGINT NOT NULL REFERENCES account_filter_set(id)
 );

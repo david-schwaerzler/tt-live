@@ -70,7 +70,8 @@ const RegisterView = () => {
                             value={username}
                             onChange={e => setUsername(e.target.value)}
                             error={errorMsgs[Errors.USERNAME] != null && errorMsgs[Errors.USERNAME] !== ""}
-                            helperText={errorMsgs[Errors.USERNAME]}                            
+                            helperText={errorMsgs[Errors.USERNAME]}      
+                            autoComplete="off"
                         />
                         <TextField
                             variant="outlined"
@@ -80,6 +81,7 @@ const RegisterView = () => {
                             error={errorMsgs[Errors.PASSWORD] != null && errorMsgs[Errors.PASSWORD] !== ""}
                             helperText={errorMsgs[Errors.PASSWORD]}
                             type="password"
+                            autoComplete="off"
                         />
                         <TextField
                             variant="outlined"
@@ -89,6 +91,7 @@ const RegisterView = () => {
                             error={errorMsgs[Errors.PASSWORD] != null && errorMsgs[Errors.PASSWORD] !== ""}
                             helperText={errorMsgs[Errors.PASSWORD]}
                             type="password"
+                            autoComplete="off"
                             
                         />
                         <TextField
@@ -98,6 +101,7 @@ const RegisterView = () => {
                             onChange={e => setEmail(e.target.value)}
                             error={errorMsgs[Errors.EMAIL] != null && errorMsgs[Errors.EMAIL] !== ""}
                             helperText={errorMsgs[Errors.EMAIL]}
+                            autoComplete="off"
                         />
                         <Box display="inline">
                             <LoadingButton

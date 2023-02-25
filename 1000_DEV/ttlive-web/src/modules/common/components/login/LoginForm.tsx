@@ -81,6 +81,7 @@ const LoginForm = ({ onLogin, showRegister = true }: LoginFormProps) => {
                 error={errorMsgs[LoginErrors.USERNAME] != null && errorMsgs[LoginErrors.USERNAME] !== ""}
                 helperText={errorMsgs[LoginErrors.USERNAME]}
                 sx={{ maxWidth: "250px" }}
+                autoComplete="off"
             />
             <TextField
                 label={t("LoginForm.password")}
@@ -90,6 +91,7 @@ const LoginForm = ({ onLogin, showRegister = true }: LoginFormProps) => {
                 error={errorMsgs[LoginErrors.PASSWORD] != null && errorMsgs[LoginErrors.PASSWORD] !== ""}
                 helperText={errorMsgs[LoginErrors.PASSWORD]}
                 type="password"
+                autoComplete="off"
                 sx={{ maxWidth: "250px" }}
             />
             <Box >

@@ -76,6 +76,7 @@ const LineupSetting = ({ match, isHomeTeam, editorCode }: LineupSettingProps) =>
                             variant="outlined"
                             value={player.name}
                             onChange={e => updatePlayer(index, e.target.value)}
+                            autoComplete="off"
                         />
                     </FormControl>
                 ))}
