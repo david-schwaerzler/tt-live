@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { AppContext } from "../../../../AppContext";
 import { ChatMessage } from "../../../../rest/data/ChatMessage";
 import { Game } from "../../../../rest/data/Game";
+import { MatchState } from "../../../../rest/data/Match";
 import { InputType } from "./edit/GameSetScore";
 
 import GameReportSection from "./GameReportSection";
@@ -13,7 +14,7 @@ export interface GameReportProps {
     games: Array<Game> | null;
     /** Indicates if the user is an editor. Display all the editable Components when provided */
     editorCode: string | null;
-    matchState: "FINISHED" | "NOT_STARTED" | "LIVE"
+    matchState: MatchState
     messages: Array<ChatMessage>;
     matchId: number | null;
     onUpdate: (game: Game) => void;

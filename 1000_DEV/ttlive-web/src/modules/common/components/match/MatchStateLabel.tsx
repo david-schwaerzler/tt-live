@@ -4,9 +4,10 @@ import dayjs, { Dayjs } from "dayjs";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { MatchState } from "../../../../rest/data/Match";
 
 export interface MatchStateLabelProps {
-    state: "NOT_STARTED" | "LIVE" | "FINISHED";
+    state: MatchState;
     sx?: any;
     variant?: "normal" | "border";
     startDate?: string;

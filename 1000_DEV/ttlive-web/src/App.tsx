@@ -13,6 +13,7 @@ import { Box } from "@mui/system";
 import AuthUtil from "./modules/common/components/utils/AuthUtil";
 import { useLocalStorage } from "./modules/common/hooks/useLocalStorage";
 import { useEditorCodes } from "./modules/common/hooks/useEditorCodes";
+import { MatchFilterOptions } from "./modules/live_search/components/MatchFilterOptions";
 
 const HomeView = React.lazy(() => import("./modules/home/HomeView"));
 const LoginView = React.lazy(() => import("./modules/login/LoginView"));
@@ -27,6 +28,7 @@ function App() {
 
     const [matchId, setMatchId] = useLocalStorage<number | null>("matchId", null);
     const [editorCode, setEditorCode] = useEditorCodes();
+    const [matchFilter, setMatchFilter] = useState<MatchFilterOptions>({});
 
     const [settings, setSettings] = useState<any>(() => {
         let settingJson = localStorage.getItem("settings");
@@ -67,8 +69,10 @@ function App() {
         },
         getSetting: key => {
             return settings[key]
-        }
-    }), [matchId, editorCode, settings, setEditorCode, setMatchId]);
+        },
+        setMatchFilter: setMatchFilter,
+        matchFilter: matchFilter
+    }), [matchId, editorCode, settings, setEditorCode, setMatchId, matchFilter]);
 
     return (
         <React.StrictMode>

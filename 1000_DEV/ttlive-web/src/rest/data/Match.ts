@@ -13,6 +13,8 @@ export interface RequestMatch {
     startDate: string;
 }
 
+export type MatchState = "NOT_STARTED" | "LIVE" | "FINISHED";
+
 export interface Match {
     id: number;
     title: string;
@@ -21,7 +23,7 @@ export interface Match {
     guestTeamScore: number;
     code: string;
     editorCode: string;
-    state: "NOT_STARTED" | "LIVE" | "FINISHED";
+    state: MatchState;
     
     accountUsername: string | null,
     accountId : number | null,
@@ -44,7 +46,7 @@ export interface SimpleMatch {
     id: number;
     homeTeamScore : number;
 	guestTeamScore : number;
-	state : "NOT_STARTED" | "LIVE" | "FINISHED";
+	state : MatchState;
 	startDate : string;
 	
 	league : League;

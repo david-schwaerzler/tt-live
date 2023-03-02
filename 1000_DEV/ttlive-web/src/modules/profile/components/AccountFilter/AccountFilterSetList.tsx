@@ -24,7 +24,7 @@ const AccountFilterSetList = () => {
             setLoading(true);
             let response = await fetchAccountFilterSets();
             if (response.data != null) {
-                setFilterSets(response.data)
+                setFilterSets(response.data.sort((a, b) => a.id - b.id));
             } else {
                 setError(t("Common.errorHttp"));
             }
@@ -60,7 +60,7 @@ const AccountFilterSetList = () => {
                     <AccountFilterAddButton onCreate={onAddfilterSet} />
                 </Box>
             </Stack>
-            <Stack>
+            <Stack gap={2}>
                 {filterSets.map(fs => <AccountFilterCard key={fs.id} filterSet={fs} onUpdated={onUpdated} onDeleted={onDeleted} />)}
 
                 {loading && <Skeleton height="100px" variant="rectangular" />}

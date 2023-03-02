@@ -167,4 +167,4 @@ const MenuBarDesktop = () => {
     )
 }
 
-export default MenuBar;
+export default React.memo(MenuBar);

@@ -1,5 +1,6 @@
 import { Doubles } from "./Doubles";
 import { GameSet } from "./GameSet";
+import { MatchState } from "./Match";
 import { Player } from "./Player";
 
 export interface Game {
@@ -9,7 +10,7 @@ export interface Game {
     sets: Array<GameSet>;
     homeSets: number;
     guestSets: number;
-    state: "NOT_STARTED" | "LIVE" | "FINISHED";
+    state: MatchState;
     modifiedAt: string;
 
     homePlayer: Player;
@@ -27,5 +28,5 @@ export interface SimpleGame {
     homePlayer2?: string;
     guestPlayer1: string;
     guestPlayer2?: string;
-    state: "NOT_STARTED" | "LIVE" | "FINISHED";
+    state: MatchState;
 }

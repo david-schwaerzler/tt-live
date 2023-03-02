@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { ChatMessage } from "../../../../rest/data/ChatMessage";
 import { Game } from "../../../../rest/data/Game";
+import { MatchState } from "../../../../rest/data/Match";
 import { InputType } from "./edit/GameSetScore";
 import GameReportGameRow from "./GameReportGameRow";
 import { GameScoreType, GameType } from "./GameScoreType";
@@ -14,7 +15,7 @@ export interface GameReportSectionProps {
     inputType: InputType;
     isEditMode: boolean;
     matchId: number | null;
-    matchState: "FINISHED" | "NOT_STARTED" | "LIVE"
+    matchState: MatchState;
     messages: Array<ChatMessage>;
     onUpdate: (game: Game) => void;
 }

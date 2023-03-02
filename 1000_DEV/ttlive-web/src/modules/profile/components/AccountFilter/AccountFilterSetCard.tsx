@@ -1,8 +1,7 @@
-import { Card, CardContent, CardHeader, IconButton, Typography } from "@mui/material";
+import { Box, Card, CardContent, CardHeader, IconButton, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { AccountFilterSet } from "../../../../rest/data/AccountFilterSet";
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { Stack } from "@mui/system";
 import AccountFilterSetEditButton from "./AccountFilterSetEditButton";
 import { useState } from "react";
@@ -28,18 +27,23 @@ const AccountFilterSetCard = ({ filterSet, onUpdated, onDeleted }: AccountFilter
             <AccountFilterAddDialog onClose={() => setShowAddFilter(false)} onCreated={onFilterCreated} show={showAddFilter} filterSetId={filterSet.id} />
             <Card elevation={3}>
                 <CardHeader title={
-                    <Stack gap={1} direction="row" alignItems="center">
-                        {filterSet.name}
+                    <Stack gap={1} direction="row" alignItems="top" flexWrap="nowrap">
+                        <Typography fontSize="1.5rem" sx={{ overflowWrap: "anywhere" }}>
+                            {filterSet.name}
+                        </Typography>
                         <AccountFilterSetEditButton filterSet={filterSet} onUpdated={onUpdated} />
+                        <Box flexGrow={1} />
+                        <Box>
+                            <AccountFilterSetDeleteButton onDelete={() => onDeleted(filterSet)} filterSetId={filterSet.id} />
+                        </Box>
                     </Stack>
-                }
-                    action={<AccountFilterSetDeleteButton onDelete={() => onDeleted(filterSet)} filterSetId={filterSet.id} />} />
-                <CardContent>
+                } />
+                <CardContent >
                     <Stack direction="row" gap={1} flexWrap="wrap">
                         {filterSet.filters.map(f => <AccountFilterChip key={f.id} filter={f} filterSetId={filterSet.id} onDeleted={onFilterDeleted} />)}
                     </Stack>
 
-                    <IconButton sx={{ mt: 1 }} size="small" onClick={() => setShowAddFilter(true)}>
+                    <IconButton sx={{ mt: 1, pb: 0 }} size="small" onClick={() => setShowAddFilter(true)}>
                         <AddIcon color="primary" />
                         {filterSet.filters.length === 0 && <Typography>{t("AccountFilter.addFilter")}</Typography>}
                     </IconButton>

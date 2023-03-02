@@ -36,7 +36,7 @@ const AccountFilterSetEditButton = ({ filterSet, onUpdated }: AccountFilterSetEd
             setGeneralError("");
             setName(filterSet.name)
         }else{
-            hasHighlighted .current = false;
+            hasHighlighted.current = false;
         }
     }, [filterSet.name, anchor]);
 

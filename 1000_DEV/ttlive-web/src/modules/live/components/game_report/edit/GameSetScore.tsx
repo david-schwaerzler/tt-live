@@ -3,6 +3,7 @@ import { Box } from "@mui/system";
 import React from "react";
 import { Game } from "../../../../../rest/data/Game";
 import { GameSet } from "../../../../../rest/data/GameSet";
+import { MatchState } from "../../../../../rest/data/Match";
 
 import GameSetResultButton from "./GameSetResultButton";
 import GameSetResultRadio from "./GameSetResultRadio";
@@ -10,7 +11,7 @@ import GameSetResultRadio from "./GameSetResultRadio";
 export interface GameSetScoreProps {
     set: GameSet;
     game: Game;
-    matchState: "NOT_STARTED" | "LIVE" | "FINISHED";
+    matchState: MatchState;
     isHome: boolean;
     isEditMode: boolean;
     inputType: InputType;

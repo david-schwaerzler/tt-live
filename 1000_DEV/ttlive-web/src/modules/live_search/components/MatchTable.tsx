@@ -1,11 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { fetchSimpleMatches } from "../../../rest/api/MatchApi";
 import { SimpleMatch } from "../../../rest/data/Match";
 import { Stack, SxProps } from "@mui/system";
 import { spacingNormal } from "../../common/utils/StyleVars";
 import MatchCard from "./MatchCard";
-import MatchFilter, { MatchFilterOptions, filterMatches } from "./MatchFilter";
+import MatchFilter from "./MatchFilter";
+import { useMatchFilter } from "./useMatchFilter";
 
 export interface MatchTableProps {
     sx?: SxProps;
@@ -16,7 +17,6 @@ const MatchTable = ({ sx, fetchDelay = 0 }: MatchTableProps) => {
 
     const [t] = useTranslation();
     const [simpleMatches, setSimpleMatches] = useState<Array<SimpleMatch> | null>(null);
-    const [filterOptions, setFilterOptions] = useState<MatchFilterOptions | null>(null);
 
     useEffect(() => {
         async function fetch() {
@@ -44,12 +44,7 @@ const MatchTable = ({ sx, fetchDelay = 0 }: MatchTableProps) => {
 
     }, [fetchDelay, t]);
 
-    const filtered = useMemo(() => {
-        if(simpleMatches == null || filterOptions == null)
-            return []
-        return  filterMatches(filterOptions, simpleMatches);        
-    }, [simpleMatches, filterOptions])
-    
+    const filtered = useMatchFilter(simpleMatches);
 
     return (
         <Stack sx={{ gap: spacingNormal }}>
@@ -60,7 +55,7 @@ const MatchTable = ({ sx, fetchDelay = 0 }: MatchTableProps) => {
                     <MatchCard simpleMatch={null} variant="simple" />
                 </React.Fragment>
                 : <React.Fragment>
-                    <MatchFilter simpleMatches={simpleMatches} onFilterChanged={fo => setFilterOptions(fo)} someFiltered={filtered.length !== simpleMatches.length}/>
+                    <MatchFilter simpleMatches={simpleMatches} />
                     {filtered.map(match => <MatchCard key={match.id} simpleMatch={match} variant="simple" />)}
                 </React.Fragment>
             }

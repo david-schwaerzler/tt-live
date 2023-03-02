@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ChatMessage } from "../../../../rest/data/ChatMessage";
 import { Game } from "../../../../rest/data/Game";
 import { GameSet } from "../../../../rest/data/GameSet";
+import { MatchState } from "../../../../rest/data/Match";
 import GameLiveEdit from "../live_edit/GameLiveEdit";
 import GameSetScore, { InputType } from "./edit/GameSetScore";
 
@@ -10,7 +11,7 @@ import GameReportPlayerCell from "./GameReportPlayerCell";
 
 export interface GameReportGameRowProps {
     matchId: number | null;
-    matchState: "FINISHED" | "NOT_STARTED" | "LIVE";
+    matchState: MatchState;
     game: Game;
     inputType: InputType;
     isEditMode: boolean;
