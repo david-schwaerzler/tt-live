@@ -20,12 +20,8 @@ import SummaryState from "./components/SummaryState";
 import TeamState from "./components/TeamState";
 import LoadingButton from "../common/components/buttons/LoadingButton";
 
-export interface CreateMatchViewProps {
-
-}
-
 enum Steps {
-    LOGIN = -1, REGION = 0, LEAGUE, HOME_TEAM, GUEST_TEAM, SUMMARY
+    REGION, LEAGUE, HOME_TEAM, GUEST_TEAM, LOGIN, SUMMARY
 }
 
 let onValidate: null | ((matchStateObject: MatchStateObject) => boolean);
@@ -33,7 +29,7 @@ function setValidate(validate: ((matchStateObject: MatchStateObject) => boolean)
     onValidate = validate;
 }
 
-const CreateMatchView = (props: CreateMatchViewProps) => {
+const CreateMatchView = () => {
 
     const context = useContext(AppContext);
     const {trackEvent} = useMatomo();

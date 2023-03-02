@@ -94,7 +94,7 @@ const LoginForm = ({ onLogin, showRegister = true }: LoginFormProps) => {
                 autoComplete="off"
                 sx={{ maxWidth: "250px" }}
             />
-            <Box >
+            <Box width="100%">
                 <Box display="inline-block">
                     <LoadingButton loading={isLoading} variant="outlined" onClick={onLoginCallback}>{t("LoginForm.login")}</LoadingButton>
                 </Box>

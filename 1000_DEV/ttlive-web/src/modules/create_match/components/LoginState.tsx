@@ -1,5 +1,5 @@
 
-import { Typography } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 import { Box } from '@mui/system'
 import { useTranslation } from 'react-i18next';
 import LoginForm from '../../common/components/login/LoginForm';
@@ -18,9 +18,9 @@ const LoginState = ({ matchStateObject, onUpdate, setValidate, onNext }: StatePr
 
             <MatchNotConnectedText />
 
-            <Box display="flex" justifyContent={{ xs: "center", md: "flex-start" }} >
+            <Paper elevation={2} sx={{ display: "flex", pt:2 , pb: 2, justifyContent: "center" }}>
                 <LoginForm onLogin={onLogin} />
-            </Box>
+            </Paper>
         </Box >
     );
 
