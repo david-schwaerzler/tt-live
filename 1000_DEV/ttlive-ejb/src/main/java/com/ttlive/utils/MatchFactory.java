@@ -64,6 +64,11 @@ public class MatchFactory {
 		matchEntity.setStartDate(requestMatch.getStartDate());
 		matchEntity.setState(MatchState.NOT_STARTED);
 		matchEntity.setAccount(account);
+		if(account == null)
+			matchEntity.setVisibility(MatchVisibility.PRIVATE);
+		else {
+			matchEntity.setVisibility(requestMatch.getVisibility());
+		}
 
 		LinkedList<PlayerEntity> homePlayers = new LinkedList<PlayerEntity>();
 		LinkedList<PlayerEntity> guestPlayers = new LinkedList<PlayerEntity>();

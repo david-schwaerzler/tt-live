@@ -52,7 +52,7 @@ const AccountFilterSelect = () => {
 
     return (
         <React.Fragment>
-            <InputLabel id="select-contest">{t('ContestSelect.contest')}</InputLabel>
+            <InputLabel id="select-contest">{t('AccountFilterSelect.label')}</InputLabel>
             <Select
                 id="select-filterSet"
                 labelId="select-filterSet"

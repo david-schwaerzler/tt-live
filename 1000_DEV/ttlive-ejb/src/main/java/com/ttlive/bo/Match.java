@@ -14,6 +14,7 @@ import com.ttlive.persistence.entity.MatchEntity;
 import com.ttlive.persistence.entity.PlayerEntity;
 import com.ttlive.persistence.entity.TeamEntity;
 import com.ttlive.utils.MatchState;
+import com.ttlive.utils.MatchVisibility;
 
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class Match {
 	private int guestTeamScore;
 	private String code;
 	private String editorCode;
+	private MatchVisibility visibility;
 	private MatchState state;
 	private LocalDateTime startDate;
 
@@ -58,6 +60,7 @@ public class Match {
 			this.startDate = entity.getStartDate();
 			this.createdAt = entity.getCreatedAt();
 			this.modifiedAt = entity.getModifiedAt();
+			this.visibility = entity.getVisibility();
 			return this;
 		}
 

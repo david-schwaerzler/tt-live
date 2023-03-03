@@ -15,7 +15,7 @@ public class MatchDao extends BaseDao<MatchEntity> {
 		super(MatchEntity.class);
 	}
 
-	public HashSet<String> getAllCodes() {
+	public HashSet<String> findAllCodes() {
 		HashSet<String> codes = new HashSet<String>();
 		TypedQuery<Object[]> query = em.createNamedQuery("Match.findCodes", Object[].class);
 
@@ -27,5 +27,11 @@ public class MatchDao extends BaseDao<MatchEntity> {
 			codes.add((String)array[1]);
 		});
 		return codes;
+	}	
+	
+
+	public List<MatchEntity> findPublic() {		
+		TypedQuery<MatchEntity> query = em.createNamedQuery("Match.findPublic", MatchEntity.class);
+		return query.getResultList();
 	}	
 }

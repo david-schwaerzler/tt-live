@@ -68,6 +68,11 @@ public class MatchService {
 		List<MatchEntity> entities = matchDao.findAll();
 		return getDefault(entities);
 	}
+	
+	public LinkedList<Match> findPublic() throws InvalidGameSetFormat {
+		List<MatchEntity> entities = matchDao.findPublic();
+		return getDefault(entities);
+	}
 
 	public Match findById(long id) throws InvalidGameSetFormat, BadRestRequestException {
 		MatchEntity match = matchDao.findById(id);
@@ -118,10 +123,11 @@ public class MatchService {
 				throw new BadRestRequestException("guestTeamId",
 						"GuestTeam with the given id='" + requestMatch.getHomeTeam().getId() + " doesn't exist");
 		}
-		HashSet<String> existingCodes = matchDao.getAllCodes();
+		HashSet<String> existingCodes = matchDao.findAllCodes();
 
 		MatchEntity matchEntity = MatchFactory.createMatchEntity(account, requestMatch, regionEntity, gameStyleEntity,
-				leagueEntity, homeTeamEntity, guestTeamEntity, existingCodes);
+				leagueEntity, homeTeamEntity, guestTeamEntity, existingCodes);		
+		
 		matchDao.persist(matchEntity);
 
 		return getDefault(matchEntity);
@@ -282,6 +288,9 @@ public class MatchService {
 		matchEntity.setGuestTeam(updatedGuestTeam);
 
 		matchEntity.setStartDate(requestMatch.getStartDate());
+		// can only updatethe visibility when the account is set (otherwise it mus be private)
+		if(matchEntity.getAccount() != null)
+			matchEntity.setVisibility(requestMatch.getVisibility());
 
 		if (oldHomeTeam.getHomeMatches().size() == 0 && oldHomeTeam.getGuestMatches().size() == 0) {
 			// need to set the league to null, to remove the team from the league

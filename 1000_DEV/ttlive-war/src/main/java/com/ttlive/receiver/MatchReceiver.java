@@ -55,8 +55,8 @@ public class MatchReceiver {
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response findAll() throws InvalidGameSetFormat {
-		LinkedList<Match> matches = matchService.findAll();
+	public Response findPublic() throws InvalidGameSetFormat {
+		LinkedList<Match> matches = matchService.findPublic();
 		return Response.ok(MatchDto.fromBos(matches)).build();
 	}
 
@@ -101,6 +101,7 @@ public class MatchReceiver {
 				.league(league) //
 				.homeTeam(homeTeam) //
 				.guestTeam(guestTeam) //
+				.visibility(requestMatchDto.getVisibility())
 				.startDate(requestMatchDto.getStartDate().withZoneSameInstant(ZoneId.of("Europe/Berlin"))
 						.toLocalDateTime())//
 				.build();
@@ -217,6 +218,7 @@ public class MatchReceiver {
 				.league(league) //
 				.homeTeam(homeTeam) //
 				.guestTeam(guestTeam) //
+				.visibility(requestMatchDto.getVisibility()) //
 				.startDate(requestMatchDto.getStartDate().withZoneSameInstant(ZoneId.of("Europe/Berlin"))
 						.toLocalDateTime())//
 				.build();
@@ -278,6 +280,6 @@ public class MatchReceiver {
 			throw new BadRestRequestException("club", "Club in guestTeam must be set and not empty");
 
 		if (requestMatchDto.getStartDate() == null)
-			throw new BadRestRequestException("startDate", "Startdate must be set");
+			throw new BadRestRequestException("startDate", "Startdate must be set");		
 	}
 }

@@ -68,7 +68,7 @@ const AccountFilterSetList = () => {
                     <Card elevation={3} sx={{ paddingBottom: "0px" }}>
                         <CardContent sx={{ paddingBottom: 2 }}>
                             <ErrorMessage msg={error} />
-                            {error === "" && t("MyGameList.noGame")}
+                            {error === "" && t("AccountFilter.noFilter")}
                         </CardContent>
                     </Card>
                 }

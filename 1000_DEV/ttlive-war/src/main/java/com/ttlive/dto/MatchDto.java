@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.ttlive.bo.Match;
 import com.ttlive.utils.MatchState;
+import com.ttlive.utils.MatchVisibility;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +25,7 @@ public class MatchDto {
 	private int guestTeamScore;
 	private String code;
 	private String editorCode;
+	private MatchVisibility visibility;
 	private MatchState state;
 	private LocalDateTime startDate;
 	private LocalDateTime createdAt;
@@ -56,6 +58,7 @@ public class MatchDto {
 			this.state = bo.getState();
 			this.startDate = bo.getStartDate();
 			this.modifiedAt = bo.getModifiedAt();
+			this.visibility = bo.getVisibility();
 
 			this.league = LeagueDto.builder().bo(bo.getLeague()).build();
 			this.homeTeam = TeamDto.builder().bo(bo.getHomeTeam()).build();

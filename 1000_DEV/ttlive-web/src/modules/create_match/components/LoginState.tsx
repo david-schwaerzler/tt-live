@@ -3,9 +3,9 @@ import { Paper, Typography } from '@mui/material';
 import { Box } from '@mui/system'
 import { useTranslation } from 'react-i18next';
 import LoginForm from '../../common/components/login/LoginForm';
-import { Account } from '../../../rest/data/Account';
 import { StateProps } from './StateProps'
 import MatchNotConnectedText from '../../common/components/match/MatchNotConnectedText';
+
 
 const LoginState = ({ matchStateObject, onUpdate, setValidate, onNext }: StateProps) => {
 
@@ -18,17 +18,11 @@ const LoginState = ({ matchStateObject, onUpdate, setValidate, onNext }: StatePr
 
             <MatchNotConnectedText />
 
-            <Paper elevation={2} sx={{ display: "flex", pt:2 , pb: 2, justifyContent: "center" }}>
-                <LoginForm onLogin={onLogin} />
+            <Paper elevation={2} sx={{ display: "flex", pt: 2, pb: 2, justifyContent: "center" }}>
+                <LoginForm onLogin={() => { }} />
             </Paper>
         </Box >
     );
-
-    function onLogin(account: Account) {
-        onUpdate({ ...matchStateObject, account: account });
-        onNext();
-    }
-
 }
 
 export default LoginState;

@@ -11,6 +11,7 @@ import GameLiveScore from "../game_report/edit/GameLiveScore";
 const LiveTab = ({ match, games }: { match: Match | null, games: Array<Game> }) => {
 
     const [t] = useTranslation();
+    console.log(match?.state)
     return (
         <Stack direction="column" gap={spacingNormal}>
             {match == null ? <Skeleton sx={{ height: { xs: "212px", sm: "200px" } }} variant="rectangular" />

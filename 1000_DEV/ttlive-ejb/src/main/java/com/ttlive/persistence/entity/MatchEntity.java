@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -22,6 +23,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.ttlive.utils.MatchState;
+import com.ttlive.utils.MatchVisibility;
 
 import lombok.Data;
 import lombok.ToString;
@@ -29,7 +31,11 @@ import lombok.ToString;
 @Data
 @Entity
 @Table(name = "match")
-@NamedQuery(name = "Match.findCodes", query = "select m.code, m.editorCode from MatchEntity m")
+@NamedQueries({
+	@NamedQuery(name = "Match.findCodes", query = "select m.code, m.editorCode from MatchEntity m"),
+	@NamedQuery(name = "Match.findPublic", query = "select m from MatchEntity m where m.visibility = com.ttlive.utils.MatchVisibility.PUBLIC")
+	
+})
 public class MatchEntity {
 
 	@Id
@@ -53,6 +59,10 @@ public class MatchEntity {
 
 	@Column(name = "editorCode")
 	private String editorCode;
+	
+	@Column(name = "visibility")
+	@Enumerated(EnumType.STRING)
+	private MatchVisibility visibility;
 	
 	@Column(name = "state")
 	@Enumerated(EnumType.STRING)

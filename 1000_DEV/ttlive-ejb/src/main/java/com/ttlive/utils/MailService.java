@@ -26,7 +26,7 @@ public class MailService {
 		Address[] to = new InternetAddress[1];
 		to[0] = new InternetAddress("david@schwaerzler.info");
 		
-		message.setFrom(from)a
+		message.setFrom(from);
 		message.setRecipients(Message.RecipientType.TO, to);
 		message.setSentDate(new java.util.Date());
 		message.setSubject("Test Email");

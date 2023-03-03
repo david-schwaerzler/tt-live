@@ -5,15 +5,24 @@ import { League, RequestLeague } from "./League";
 import { Player } from "./Player";
 import { RequestTeam, Team } from "./Team";
 
+export type MatchState = "NOT_STARTED" | "LIVE" | "FINISHED";
+export function isMatchState(str: string) : str is MatchState {
+    return str === "NOT_STARTED" ||  str === "LIVE" || str === "FINISHED";
+}
+
+export type MatchVisibility = "PUBLIC" | "PRIVATE";
+export function isMatchVisibility(str : string) : str is MatchVisibility {
+    return str === "PUBLIC" || str === "PRIVATE";
+}
+
 export interface RequestMatch {    
     gameStyleId: number;
     league: RequestLeague;
     homeTeam: RequestTeam;
     guestTeam: RequestTeam;
     startDate: string;
+    visibility: MatchVisibility;
 }
-
-export type MatchState = "NOT_STARTED" | "LIVE" | "FINISHED";
 
 export interface Match {
     id: number;
@@ -24,6 +33,7 @@ export interface Match {
     code: string;
     editorCode: string;
     state: MatchState;
+    visibility: MatchVisibility;
     
     accountUsername: string | null,
     accountId : number | null,

@@ -1,13 +1,13 @@
-import {  Button, FormControl, FormHelperText, TextField, Typography } from "@mui/material";
+import { Button, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import React from "react";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { putMatch } from "../../../../rest/api/MatchApi";
 import { RequestLeague } from "../../../../rest/data/League";
-import { Match, RequestMatch } from "../../../../rest/data/Match";
+import { isMatchVisibility, Match, RequestMatch } from "../../../../rest/data/Match";
 import { Region } from "../../../../rest/data/Region";
 import { RequestTeam } from "../../../../rest/data/Team";
 import ContestSelect from "../../../common/components/autocomplete/ContestSelect";
@@ -21,7 +21,7 @@ import BaseSetting from "./BaseSetting";
 export interface MatchInfoEditProps {
     match: Match | null;
     editorCode: string;
-}
+};
 
 enum Error {
     GENERAL,
@@ -32,6 +32,7 @@ enum Error {
     START_DATE,
     LEAGUE,
     REGION,
+    VISIBILITY,
     CONTEST
 };
 
@@ -46,6 +47,7 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
     const [league, setLeague] = useState<string>(match == null ? "" : match.league.name);
     const [contest, setContest] = useState<"MEN" | "WOMEN">(match == null ? "MEN" : match.league.contest)
     const [region, setRegion] = useState<Region | null>(null);
+    const [visibility, setVisibility] = useState<string>(match == null ? "" : match.visibility);
     const [isLoading, setLoading] = useState<boolean>(false);
 
     const [t] = useTranslation();
@@ -73,7 +75,7 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
     if (match == null)
         return <React.Fragment />;
 
-        return (
+    return (
         <BaseSetting title={t('MatchInfoEdit.title')} expanded={expanded} onExpandedChanged={setExpanded}>
             <ErrorMessage msg={errorMsgs[Error.GENERAL]} />
             <Stack gap={2}>
@@ -135,13 +137,29 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
                         ampm={false}
                         label={t("LeagueState.startDate")}
                         value={startDate}
-                        onChange={date => setStartDate(date)}                        
+                        onChange={date => setStartDate(date)}
                         renderInput={(params) =>
                             <TextField {...params} error={errorMsgs[Error.START_DATE] != null && errorMsgs[Error.START_DATE] !== ""}
                             />}
 
                     />
                     <FormHelperText>{errorMsgs[Error.START_DATE]}</FormHelperText>
+                </FormControl>
+
+                <FormControl>
+                    <InputLabel id="select-visibility">{t('SettingsState.visibility')}</InputLabel>
+                    <Select
+                        id="select-contest"
+                        labelId="select-contest"
+                        label={t('SettingsState.visibility')}
+                        value={visibility}
+                        onChange={e => isMatchVisibility(e.target.value) && setVisibility(e.target.value)}>
+                        <MenuItem value="PUBLIC">{t('MatchVisibility.public')}</MenuItem>
+                        <MenuItem value="PRIVATE">{t('MatchVisibility.private')}</MenuItem>
+                    </Select>
+                    <FormHelperText>
+                        {errorMsgs[Error.VISIBILITY]}
+                    </FormHelperText>
                 </FormControl>
 
                 <Typography variant="h6" width="100%" mb={1}>
@@ -188,34 +206,39 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
         setGuestTeamNumber(match.guestTeam.number);
         setStartDate(dayjs(match.startDate));
         setLeague(match.league.name);
+        setVisibility(match.visibility)
         clearErrors();
     }
+
 
     async function onSave(match: Match) {
         clearErrors();
         if (homeTeamClub === "") {
-            updateError(Error.HOME_CLUB, "MatchInfoEdit.errorHomeClub");
+            updateError(Error.HOME_CLUB, t("MatchInfoEdit.errorHomeClub"));
             return;
         } else if (homeTeamNumber < 0) {
-            updateError(Error.HOME_NUMBER, "MatchInfoEdit.errorHomeNumber");
+            updateError(Error.HOME_NUMBER, t("MatchInfoEdit.errorHomeNumber"));
             return;
         } else if (guestTeamClub === "") {
-            updateError(Error.GUEST_CLUB, "MatchInfoEdit.errorGuestClub");
+            updateError(Error.GUEST_CLUB, t("MatchInfoEdit.errorGuestClub"));
             return;
         } else if (guestTeamNumber < 0) {
-            updateError(Error.GUEST_NUMBER, "MatchInfoEdit.errorGuestNumber");
+            updateError(Error.GUEST_NUMBER, t("MatchInfoEdit.errorGuestNumber"));
             return;
         } else if (startDate == null || startDate.isValid() === false) {
-            updateError(Error.START_DATE, "MatchInfoEdit.errorStartDate");
+            updateError(Error.START_DATE, t("MatchInfoEdit.errorStartDate"));
             return;
         } else if (league === "") {
-            updateError(Error.LEAGUE, "MatchInfoEdit.errorLeague");
+            updateError(Error.LEAGUE, t("MatchInfoEdit.errorLeague"));
             return;
         } else if (region === null) {
-            updateError(Error.REGION, "MatchInfoEdit.errorRegion");
+            updateError(Error.REGION, t("MatchInfoEdit.errorRegion"));
             return;
         } else if (contest !== "MEN" && contest !== "WOMEN") {
-            updateError(Error.CONTEST, "MatchInfoEdit.errorContest");
+            updateError(Error.CONTEST, t("MatchInfoEdit.errorContest"));
+            return;
+        } else if (!isMatchVisibility(visibility)) {
+            updateError(Error.CONTEST, t("MatchInfoEdit.errorVisibility"));
             return;
         }
 
@@ -244,7 +267,8 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
             guestTeam: requestGuestTeam,
             homeTeam: requestHomeTeam,
             league: requestLeague,
-            startDate: startDate.toISOString()
+            startDate: startDate.toISOString(),
+            visibility: visibility
         };
         setLoading(true);
         let response = await putMatch(match.id, requestMatch, editorCode);

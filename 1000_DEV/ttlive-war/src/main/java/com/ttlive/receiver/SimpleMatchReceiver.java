@@ -37,7 +37,7 @@ public class SimpleMatchReceiver {
 		if (fieldsStr != null) {
 			fields = fieldsStr.split(",");
 		}
-		LinkedList<Match> matches = matchService.findAll();
+		LinkedList<Match> matches = matchService.findPublic();
 		return Response.ok(SimpleMatchDto.fromBos(matches, fields)).build();
 
 	}

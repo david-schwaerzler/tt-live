@@ -103,7 +103,7 @@ const TeamState = ({ matchStateObject, onUpdate, setValidate, isHomeTeam }: Team
                     <FormHelperText error={errorMsgs[ERROR_CLUB] != null && errorMsgs[ERROR_CLUB] !== ""} >{errorMsgs[ERROR_CLUB]}</FormHelperText>
 
                 </FormControl>
-                <FormControl sx={{ minWidth: "150px" }}>
+                <FormControl sx={{ minWidth: "200px" }}>
                     <TeamNumberSelector
                         isHomeTeam={isHomeTeam}
                         matchStateObject={matchStateObject}

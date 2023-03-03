@@ -63,8 +63,8 @@ export function useLogin() {
                             tokenType: "Bearer",
                             authState: response.data.account
                         })) {
-                        trackEvent({ category: "login", action: "login" });                      
-
+                            trackEvent({ category: "login", action: "login" });
+                                                                          
                         return { account: response.data.account, error: null, errorMsg: "" };
                     } else {
                         console.error(`Error login in. Error from react auth kit`);

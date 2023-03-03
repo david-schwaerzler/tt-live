@@ -23,7 +23,7 @@ const MyGamesList = () => {
             setError("");
             let response = await fetchAccountMatches();
             if (response.data != null)
-                setMatches(response.data);
+                setMatches(response.data.sort((a, b) => b.id - a.id));
             else {
                 setError(t("Common.errorHttp"));
             }

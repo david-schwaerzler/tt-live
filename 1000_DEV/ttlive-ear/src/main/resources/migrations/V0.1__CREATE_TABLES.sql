@@ -64,6 +64,7 @@ CREATE TABLE match (
 	editorCode VARCHAR(16) NOT NULL,
 	code VARCHAR(16) NOT NULL,
 	state VARCHAR(32) NOT NULL DEFAULT 'NOT_STARTED',
+	visibility VARCHAR(256) NOT NULL,
 	start_date TIMESTAMP NOT NULL,
 	
 	league_id BIGINT NOT NULL REFERENCES league(id),		
