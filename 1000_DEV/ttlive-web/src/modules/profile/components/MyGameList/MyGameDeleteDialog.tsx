@@ -24,11 +24,11 @@ const MyGameDeleteButton = ({ matchId, onDeleted }: MyGameDeleteButtonProps) => 
             <IconButton onClick={() => setShow(true)}>
                 <DeleteIcon color="primary" />
             </IconButton>
-            <Dialog open={show}>
+            <Dialog open={show} onClose={() => setShow(false)}>
                 <DialogTitle>
                     {t("MyGameDeleteButton.matchDeleteTitle")}
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent sx={{display: "flex", justifyContent: "center", flexDirection: "column"}}>
                     <MatchDeleteForm matchId={matchId} editorCode={editorCode} onDeleted={onDeletedLocal} />
                 </DialogContent>
             </Dialog>

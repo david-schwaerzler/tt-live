@@ -1,7 +1,6 @@
-import { TextField } from "@mui/material";
-import { t } from "i18next";
+import { FormControl, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { deleteMatch } from "../../../../rest/api/MatchApi";
 import LoadingButton from "../buttons/LoadingButton";
 import ErrorMessage from "../utils/ErrorMessage";
@@ -21,22 +20,26 @@ const MatchDeleteForm = ({ matchId, editorCode, onDeleted }: MatchDeleteFormProp
 
     return (
         <React.Fragment>
-
-            <ErrorMessage msg={errorMsg} sx={{ mb: 1 }} />
-            <TextField
-                sx={{}}
-                label="löschen"
-                placeholder="Löschen"
-                value={inputValue}
-                onChange={e => setInputValue(e.target.value)}
-                autoComplete="off"
-            />
-            <LoadingButton
-                sx={{ mt: 2 }}
-                loading={loading}
-                variant="outlined"
-                onClick={onDelete}
-            >{t("Common.delete")}</LoadingButton>
+            <Typography sx={[{ "& strong": { color: theme => theme.palette.primary.main } }]} mb={2} whiteSpace="pre-wrap">
+                <Trans i18nKey={"MatchDeleteForm.deletable"} t={t} />
+            </Typography>
+            <FormControl sx={{maxWidth: "200px"}}>
+                <ErrorMessage msg={errorMsg} sx={{ mb: 1 }} />
+                <TextField
+                    sx={{}}
+                    label="löschen"
+                    placeholder="Löschen"
+                    value={inputValue}
+                    onChange={e => setInputValue(e.target.value)}
+                    autoComplete="off"
+                />
+                <LoadingButton
+                    sx={{ mt: 2 }}
+                    loading={loading}
+                    variant="outlined"
+                    onClick={onDelete}
+                >{t("Common.delete")}</LoadingButton>
+            </FormControl>
         </React.Fragment>
     );
 
@@ -57,7 +60,7 @@ const MatchDeleteForm = ({ matchId, editorCode, onDeleted }: MatchDeleteFormProp
             setErrorMsg(t("DeleteMatchSetting.deleteError"))
         } else {
             setErrorMsg("");
-            onDeleted();          
+            onDeleted();
         }
         setLoading(false);
     }

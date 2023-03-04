@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useAuthUser } from "react-auth-kit";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { AppContext } from "../../../../AppContext";
 import { Account } from "../../../../rest/data/Account";
@@ -53,12 +53,7 @@ const DeleteMatchSetting = ({ match, editorCode }: DeleteMatchSettingProps) => {
     function renderDeletable() {
 
         return (
-            <React.Fragment>
-                <Typography sx={[{ "& strong": { color: theme => theme.palette.primary.main } }]} mb={2} >
-                    <Trans i18nKey={"DeleteMatchSetting.deletable"} t={t} />
-                </Typography>
-                <MatchDeleteForm matchId={match.id}  editorCode={editorCode} onDeleted={onDeleted} />
-            </React.Fragment>
+            <MatchDeleteForm matchId={match.id} editorCode={editorCode} onDeleted={onDeleted} />
         );
     }
 
