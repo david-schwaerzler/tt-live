@@ -17,6 +17,8 @@ export function useWebHookUtil(
 
     const ws = useRef<WebSocket | null>(null);
 
+
+
     useEffect(() => {
         function initWs() {
             ws.current = new WebSocket(`${Config.WS_URL}/${match?.id}`);
@@ -28,28 +30,6 @@ export function useWebHookUtil(
             ws.current.onerror = e => {
                 console.log("Error from websocket. Try to create new connection: ");
             }
-
-            return ws.current;
-        }
-
-        if(match?.id == null)
-            return;
-
-        let wsCurrent = initWs();
-
-        const intevalId = setInterval(() => {
-            if (wsCurrent.readyState === WebSocket.CLOSED)
-                wsCurrent = initWs();
-        }, RETRY_TIMOUT * 1000);
-        return () => {
-            wsCurrent.close();
-            clearInterval(intevalId);
-        }
-
-    }, [match?.id])
-
-    useEffect(() => {
-        if (ws.current) {
             ws.current.onmessage = (event: MessageEvent<any>) => {
                 let action: UpdateAction = JSON.parse(event.data);
                 if (action.action === "MATCH") {
@@ -72,7 +52,25 @@ export function useWebHookUtil(
                     onAddChatMessage(action.chat);
                 }
             }
+
+            return ws.current;
         }
-    }, [onMatchUpdated, onGameUpdated, onAddChatMessage])
+
+        if (match?.id == null)
+            return;
+
+        let wsCurrent = initWs();
+
+        const intevalId = setInterval(() => {
+            if (wsCurrent.readyState === WebSocket.CLOSED)
+                wsCurrent = initWs();
+        }, RETRY_TIMOUT * 1000);
+        return () => {
+            wsCurrent.close();
+            clearInterval(intevalId);
+        }
+
+    }, [match?.id, onMatchUpdated, onGameUpdated, onAddChatMessage])
+
 
 }
