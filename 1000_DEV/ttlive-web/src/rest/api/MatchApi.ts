@@ -83,17 +83,15 @@ export async function fetchSimpleMatchGames(matchId: number): Promise<SimpleGame
 
 export async function fetchMatch(id: number): Promise<MatchResponse> {
     try {
-        let response = await axios.get(`/match/${id}`);
-        if (response.status !== 200) {
-            console.log(`Error fetching match with id = ${id} from the Server: ${response.status} `)
-            return returnError(response.status.toString());
-        }
-
+        let response = await axios.get(`/match/${id}`);        
         return returnData(sortMatch(response.data));
 
     } catch (error) {
-        console.log(`Error fetching match with id = ${id} from Server: ${error} `)
-        return returnError(`${error} `);
+        if(axios.isAxiosError(error)){
+            console.log(`Error fetching match with id = ${id} from Server: ${error.response?.data}`)            
+            return returnError(`Error fetching match with id = ${id} from Server:`, error.response?.status)
+        }        
+        return returnError(`Error fetching match with id = ${id} from Server: ${error}`);
     }
 
 }

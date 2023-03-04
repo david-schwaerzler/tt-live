@@ -84,6 +84,7 @@
   "LiveSearch.homeTeam": "Heim",
   "LiveSearch.guestTeam": "Gast",
   "LiveView.noMatch": "Kein Livespiel ausgewählt.\nFinde ein Spiel über die Suche",
+  "LiveView.matchDeleted": "Das Spiel existiert leider nicht mehr.\nÜber die Suche findest du aber weitere spannende Spiele.",
   "LiveView.search": "Zur Suche",
   "LiveView.live": "Live",
   "LiveView.lineup": "Spielbericht",
@@ -140,7 +141,7 @@
   "AccountSetting.confirm.connect": "Verknüpfen",
   "AccountSetting.confirm.cancel": "Abbrechen",
   "DeleteMatchSetting.title": "Match Löschen",
-  "DeleteMatchSetting.deletable": "Gebe <strong>löschen</strong> ein, um das Spiel zu löschen.\nDiese Aktion ist unumkehrbar.",
+  "MatchDeleteForm.deletable": "Gebe <strong>löschen</strong> ein, um das Spiel zu entfernen.\nEin gelöschtes spiel kann nicht wiederhergestellt werden.",
   "DeleteMatchSetting.notDeletableAccount": "Löschen des Spieles nicht möglich.\nNur der inhaber kann das Spiel löschen \nInhaber:",
   "DeleteMatchSetting.notDeletableEditor": "Löschen des Spieles nicht möglich.\nNur Editoren kann das Spiel löschen",
   "DeleteMatchSetting.inputError": "Falsche Eingabe. Geben sie 'löschen' ein",
@@ -166,7 +167,7 @@
   "MatchFilter.contest": "Konkurrenz",
   "MatchFilter.region": "Verband",
   "ContactForm.header": "Kontakt",
-  "ContactForm.introduction": "Moin,\nTT-Live ist ein kleines Projekt, welches ich neben meinem Studium in der Freizeit entsanden ist.\nHast du Feedback, Verbesserungsvorschläge oder\nsind Fehler aufgetreten, lassen es mich gerne wissen.",
+  "ContactForm.introduction": "Moin,\nTT-Live ist ein kleines Freizeitprojekt, welches ich parallel zu meinem Studium entwickel.\nTT-Live ist noch nicht perfekt und in stetiger entwicklung.Hast du Feedback, Verbesserungsvorschläge oder gefundene Fehler, lass es mich gerne wissen.",
   "ContactForm.text": "Deine Nachricht",
   "ContactForm.recipient": "Email (optional)",
   "ContactForm.submit": "Senden",
@@ -235,5 +236,6 @@
   "CreateGameView.stepSettings": "Match Einstellungen",
   "MatchVisibility.publicDesc": "Öffentliche Spiele können von jedem eingesehen werden und erscheinen in der Spielsuche.",
   "MatchVisibility.privateDesc": "Private Spiele können nur per Link aufgerufen werden.\nSie erscheinen nicht in der Spielesuche.",
-  "AccountFilter.noFilter": "Du hast noch keine Filter erstellt"
+  "AccountFilter.noFilter": "Du hast noch keine Filter erstellt",
+  "LiveView.errorNetwork": "Der Server ist aktuell nicht erreichbar. Bitte versuche es später erneut."
 }

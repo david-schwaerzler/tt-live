@@ -47,7 +47,7 @@ const RegisterView = () => {
     function successView() {
         return (
             <CardContent>
-                <Typography>{t("RegisterView.registeredTitle")}</Typography>
+                <Typography variant="h3" mb={2}>{t("RegisterView.registeredTitle")}</Typography>
                 <Typography mt={1}>{t("RegisterView.registeredText")}</Typography>
                 <Link to="/login" style={{  textDecoration: "none"}}>
                     <Button variant="outlined" sx={{ mt: 2 }}>
