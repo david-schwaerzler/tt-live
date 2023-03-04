@@ -25,9 +25,9 @@ import com.ttlive.bo.Match;
 import com.ttlive.dto.AccountDto;
 import com.ttlive.dto.EditorCodeDto;
 import com.ttlive.dto.SimpleMatchDto;
+import com.ttlive.exceptions.BadRestRequestException;
 import com.ttlive.rest.InvalidEditorCodeException;
 import com.ttlive.service.AccountService;
-import com.ttlive.utils.BadRestRequestException;
 
 @Stateless
 @Path("/secured/account")

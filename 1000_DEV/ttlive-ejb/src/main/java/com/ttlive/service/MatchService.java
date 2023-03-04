@@ -13,6 +13,8 @@ import com.ttlive.bo.Match;
 import com.ttlive.bo.request.RequestLineup;
 import com.ttlive.bo.request.RequestLineup.RequestDoubles;
 import com.ttlive.bo.request.RequestLineup.RequestPlayer;
+import com.ttlive.exceptions.BadRestRequestException;
+import com.ttlive.exceptions.NotFoundException;
 import com.ttlive.bo.request.RequestMatch;
 import com.ttlive.persistence.dao.AccountDao;
 import com.ttlive.persistence.dao.GameStyleDao;
@@ -30,7 +32,6 @@ import com.ttlive.persistence.entity.PlayerEntity;
 import com.ttlive.persistence.entity.RegionEntity;
 import com.ttlive.persistence.entity.TeamEntity;
 import com.ttlive.session.MatchEventObserver;
-import com.ttlive.utils.BadRestRequestException;
 import com.ttlive.utils.MatchFactory;
 import com.ttlive.utils.MatchState;
 
@@ -74,10 +75,10 @@ public class MatchService {
 		return getDefault(entities);
 	}
 
-	public Match findById(long id) throws InvalidGameSetFormat, BadRestRequestException {
+	public Match findById(long id) throws InvalidGameSetFormat, BadRestRequestException, NotFoundException {
 		MatchEntity match = matchDao.findById(id);
 		if (match == null)
-			throw new BadRestRequestException("id", "Match with the given id='" + id + " doesn't exist");
+			throw new NotFoundException("id", "Match with the given id='" + id + " doesn't exist");
 		return getDefault(match);
 	}
 

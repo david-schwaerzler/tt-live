@@ -13,8 +13,8 @@ import com.ttlive.bo.Contact;
 import com.ttlive.bo.request.RequestContact;
 import com.ttlive.dto.ContactDto;
 import com.ttlive.dto.request.RequestContactDto;
+import com.ttlive.exceptions.BadRestRequestException;
 import com.ttlive.service.ContactService;
-import com.ttlive.utils.BadRestRequestException;
 
 @Stateless
 @Path("contact")

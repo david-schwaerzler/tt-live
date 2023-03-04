@@ -9,11 +9,11 @@ import javax.ejb.Stateless;
 import com.ttlive.bo.League;
 import com.ttlive.bo.Team;
 import com.ttlive.bo.request.RequestLeague;
+import com.ttlive.exceptions.BadRestRequestException;
 import com.ttlive.persistence.dao.LeagueDao;
 import com.ttlive.persistence.dao.RegionDao;
 import com.ttlive.persistence.entity.LeagueEntity;
 import com.ttlive.persistence.entity.RegionEntity;
-import com.ttlive.utils.BadRestRequestException;
 
 @Stateless
 public class LeagueService {

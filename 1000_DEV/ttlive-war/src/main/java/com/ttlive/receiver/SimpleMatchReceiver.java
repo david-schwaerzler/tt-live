@@ -17,8 +17,9 @@ import com.ttlive.bo.GameSet.InvalidGameSetFormat;
 import com.ttlive.bo.Match;
 import com.ttlive.dto.SimpleMatchDto;
 import com.ttlive.dto.SimpleMatchDto.SimpleGameDto;
+import com.ttlive.exceptions.BadRestRequestException;
+import com.ttlive.exceptions.NotFoundException;
 import com.ttlive.service.MatchService;
-import com.ttlive.utils.BadRestRequestException;
 
 @Stateless
 @Path("/simple_match")
@@ -46,7 +47,7 @@ public class SimpleMatchReceiver {
 	@Path("/{id}/games")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response findGames(@PathParam("id") long matchId, @QueryParam("fields") String fieldsStr) throws InvalidGameSetFormat, BadRestRequestException {
+	public Response findGames(@PathParam("id") long matchId, @QueryParam("fields") String fieldsStr) throws InvalidGameSetFormat, BadRestRequestException, NotFoundException {
 		Match match = matchService.findById(matchId);		
 		return Response.ok(SimpleGameDto.fromBos(match.getGames(), null)).build();
 	}

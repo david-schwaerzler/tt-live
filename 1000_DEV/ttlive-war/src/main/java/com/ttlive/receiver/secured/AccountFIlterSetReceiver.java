@@ -23,9 +23,9 @@ import com.ttlive.dto.AccountFilterDto;
 import com.ttlive.dto.AccountFilterSetDto;
 import com.ttlive.dto.request.RequestAccountFilterDto;
 import com.ttlive.dto.request.RequestAccountFilterSetDto;
+import com.ttlive.exceptions.BadRestRequestException;
 import com.ttlive.service.AccountFilterService;
 import com.ttlive.service.AccountFilterSetService;
-import com.ttlive.utils.BadRestRequestException;
 
 @Path("/secured/filterSet")
 @Consumes(MediaType.APPLICATION_JSON)

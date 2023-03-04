@@ -18,9 +18,9 @@ import com.ttlive.bo.request.RequestChatMessage;
 import com.ttlive.dto.ChatMessageDto;
 import com.ttlive.dto.LiveCountDto;
 import com.ttlive.dto.request.RequestChatMessageDto;
+import com.ttlive.exceptions.BadRestRequestException;
 import com.ttlive.hook.TTLiveWebSocket;
 import com.ttlive.service.ChatMessageService;
-import com.ttlive.utils.BadRestRequestException;
 
 @Stateless
 @Path("/chat")

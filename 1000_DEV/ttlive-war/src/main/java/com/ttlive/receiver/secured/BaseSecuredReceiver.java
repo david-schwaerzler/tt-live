@@ -5,7 +5,7 @@ import java.security.Principal;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
-import com.ttlive.utils.BadRestRequestException;
+import com.ttlive.exceptions.BadRestRequestException;
 
 public class BaseSecuredReceiver {
 	@Context

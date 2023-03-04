@@ -5,9 +5,9 @@ import javax.ejb.Stateless;
 
 import com.ttlive.bo.Contact;
 import com.ttlive.bo.request.RequestContact;
+import com.ttlive.exceptions.BadRestRequestException;
 import com.ttlive.persistence.dao.ContactDao;
 import com.ttlive.persistence.entity.ContactEntity;
-import com.ttlive.utils.BadRestRequestException;
 
 @Stateless
 public class ContactService {

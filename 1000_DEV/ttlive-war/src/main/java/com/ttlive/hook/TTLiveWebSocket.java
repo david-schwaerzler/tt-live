@@ -68,7 +68,7 @@ public class TTLiveWebSocket {
 			sockets = sessions.get(matchId);
 			if (sockets == null) {
 				sockets = new LinkedList<>();
-				sessions.put(matchId, sockets);
+				sessions.put(matchId, sockets);				
 			}
 		}
 

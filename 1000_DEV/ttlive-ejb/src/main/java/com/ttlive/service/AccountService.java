@@ -10,12 +10,12 @@ import com.ttlive.bo.GameSet.InvalidGameSetFormat;
 import com.ttlive.bo.LoginResponse;
 import com.ttlive.bo.Match;
 import com.ttlive.bo.request.RequestAccount;
+import com.ttlive.exceptions.BadRestRequestException;
 import com.ttlive.persistence.dao.AccountDao;
 import com.ttlive.persistence.dao.MatchDao;
 import com.ttlive.persistence.entity.AccountEntity;
 import com.ttlive.persistence.entity.MatchEntity;
 import com.ttlive.session.MatchEventObserver;
-import com.ttlive.utils.BadRestRequestException;
 import com.ttlive.utils.HashUtils;
 
 @Stateless

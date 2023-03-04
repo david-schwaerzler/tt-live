@@ -8,12 +8,12 @@ import javax.ejb.Stateless;
 
 import com.ttlive.bo.ChatMessage;
 import com.ttlive.bo.request.RequestChatMessage;
+import com.ttlive.exceptions.BadRestRequestException;
 import com.ttlive.persistence.dao.ChatMessageDao;
 import com.ttlive.persistence.dao.MatchDao;
 import com.ttlive.persistence.entity.ChatMessageEntity;
 import com.ttlive.persistence.entity.MatchEntity;
 import com.ttlive.session.MatchEventObserver;
-import com.ttlive.utils.BadRestRequestException;
 
 @Stateless
 public class ChatMessageService {

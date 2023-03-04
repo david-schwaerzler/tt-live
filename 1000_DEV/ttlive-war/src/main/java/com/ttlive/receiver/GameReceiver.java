@@ -16,9 +16,9 @@ import com.ttlive.bo.GameSet.InvalidGameSetFormat;
 import com.ttlive.bo.request.RequestGameSet;
 import com.ttlive.dto.GameDto;
 import com.ttlive.dto.request.RequestGametSetDto;
+import com.ttlive.exceptions.BadRestRequestException;
 import com.ttlive.rest.InvalidEditorCodeException;
 import com.ttlive.service.GameService;
-import com.ttlive.utils.BadRestRequestException;
 
 @Stateless
 @Path("/game")

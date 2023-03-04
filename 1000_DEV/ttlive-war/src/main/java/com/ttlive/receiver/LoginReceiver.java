@@ -25,10 +25,10 @@ import com.ttlive.dto.LoginResponseDto;
 import com.ttlive.dto.request.RequestAccountDto;
 import com.ttlive.dto.request.RequestLoginDto;
 import com.ttlive.dto.request.RequestRefreshTokenDto;
+import com.ttlive.exceptions.BadRestRequestException;
 import com.ttlive.rest.JwtFactory;
 import com.ttlive.service.AccountService;
 import com.ttlive.service.AccountService.LoginStatus;
-import com.ttlive.utils.BadRestRequestException;
 
 @Stateless
 @Produces(MediaType.APPLICATION_JSON)

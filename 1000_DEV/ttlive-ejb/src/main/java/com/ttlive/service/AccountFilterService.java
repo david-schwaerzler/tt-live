@@ -8,12 +8,12 @@ import javax.ejb.Stateless;
 
 import com.ttlive.bo.AccountFilter;
 import com.ttlive.bo.request.RequestAccountFilter;
+import com.ttlive.exceptions.BadRestRequestException;
 import com.ttlive.persistence.dao.AccountDao;
 import com.ttlive.persistence.dao.AccountFilterDao;
 import com.ttlive.persistence.entity.AccountEntity;
 import com.ttlive.persistence.entity.AccountFilterEntity;
 import com.ttlive.persistence.entity.AccountFilterSetEntity;
-import com.ttlive.utils.BadRestRequestException;
 
 @Stateless
 public class AccountFilterService {

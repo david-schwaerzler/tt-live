@@ -1,4 +1,4 @@
-package com.ttlive.utils;
+package com.ttlive.exceptions;
 
 public class BadRestRequestException extends Exception {
 

@@ -36,9 +36,10 @@ import com.ttlive.dto.request.RequestLineupDto;
 import com.ttlive.dto.request.RequestMatchDto;
 import com.ttlive.dto.request.RequestLineupDto.RequestDoublesDto;
 import com.ttlive.dto.request.RequestLineupDto.RequestPlayerDto;
+import com.ttlive.exceptions.BadRestRequestException;
+import com.ttlive.exceptions.NotFoundException;
 import com.ttlive.rest.InvalidEditorCodeException;
 import com.ttlive.service.MatchService;
-import com.ttlive.utils.BadRestRequestException;
 import com.ttlive.utils.LeagueContest;
 
 @Stateless
@@ -64,7 +65,7 @@ public class MatchReceiver {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response findById(@PathParam("id") long id) throws InvalidGameSetFormat, BadRestRequestException {
+	public Response findById(@PathParam("id") long id) throws InvalidGameSetFormat, BadRestRequestException, NotFoundException {
 		Match match = matchService.findById(id);
 		return Response.ok(MatchDto.builder().bo(match).build()).build();
 	}
