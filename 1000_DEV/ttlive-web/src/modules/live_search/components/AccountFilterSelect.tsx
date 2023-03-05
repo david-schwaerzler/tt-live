@@ -140,7 +140,7 @@ const AccountFilterSelect = () => {
                 {error === "" &&
                     <MenuItem value={-1}>
                         {loading === true && t("Common.loading")}
-                        {loading === false && context.matchFilter.isCustom === false && t("AccountFilterSelect.allMatches")}
+                        {loading === false && (context.matchFilter.isCustom == null || context.matchFilter.isCustom === false) && t("AccountFilterSelect.allMatches")}
                         {loading === false && context.matchFilter.isCustom === true && t("AccountFilterSelect.custom")}
                     </MenuItem>}
 
