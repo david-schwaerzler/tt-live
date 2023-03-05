@@ -56,8 +56,10 @@ const GameSetResultDialog = ({ set, isHome, show, game, editorCode, onClose, onE
 
     return (
         <Dialog open={show} onClose={() => onClose()} fullWidth maxWidth="md" PaperProps={{ sx: { position: "fixed", top: theme => theme.spacing(5) } }}>
-            <DialogTitle>
-                {t("GameSetResult.title")}
+            <DialogTitle sx={{display: "flex", alignItems: "center"}}>
+                <Box flexGrow="1">
+                    {t("GameSetResult.title")}
+                </Box>
                 <FormControlLabel sx={{ float: "right" }} value="reset" control={<Radio checked={isUnset} onClick={() => setUnset(!isUnset)} />} label={t("GameSetResult.unset")} />
             </DialogTitle>
 
@@ -76,7 +78,7 @@ const GameSetResultDialog = ({ set, isHome, show, game, editorCode, onClose, onE
                         </Grid>
                         <Grid item xs={2} display="flex" justifyContent="center" alignItems="center">
                             <IconButton onClick={() => setHomeState(!isHomeState)}>
-                                <SwapHorizIcon color="primary"/>
+                                <SwapHorizIcon color="primary" />
                             </IconButton>
                         </Grid>
                         <Grid item xs={4} display="flex" justifyContent="center" alignItems="center" textAlign="center">
