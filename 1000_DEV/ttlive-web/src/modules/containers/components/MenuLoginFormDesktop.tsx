@@ -37,6 +37,7 @@ const MenuLoginFormDesktop = ({ onLogin, username, password, onUsernameChange, o
                 onChange={e => onPasswordChange(e.target.value)}
                 value={password}
                 type="password"
+                onKeyDown={(e) => e.key === "Enter" && onLoginClicked()}
             />
             <WhiteLoadingButton
                 loading={loading}
