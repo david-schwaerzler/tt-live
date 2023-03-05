@@ -1,7 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
-import { FormControl, IconButton, Menu, Stack, TextField } from '@mui/material';
+import { Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, Menu, Stack, TextField } from '@mui/material';
 import { Box } from '@mui/system';
-import React, { HtmlHTMLAttributes, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { postAccountFilterSet } from '../../../../rest/api/AccountFilterApi';
 import { AccountFilterSet, RequestAccountFilterSet } from '../../../../rest/data/AccountFilterSet';
@@ -9,14 +9,14 @@ import LoadingButton from '../../../common/components/buttons/LoadingButton';
 import ErrorMessage from '../../../common/components/utils/ErrorMessage';
 import { useBackDialogHandler } from '../../../common/hooks/useBackDialogHandler';
 import { useShortcuts } from '../../../common/hooks/useShortcuts';
-import { WhiteTextField } from '../../../containers/components/MenuLoginForm';
 
 
 export interface AccountFilterSetAddButtonProps {
+    takenNames: Array<string>;
     onCreate: (filerSet: AccountFilterSet) => void;
 }
 
-const AccountFilterSetAddButton = ({ onCreate }: AccountFilterSetAddButtonProps) => {
+const AccountFilterSetAddButton = ({ takenNames, onCreate }: AccountFilterSetAddButtonProps) => {
 
     const [anchor, setAnchor] = useState<HTMLElement | null>(null);
     const [name, setName] = useState("");
@@ -25,6 +25,8 @@ const AccountFilterSetAddButton = ({ onCreate }: AccountFilterSetAddButtonProps)
     const [generalError, setGeneralError] = useState<string>("");
     const [isLoading, setLoading] = useState<boolean>(false);
     const hasHighlighted = useRef(false);
+    const [isDefault, setDefault] = useState<boolean>(false);
+    const [isActive, setActive] = useState<boolean>(false);
 
     useBackDialogHandler(anchor != null, () => setAnchor(null), "filterSetAdd");
     useShortcuts(onClick, () => setAnchor(null), anchor != null);
@@ -34,6 +36,8 @@ const AccountFilterSetAddButton = ({ onCreate }: AccountFilterSetAddButtonProps)
             setNameError("");
             setGeneralError("");
             setName("");
+            setActive(true);
+            setDefault(false);
         } else {
             hasHighlighted.current = false;
         }
@@ -53,7 +57,7 @@ const AccountFilterSetAddButton = ({ onCreate }: AccountFilterSetAddButtonProps)
                     vertical: "top",
                     horizontal: "right",
                 }}
-             
+
                 transformOrigin={{
                     vertical: "top",
                     horizontal: "right",
@@ -77,6 +81,11 @@ const AccountFilterSetAddButton = ({ onCreate }: AccountFilterSetAddButtonProps)
                         />
                     </FormControl>
 
+                    <FormGroup sx={{ flexDirection: "row" }}>
+                        <FormControlLabel control={<Checkbox checked={isDefault} onChange={e => setDefault(!isDefault)} />} label={t("AccountFilter.checkDefault")} />
+                        <FormControlLabel control={<Checkbox checked={isActive} onChange={e => setActive(!isActive)} />} label={t("AccountFilter.checkActive")} />
+                    </FormGroup>
+
                     <Box>
                         <LoadingButton loading={isLoading} onClick={onClick} >
                             {t("Common.create")}
@@ -84,8 +93,6 @@ const AccountFilterSetAddButton = ({ onCreate }: AccountFilterSetAddButtonProps)
                     </Box>
                 </Stack>
             </Menu>
-
-
         </React.Fragment>
     )
 
@@ -104,9 +111,14 @@ const AccountFilterSetAddButton = ({ onCreate }: AccountFilterSetAddButtonProps)
             return;
         }
 
+        if(takenNames.includes(name) === true){
+            setNameError(t("AccountFilter.nameExists"))
+            return;
+        }
+
         let requestFilterSet: RequestAccountFilterSet = {
-            active: true,
-            default: false,
+            active: isActive,
+            default: isDefault,
             name: name
         };
 

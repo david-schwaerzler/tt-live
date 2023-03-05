@@ -6,5 +6,6 @@ export interface MatchFilterOptions {
     clubs?: Array<string>,
     contests?: Array<string>,
     states?: Array<MatchState>,
-    isCustom?: boolean
+    isCustom?: boolean,
+    setId? : number
 };

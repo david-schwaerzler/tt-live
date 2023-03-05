@@ -23,7 +23,7 @@ const MatchDeleteForm = ({ matchId, editorCode, onDeleted }: MatchDeleteFormProp
             <Typography sx={[{ "& strong": { color: theme => theme.palette.primary.main } }]} mb={2} whiteSpace="pre-wrap">
                 <Trans i18nKey={"MatchDeleteForm.deletable"} t={t} />
             </Typography>
-            <FormControl sx={{maxWidth: "200px"}}>
+            <FormControl sx={{ maxWidth: "200px" }}>
                 <ErrorMessage msg={errorMsg} sx={{ mb: 1 }} />
                 <TextField
                     sx={{}}
@@ -33,13 +33,15 @@ const MatchDeleteForm = ({ matchId, editorCode, onDeleted }: MatchDeleteFormProp
                     onChange={e => setInputValue(e.target.value)}
                     autoComplete="off"
                 />
-                <LoadingButton
-                    sx={{ mt: 2 }}
-                    loading={loading}
-                    variant="outlined"
-                    onClick={onDelete}
-                >{t("Common.delete")}</LoadingButton>
             </FormControl>
+            <LoadingButton
+                sx={{ mt: 2 }}
+                loading={loading}
+                variant="outlined"
+                onClick={onDelete}
+            >
+                {t("Common.delete")}
+            </LoadingButton>
         </React.Fragment>
     );
 

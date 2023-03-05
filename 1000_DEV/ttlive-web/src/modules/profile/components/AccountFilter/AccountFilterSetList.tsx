@@ -1,5 +1,5 @@
 import { Stack, Typography, Box, Card, CardContent, Skeleton } from "@mui/material";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import AccountFilterAddButton from "./AccountFilterSetAddButton";
@@ -17,6 +17,8 @@ const AccountFilterSetList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string>("");
 
+    const filterSetNames = useMemo(() => filterSets.map(fs => fs.name), [filterSets]);
+
 
     useEffect(() => {
         async function fetch() {
@@ -24,7 +26,7 @@ const AccountFilterSetList = () => {
             setLoading(true);
             let response = await fetchAccountFilterSets();
             if (response.data != null) {
-                setFilterSets(response.data.sort((a, b) => a.id - b.id));
+                setFilterSets(response.data.sort((a, b) => b.id - a.id));
             } else {
                 setError(t("Common.errorHttp"));
             }
@@ -38,8 +40,18 @@ const AccountFilterSetList = () => {
 
     const onUpdated = useCallback((filterSet: AccountFilterSet) => {
         setFilterSets(filterSets => {
-            let copy = filterSets.filter(fs => fs.id !== filterSet.id);
-            copy.push(filterSet);
+
+            let existing = filterSets.find(fs => fs.id === filterSet.id);
+            if (existing == null)
+                return filterSets;
+
+            let idx = filterSets.indexOf(existing);
+            let copy = [...filterSets];
+
+            if (filterSet.default)
+                copy.forEach(fs => fs.default = false);
+            copy[idx] = filterSet;
+
             return copy;
         });
     }, []);
@@ -57,11 +69,11 @@ const AccountFilterSetList = () => {
             <Stack direction="row" alignItems="center" justifyContent="center" mb={2}>
                 <Typography variant="h4" flexGrow={1}>{t("AccountFilter.title")}</Typography>
                 <Box>
-                    <AccountFilterAddButton onCreate={onAddfilterSet} />
+                    <AccountFilterAddButton onCreate={onAddfilterSet} takenNames={filterSetNames} />
                 </Box>
             </Stack>
             <Stack gap={2}>
-                {filterSets.map(fs => <AccountFilterCard key={fs.id} filterSet={fs} onUpdated={onUpdated} onDeleted={onDeleted} />)}
+                {filterSets.map(fs => <AccountFilterCard key={fs.id} filterSet={fs} onUpdated={onUpdated} onDeleted={onDeleted} takenNames={filterSetNames} />)}
 
                 {loading && <Skeleton height="100px" variant="rectangular" />}
                 {loading === false && (filterSets.length === 0 || error !== "") &&
@@ -77,13 +89,9 @@ const AccountFilterSetList = () => {
     );
 
     function onAddfilterSet(filterSet: AccountFilterSet) {
-        let copy = [...filterSets];
-        copy.push(filterSet);
+        let copy = [filterSet, ...filterSets];
         setFilterSets(copy);
     }
-
-
-
 }
 
 export default React.memo(AccountFilterSetList);

@@ -146,7 +146,7 @@ const MatchFilter = ({ simpleMatches }: MatchFilterProps) => {
                     </Stack>
 
                     <Stack direction="row" gap={1}>
-                        <Button onClick={() => context.setMatchFilter({})}>{t("Common.reset")}</Button>
+                        <Button onClick={() => context.setMatchFilter({isCustom: false})}>{t("Common.reset")}</Button>
                     </Stack>
                 </Stack>
             </Collapse>

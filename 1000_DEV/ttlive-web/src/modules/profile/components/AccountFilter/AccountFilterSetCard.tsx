@@ -9,15 +9,17 @@ import AccountFilterAddDialog from "./AccountFilterAddDialog";
 import React from "react";
 import { AccountFilter } from "../../../../rest/data/AccountFilter";
 import AccountFilterChip from "./AccountFilterChip";
-import AccountFilterSetDeleteButton from "./AccountFilterSetDeleteButton";
+import DeleteConfirmButton from "../../../common/components/buttons/DeleteConfirmButton";
+import { deleteAccountFilterSet } from "../../../../rest/api/AccountFilterApi";
 
 export interface AccountFilterSetCardProps {
     filterSet: AccountFilterSet;
+    takenNames: Array<string>;
     onUpdated: (updatedFilter: AccountFilterSet) => void;
     onDeleted: (updatedFilter: AccountFilterSet) => void;
 }
 
-const AccountFilterSetCard = ({ filterSet, onUpdated, onDeleted }: AccountFilterSetCardProps) => {
+const AccountFilterSetCard = ({ filterSet, takenNames, onUpdated, onDeleted }: AccountFilterSetCardProps) => {
 
     const [t] = useTranslation();
     const [showAddFilter, setShowAddFilter] = useState(false);
@@ -28,13 +30,20 @@ const AccountFilterSetCard = ({ filterSet, onUpdated, onDeleted }: AccountFilter
             <Card elevation={3}>
                 <CardHeader title={
                     <Stack gap={1} direction="row" alignItems="top" flexWrap="nowrap">
-                        <Typography fontSize="1.5rem" sx={{ overflowWrap: "anywhere" }}>
+                        <Typography
+                            fontSize="1.5rem"
+                            sx={{ overflowWrap: "anywhere" }}
+                            fontStyle={filterSet.active === false ? "italic" : undefined}
+                        >
                             {filterSet.name}
                         </Typography>
-                        <AccountFilterSetEditButton filterSet={filterSet} onUpdated={onUpdated} />
+                        {filterSet.default &&
+                            <Typography fontSize="0.75rem" alignSelf="center">{t("AccountFilter.defaultLabel")}</Typography>
+                        }
+                        <AccountFilterSetEditButton filterSet={filterSet} onUpdated={onUpdated} takenNames={takenNames} />
                         <Box flexGrow={1} />
                         <Box>
-                            <AccountFilterSetDeleteButton onDelete={() => onDeleted(filterSet)} filterSetId={filterSet.id} />
+                            <DeleteConfirmButton content={t("AccountFilter.deleteConfirm")} onDelete={onFilterSetDeleted} />
                         </Box>
                     </Stack>
                 } />
@@ -43,13 +52,13 @@ const AccountFilterSetCard = ({ filterSet, onUpdated, onDeleted }: AccountFilter
                         {filterSet.filters.map(f => <AccountFilterChip key={f.id} filter={f} filterSetId={filterSet.id} onDeleted={onFilterDeleted} />)}
                     </Stack>
 
-                    <IconButton sx={{ mt: 1, pb: 0 }} size="small" onClick={() => setShowAddFilter(true)}>
+                    <IconButton sx={{ mt: filterSet.filters.length > 0 ? 1 : 0, pb: 0 }} size="small" onClick={() => setShowAddFilter(true)}>
                         <AddIcon color="primary" />
                         {filterSet.filters.length === 0 && <Typography>{t("AccountFilter.addFilter")}</Typography>}
                     </IconButton>
                 </CardContent>
             </Card>
-        </React.Fragment>
+        </React.Fragment >
     );
 
     function onFilterCreated(filter: AccountFilter) {
@@ -63,6 +72,18 @@ const AccountFilterSetCard = ({ filterSet, onUpdated, onDeleted }: AccountFilter
         tmp.filters = filterSet.filters.filter(f => f.id !== filter.id);
         console.log(tmp.filters)
         onUpdated(tmp);
+    }
+
+
+    async function onFilterSetDeleted() {
+
+        let response = await deleteAccountFilterSet(filterSet.id);
+        if (response.data != null){
+            onDeleted(filterSet)
+            return null;
+        }
+
+        return t("Common.errorHttp");
     }
 
 }

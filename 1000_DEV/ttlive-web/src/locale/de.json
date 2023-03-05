@@ -7,6 +7,7 @@
   "Common.delete": "Löschen",
   "Common.create": "Erstellen",
   "Common.save": "Speichern",
+  "Common.cancel": "Abbrechen",
   "Common.notLoggedIn": "Du musst dich anmelden um diese Informationen abzurufen",
   "Common.loading": "Loading...",
   "MenuBar.home": "Home",
@@ -237,5 +238,14 @@
   "MatchVisibility.publicDesc": "Öffentliche Spiele können von jedem eingesehen werden und erscheinen in der Spielsuche.",
   "MatchVisibility.privateDesc": "Private Spiele können nur per Link aufgerufen werden.\nSie erscheinen nicht in der Spielesuche.",
   "AccountFilter.noFilter": "Du hast noch keine Filter erstellt",
-  "LiveView.errorNetwork": "Der Server ist aktuell nicht erreichbar. Bitte versuche es später erneut."
+  "LiveView.errorNetwork": "Der Server ist aktuell nicht erreichbar. Bitte versuche es später erneut.",
+  "AccountFilter.checkDefault": "Default",
+  "AccountFilter.checkActive": "Aktiv",
+  "AccountFilter.nameExists": "Ein Filter mit diesem Namen existiert bereits",
+  "AccountFilter.defaultLabel": "(default)",
+  "AccountFilterSelect.newFilter": "Neuer Filter",
+  "AccountFilterSelect.allMatches": "Alle Spiele",
+  "AccountFilterSelect.custom": "Benutzerdefiniert",
+  "DeleteConfirmButton.title": "Löschen bestätigen",
+  "AccountFilter.deleteConfirm": "Bist du sicher, dass der Filter gelöscht werden soll?"
 }

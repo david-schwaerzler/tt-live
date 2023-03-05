@@ -1,4 +1,4 @@
-import { FormControl, IconButton, Menu, Stack, TextField } from '@mui/material';
+import { Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, Menu, Stack, TextField } from '@mui/material';
 import { Box } from '@mui/system';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,9 +15,10 @@ import { useShortcuts } from '../../../common/hooks/useShortcuts';
 export interface AccountFilterSetEditButtonProps {
     onUpdated: (filerSet: AccountFilterSet) => void;
     filterSet: AccountFilterSet
+    takenNames: Array<string>;
 }
 
-const AccountFilterSetEditButton = ({ filterSet, onUpdated }: AccountFilterSetEditButtonProps) => {
+const AccountFilterSetEditButton = ({ filterSet, takenNames, onUpdated }: AccountFilterSetEditButtonProps) => {
 
     const [anchor, setAnchor] = useState<HTMLElement | null>(null);
     const [name, setName] = useState(filterSet.name);
@@ -26,6 +27,8 @@ const AccountFilterSetEditButton = ({ filterSet, onUpdated }: AccountFilterSetEd
     const [generalError, setGeneralError] = useState<string>("");
     const [isLoading, setLoading] = useState<boolean>(false);
     const hasHighlighted = useRef(false);
+    const [isDefault, setDefault] = useState<boolean>(false);
+    const [isActive, setActive] = useState<boolean>(false);
 
     useBackDialogHandler(anchor != null, () => setAnchor(null), "filterSetEdit");
     useShortcuts(onClick, () => setAnchor(null), anchor != null);
@@ -35,10 +38,12 @@ const AccountFilterSetEditButton = ({ filterSet, onUpdated }: AccountFilterSetEd
             setNameError("");
             setGeneralError("");
             setName(filterSet.name)
-        }else{
+            setDefault(filterSet.default);
+            setActive(filterSet.active);
+        } else {
             hasHighlighted.current = false;
         }
-    }, [filterSet.name, anchor]);
+    }, [filterSet, anchor]);
 
     return (
         <Box>
@@ -77,6 +82,11 @@ const AccountFilterSetEditButton = ({ filterSet, onUpdated }: AccountFilterSetEd
                         />
                     </FormControl>
 
+
+                    <FormGroup sx={{ flexDirection: "row" }}>
+                        <FormControlLabel control={<Checkbox checked={isDefault} onChange={e => setDefault(!isDefault)} />} label={t("AccountFilter.checkDefault")} />
+                        <FormControlLabel control={<Checkbox checked={isActive} onChange={e => setActive(!isActive)} />} label={t("AccountFilter.checkActive")} />
+                    </FormGroup>
                     <Box>
                         <LoadingButton loading={isLoading} onClick={onClick} >
                             {t("Common.save")}
@@ -102,9 +112,14 @@ const AccountFilterSetEditButton = ({ filterSet, onUpdated }: AccountFilterSetEd
             return;
         }
 
+        if(takenNames.some(n => n !== filterSet.name && n === name) === true){
+            setNameError(t("AccountFilter.nameExists"))
+            return;
+        }
+
         let requestFilterSet: RequestAccountFilterSet = {
-            active: filterSet.active,
-            default: filterSet.default,
+            active: isActive,
+            default: isDefault,
             name: name
         };
 

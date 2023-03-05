@@ -4,8 +4,8 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import React, { useState } from "react";
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import { useBackDialogHandler } from "../../../common/hooks/useBackDialogHandler";
-import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { Box } from "@mui/system";
 
 
 export interface StatisticsButtonProps {
@@ -15,7 +15,6 @@ export interface StatisticsButtonProps {
 const StatisticsButton = ({ match }: StatisticsButtonProps) => {
 
     const [show, setShow] = useState(false);
-    const [t] = useTranslation();
 
     useBackDialogHandler(show, setShow);
 
@@ -30,7 +29,9 @@ const StatisticsButton = ({ match }: StatisticsButtonProps) => {
                     Spiel Statistiken
                 </DialogTitle>
                 <DialogContent>
-                    <EngineeringIcon color="primary" fontSize="large" />
+                    <Box display="flex" justifyContent="center">
+                        <EngineeringIcon color="primary" fontSize="large" />
+                    </Box>
                     <br />
                     Dieser Dialog ist noch nicht implementiert. <br />
                     Später sind hier Statistiken über deine Spiele zu finden. <br />
