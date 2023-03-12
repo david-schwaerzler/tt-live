@@ -28,7 +28,7 @@ const SummaryState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =
         values.push({ key: t("SummaryState.homeTeam"), value: matchStateObject.homeTeam?.club + " " + matchStateObject.homeTeam?.number });
         values.push({ key: t("SummaryState.guestTeam"), value: matchStateObject.guestTeam?.club + " " + matchStateObject.guestTeam?.number });
         values.push({ key: t("SummaryState.startDate"), value: matchStateObject.startDate?.format("YYYY-MM-DD HH:mm") });
-        values.push({ key: t("SummaryState.visibility"), value: matchStateObject.visibility === "PRIVATE" ? t("MatchVisibility.private") : t("MatchVisibility.public") });
+        values.push({ key: t("SummaryState.visibility"), value: matchStateObject.visibility === "PUBLIC" ? t("MatchVisibility.public") : t("MatchVisibility.private") });
         values.push({ key: t("SummaryState.account"), value: account?.username ?? t("SummaryState.noAccount") });
         return values;
     }, [matchStateObject, authUser, t])

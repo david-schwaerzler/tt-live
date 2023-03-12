@@ -60,7 +60,7 @@ const ChatDrawer = ({ match, expanded, isEditor, messages, badgeCounter, onExpan
 
     return (
         <React.Fragment>
-            <Paper sx={{ position: "fixed", cursor: "pointer", width: "100%", left: 0, right: 0, bottom: 0 }} elevation={5}>
+            <Paper sx={{ position: "fixed", cursor: "pointer", width: "100%", left: 0, right: 0, bottom: 0, zIndex: 1 }} elevation={5}>
                 <Box sx={{ display: isBig || expanded ? "none" : "grid", width: "100%" }} onClick={() => onExpanded(!expanded)}>
                     <StyledBadge color="primary" badgeContent={badgeCounter} sx={{ gridRow: 1, gridColumn: 1, alignSelf: "center", justifySelf: "center" }}>
                         <ExpandButton expanded={!expanded} />

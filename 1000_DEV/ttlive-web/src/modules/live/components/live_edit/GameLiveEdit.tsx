@@ -33,7 +33,7 @@ const GameLiveEdit = ({ game, messages, editorCode, matchId, onUpdate }: GameLiv
                     onUpdate={onUpdate}
                 />
             }
-            <IconButton onClick={() => setShow(true)} sx={{ mt: "auto", mb: "auto", p: 0, display: "flex", justifyContent: "right" }} disableRipple>
+            <IconButton onClick={() => setShow(true)} sx={{ p: 0, display: "flex", justifyContent: "right" }} disableRipple color="primary">
                 <EditIcon sx={{ width: "20px" }} />
             </IconButton>
 

@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useIsAuthenticated } from "react-auth-kit";
 import { Trans, useTranslation } from "react-i18next";
@@ -58,7 +58,8 @@ const AccountSetting = ({ match, editorCode }: AccountSettingProps) => {
 
             {isAuthenticated()
                 ? <LoadingButton loading={loading} variant="outlined" onClick={() => setShowDialog(true)}>{t("AccountSetting.confirm")}</LoadingButton>
-                : <LoginForm onLogin={(account: Account) => setShowDialog(true)} />}
+                : <Stack direction="row"><LoginForm onLogin={(account: Account) => setShowDialog(true)} /></Stack>
+            }
         </BaseSetting>
     )
 

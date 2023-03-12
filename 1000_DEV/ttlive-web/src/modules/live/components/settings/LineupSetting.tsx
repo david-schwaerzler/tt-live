@@ -1,4 +1,4 @@
-import { Button,  FormControl, Skeleton, Stack, TextField, Typography } from "@mui/material";
+import { Button, FormControl, Skeleton, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -12,6 +12,7 @@ import LoadingButton from "../../../common/components/buttons/LoadingButton";
 import ErrorMessage from "../../../common/components/utils/ErrorMessage";
 
 import BaseSetting from "./BaseSetting";
+import LineupSettingMenu from "./LineupSettingMenu";
 
 export interface LineupSettingProps {
     match: Match | null,
@@ -38,6 +39,8 @@ const LineupSetting = ({ match, isHomeTeam, editorCode }: LineupSettingProps) =>
         if (expanded === false) {
             let doubles = isHomeTeam ? match.homeDoubles.map(d => ({ ...d })) : match.guestDoubles.map(d => ({ ...d }));
             let players = isHomeTeam ? match.homePlayers.map(d => ({ ...d })) : match.guestPlayers.map(d => ({ ...d }));
+            doubles.sort((a,b) => a.position - b.position)
+            players.sort((a,b) => a.position - b.position)
 
             setDoubles(doubles);
             setPlayers(players);
@@ -56,19 +59,22 @@ const LineupSetting = ({ match, isHomeTeam, editorCode }: LineupSettingProps) =>
     doubles.forEach(d => {
         if (d.player1 !== "" && playerNames.includes(d.player1) === false)
             playerNames.push(d.player1);
-            if (d.player2 !== "" && playerNames.includes(d.player2) === false)
+        if (d.player2 !== "" && playerNames.includes(d.player2) === false)
             playerNames.push(d.player2);
     })
 
     return (
         <BaseSetting title={isHomeTeam ? t('LineupSetting.homeTeam') : t('LineupSetting.guestTeam')} expanded={expanded} onExpandedChanged={setExpanded}>
-            <Stack direction="column" sx={{ gap: 2, p: 2 }}>
+            <Stack direction="column" sx={{ gap: 2, p: 2, pb: 0 }}>
                 <ErrorMessage msg={errorMsg} />
 
-                <Typography variant="h6" width="100%">
-                    {t("LineupSetting.player")}:
-                    <Button sx={{ float: "right" }} onClick={() => onResetPlayers(match)}>reset</Button>
-                </Typography>
+                <Stack direction="row" alignItems="center" >
+                    <Typography variant="h6" width="100%" flexGrow={1}>
+                        {t("LineupSetting.player")}:
+                    </Typography>
+                    <Button onClick={() => onResetPlayers(match)}>reset</Button>
+                    <LineupSettingMenu editorCode={editorCode} matchId={match.id} onError={setErrorMsg} onUpdate={onMatchUpdated} />
+                </Stack>
                 {players.map((player, index) => (
                     <FormControl key={player.id}>
                         <TextField key={player.id} sx={{ minWidth: "100px" }}
@@ -109,11 +115,24 @@ const LineupSetting = ({ match, isHomeTeam, editorCode }: LineupSettingProps) =>
                         </FormControl>
                     </Stack>
                 ))}
+                <Stack direction="row" gap={1}>
+                    <LoadingButton sx={{ flexGrow: 1 }} loading={loading} variant="outlined" onClick={() => onSave(match)}>Save</LoadingButton>
+                </Stack>
 
-                <LoadingButton loading={loading} variant="outlined" onClick={() => onSave(match)}>Save</LoadingButton>
             </Stack>
-        </BaseSetting>
+        </BaseSetting >
     );
+
+    function onMatchUpdated(match: Match) {
+        let doubles = isHomeTeam ? match.homeDoubles.map(d => ({ ...d })) : match.guestDoubles.map(d => ({ ...d }));
+        let players = isHomeTeam ? match.homePlayers.map(d => ({ ...d })) : match.guestPlayers.map(d => ({ ...d }));
+
+        doubles.sort((a,b) => a.position - b.position)
+        players.sort((a,b) => a.position - b.position)
+
+        setDoubles(doubles);
+        setPlayers(players);
+    }
 
     function updatePlayer(index: number, newName: string) {
         let tmp = [...players];

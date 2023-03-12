@@ -83,20 +83,20 @@ export async function fetchSimpleMatchGames(matchId: number): Promise<SimpleGame
 
 export async function fetchMatch(id: number): Promise<MatchResponse> {
     try {
-        let response = await axios.get(`/match/${id}`);        
+        let response = await axios.get(`/match/${id}`);
         return returnData(sortMatch(response.data));
 
     } catch (error) {
-        if(axios.isAxiosError(error)){
-            console.log(`Error fetching match with id = ${id} from Server: ${error.response?.data}`)            
+        if (axios.isAxiosError(error)) {
+            console.log(`Error fetching match with id = ${id} from Server: ${error.response?.data}`)
             return returnError(`Error fetching match with id = ${id} from Server:`, error.response?.status)
-        }        
+        }
         return returnError(`Error fetching match with id = ${id} from Server: ${error}`);
     }
 
 }
 
-export async function fetchValidateErrorCode(id: number, editorCode: string) : Promise<ApiResponse<boolean>>{
+export async function fetchValidateErrorCode(id: number, editorCode: string): Promise<ApiResponse<boolean>> {
     try {
         let response = await axios.get(`/match/${id}/validate?editorCode=${editorCode}`);
         if (response.status !== 200) {
@@ -158,5 +158,19 @@ export async function deleteMatch(id: number, editorCode: string) {
     } catch (error) {
         console.log(`Error deleting match on Server: ${error}`)
         return returnError(`${error}`);
+    }
+}
+
+export async function putSwapLineup(id: number, editorCode: string): Promise<MatchResponse> {
+    try {
+        let response  = await axios.put(`/match/${id}/switchTeams?editorCode=${editorCode}`);
+        return returnData(response.data);
+
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log('Error switching home guets lineup', error.response?.data)
+            return returnError(`${error.message}`, error.response?.status);
+        }
+        return returnError(`Error switching home guets lineup: ${error}`, -1);
     }
 }

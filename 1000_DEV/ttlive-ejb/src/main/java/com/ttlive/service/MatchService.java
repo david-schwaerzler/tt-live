@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.ws.rs.NotAuthorizedException;
 
 import com.ttlive.bo.GameSet.InvalidGameSetFormat;
+import com.ttlive.bo.Game;
 import com.ttlive.bo.Match;
 import com.ttlive.bo.request.RequestLineup;
 import com.ttlive.bo.request.RequestLineup.RequestDoubles;
@@ -315,6 +316,39 @@ public class MatchService {
 		Match match = getDefault(matchEntity);
 		eventObserver.fireMatchEvent(match);
 		return match;
+	}
+	
+	public Match switchTeams(long id) throws BadRestRequestException, InvalidGameSetFormat {
+		MatchEntity matchEntity = matchDao.findById(id);
+
+		if (matchEntity == null)
+			throw new BadRestRequestException("id", "Match with the given id='" + id + " doesn't exist");
+		
+		
+		for(PlayerEntity player : matchEntity.getPlayers()) {
+			player.setHomeTeam(!player.isHomeTeam());
+		}
+		
+		for(DoublesEntity doubles : matchEntity.getDoubles()) {
+			doubles.setHomeTeam(!doubles.isHomeTeam());
+		}
+		
+		for(GameEntity game : matchEntity.getGames()) {
+			if(game.isDoubles()) {
+				DoublesEntity tmp = game.getHomeDoubles();
+				game.setHomeDoubles(game.getGuestDoubles());
+				game.setGuestDoubles(tmp);
+			}else {
+				PlayerEntity tmp = game.getHomePlayer();
+				game.setHomePlayer(game.getGuestPlayer());
+				game.setGuestPlayer(tmp);
+			}
+		}
+		
+		Match match = getDefault(matchEntity);
+		eventObserver.fireMatchEvent(match);
+		return match;
+		
 	}
 
 	public Match getDefault(MatchEntity entity) throws InvalidGameSetFormat {

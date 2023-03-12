@@ -1,5 +1,5 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
-import { KeyboardArrowLeft, KeyboardArrowRight, StayCurrentLandscapeTwoTone } from "@mui/icons-material";
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Divider, MobileStepper, Step, StepLabel, Stepper } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { useContext, useState } from "react";
@@ -64,7 +64,7 @@ const CreateMatchView = () => {
             let account = authUser() as Account | null;
             if (account != null)
                 setCurrentStep(currentStep => {
-                    if (currentStep === Steps.SUMMARY || currentStep === Steps.MATCH_SETTINGS)
+                    if (currentStep === Steps.SUMMARY || currentStep === Steps.LOGIN)
                         return Steps.MATCH_SETTINGS;
                     return currentStep;
                 });
@@ -73,7 +73,7 @@ const CreateMatchView = () => {
             setMatchStateObject(matchStateObject => ({ ...matchStateObject, visibility: "PRIVATE" }));
             console.log(currentStep)
             setCurrentStep(currentStep => {
-                if (currentStep === Steps.SUMMARY || currentStep == Steps.MATCH_SETTINGS)
+                if (currentStep === Steps.SUMMARY || currentStep === Steps.MATCH_SETTINGS)
                     return Steps.LOGIN;
                 return currentStep;
             });
@@ -259,10 +259,6 @@ const CreateMatchView = () => {
             console.log("Error match wizard: startDate is null");
             setErrorDialogOpen(true);
             return;
-        } else if (matchStateObject.visibility == null) {
-            console.log("Error match wizard: visibility is null");
-            setErrorDialogOpen(true);
-            return;
         }
         setLoading(true);
 
@@ -291,7 +287,7 @@ const CreateMatchView = () => {
             homeTeam: requestHomeTeam,
             guestTeam: requestGuestTeam,
             startDate: matchStateObject.startDate.toISOString(),
-            visibility: matchStateObject.visibility
+            visibility: matchStateObject.visibility == null ? "PRIVATE" : matchStateObject.visibility
         };
 
         let response = await postMatch(requestMatch);

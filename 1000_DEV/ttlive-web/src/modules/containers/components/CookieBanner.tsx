@@ -19,10 +19,10 @@ const CookieBanner = () => {
     const [t] = useTranslation();
     const [show, setShow] = useState(() => {
         let consent = sessionStorage.getItem("cookie-consent");
-        if(consent != null && consent === "false"){ // consent will never happen here. only consent===false is stored
+        if (consent != null && consent === "false") { // consent will never happen here. only consent===false is stored
             return false;
         }
-        
+
         consent = localStorage.getItem("cookie-consent")
         if (consent == null)
             return true;
@@ -40,9 +40,9 @@ const CookieBanner = () => {
 
 
     return (
-        <Box sx={{ position: "fixed", bottom: 0, width: "100%" }}>
+        <Box sx={{ position: "fixed", bottom: 0, width: "100%", zIndex: 1 }}>
             <Card sx={{ mb: 0, background: "#424242" }} variant="outlined" >
-                <CardContent sx={{whiteSpace: "pre-wrap"}}>
+                <CardContent sx={{ whiteSpace: "pre-wrap" }}>
                     <Typography variant="h5" mb={2}>{t("CookieBanner.title")}</Typography>
                     <Typography flexGrow={1}>{t("CookieBanner.content")}</Typography>
                     <Stack direction={{ xs: "column", md: "row" }} gap={2} mt={2} >
@@ -55,11 +55,11 @@ const CookieBanner = () => {
     );
 
     function setConsent(consent: boolean) {
-        if (consent === true) {            
+        if (consent === true) {
             if (isMatomoConsent() === false)
                 matomo.pushInstruction("setConsentGiven", true);
             localStorage.setItem("cookie-consent", "true");
-        }else{
+        } else {
             sessionStorage.setItem("cookie-consent", "false");
         }
         setShow(false);

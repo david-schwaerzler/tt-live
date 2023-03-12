@@ -25,10 +25,10 @@ const MatchSettingsTab = ({ match, editorCode, onMatchChanged }: MatchSettingsPr
     return (
         <Stack gap={2}>
             <CodeSetting editorCode={editorCode} />
-            <LineupSetting match={match} editorCode={editorCode} isHomeTeam={true} />
+            <LineupSetting match={match} editorCode={editorCode} isHomeTeam={true}  />
             <LineupSetting match={match} editorCode={editorCode} isHomeTeam={false} />
             <MatchInfoEdit match={match} editorCode={editorCode} />
-            {match != null && 
+            {match != null &&
                 <React.Fragment>
                     <AccountSetting match={match} editorCode={editorCode} />
                     <DeleteMatchSetting match={match} editorCode={editorCode} />

@@ -145,22 +145,23 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
                     />
                     <FormHelperText>{errorMsgs[Error.START_DATE]}</FormHelperText>
                 </FormControl>
-
-                <FormControl>
-                    <InputLabel id="select-visibility">{t('SettingsState.visibility')}</InputLabel>
-                    <Select
-                        id="select-contest"
-                        labelId="select-contest"
-                        label={t('SettingsState.visibility')}
-                        value={visibility}
-                        onChange={e => isMatchVisibility(e.target.value) && setVisibility(e.target.value)}>
-                        <MenuItem value="PUBLIC">{t('MatchVisibility.public')}</MenuItem>
-                        <MenuItem value="PRIVATE">{t('MatchVisibility.private')}</MenuItem>
-                    </Select>
-                    <FormHelperText>
-                        {errorMsgs[Error.VISIBILITY]}
-                    </FormHelperText>
-                </FormControl>
+                {match.accountId != null &&
+                    <FormControl>
+                        <InputLabel id="select-visibility">{t('SettingsState.visibility')}</InputLabel>
+                        <Select
+                            id="select-contest"
+                            labelId="select-contest"
+                            label={t('SettingsState.visibility')}
+                            value={visibility}
+                            onChange={e => isMatchVisibility(e.target.value) && setVisibility(e.target.value)}>
+                            <MenuItem value="PUBLIC">{t('MatchVisibility.public')}</MenuItem>
+                            <MenuItem value="PRIVATE">{t('MatchVisibility.private')}</MenuItem>
+                        </Select>
+                        <FormHelperText>
+                            {errorMsgs[Error.VISIBILITY]}
+                        </FormHelperText>
+                    </FormControl>
+                }
 
                 <Typography variant="h6" width="100%" mb={1}>
                     {t("MatchInfoEdit.league")}:
