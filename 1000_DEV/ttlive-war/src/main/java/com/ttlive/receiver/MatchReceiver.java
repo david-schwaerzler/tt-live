@@ -249,6 +249,18 @@ public class MatchReceiver {
 		
 		matchService.delete(id, username);
 		return Response.ok().build();
+	}
+	
+	@PUT
+	@Path("/{id}/switchTeams")
+	public Response switchTeams(@PathParam("id") long id, @QueryParam("editorCode") String editorCode) throws InvalidEditorCodeException, BadRestRequestException, InvalidGameSetFormat {
+		if (editorCode == null || !matchService.isEditorCodeValid(id, editorCode)) {
+			throw new InvalidEditorCodeException(editorCode, id);
+		}
+		
+		Match match = matchService.switchTeams(id);
+		
+		return Response.ok(MatchDto.builder().bo(match).build()).build();
 		
 	}
 	
