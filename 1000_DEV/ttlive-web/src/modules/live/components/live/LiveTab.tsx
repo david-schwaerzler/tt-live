@@ -17,6 +17,7 @@ const LiveTab = ({ match, games }: { match: Match | null, games: Array<Game> }) 
                 : <React.Fragment><Card>
                     <CardContent>
                         <MatchScore
+                            state={match.state}
                             homeClub={match.homeTeam.club}
                             guestClub={match.guestTeam.club}
                             homeNumber={match.homeTeam.number}

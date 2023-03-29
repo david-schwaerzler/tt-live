@@ -29,8 +29,7 @@ export const tokenRefreshApi = createRefresh({
         authTokenExpireAt,
         refreshToken,
         refreshTokenExpiresAt,
-        authUserState }) => {
-        console.log("refresh")
+        authUserState }) => {        
         let requestData: RequestRefreshToken = { refreshToken: refreshToken == null ? "" : refreshToken };
         return axios.put("/login", requestData)
             .then(response => {

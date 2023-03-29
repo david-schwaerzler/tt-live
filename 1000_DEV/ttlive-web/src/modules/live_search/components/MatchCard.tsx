@@ -72,6 +72,7 @@ const MatchCard = ({ match, simpleMatch, variant }: MatchCardProps) => {
 
                 <MatchScore
                     sx={{ pt: spacingNormal }}
+                    state={matchState.state}
                     homeClub={matchState.homeClub}
                     guestClub={matchState.guestClub}
                     homeNumber={matchState.homeNumber}
@@ -100,10 +101,10 @@ const MatchCard = ({ match, simpleMatch, variant }: MatchCardProps) => {
         </Card >);
 
 
-    function onExpand(){
-        if(!expanded)
-            setLoading(true) 
-        setExpanded(!expanded);        
+    function onExpand() {
+        if (!expanded)
+            setLoading(true)
+        setExpanded(!expanded);
     }
 
     function renderHeader(simpleMatch: SimpleMatch) {
