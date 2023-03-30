@@ -1,5 +1,5 @@
 import { FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Skeleton, Switch } from "@mui/material";
-import React, {  useContext, useDeferredValue, useMemo, useState } from "react";
+import React, { useContext, useDeferredValue, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AppContext } from "../../../../AppContext";
 import { ChatMessage } from "../../../../rest/data/ChatMessage";
@@ -8,6 +8,7 @@ import { MatchState } from "../../../../rest/data/Match";
 import { InputType } from "./edit/GameSetScore";
 
 import GameReportSection from "./GameReportSection";
+import GameResportStatistics from "./GameReportStatistics";
 import { GameScoreType, GameType } from "./GameScoreType";
 
 export interface GameReportProps {
@@ -90,7 +91,7 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
                 ...g,
                 homeTeamScore: homeTeamScore,
                 guestTeamScore: guestTeamScore,
-                
+
             });
         };
 
@@ -113,20 +114,24 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
                     <Skeleton sx={{ height: { xs: "247px", sm: "247px" }, mb: 2 }} variant="rectangular" />
                     <Skeleton sx={{ height: { xs: "556px", sm: "556px" } }} variant="rectangular" />
                 </React.Fragment>
-                : sections.map((section, index) =>
-                   <GameReportSection
-                    key={index}
-                    games={section.games}
-                    type={section.type}
-                    editorCode={editorCode}
-                    inputType={deferredInputType}
-                    isEditMode={deferredIsEditMode}
-                    matchId={matchId}
-                    matchState = {matchState}
-                    messages={messages}
-                    onUpdate={onUpdate}
-                    />
-                )
+                : <React.Fragment>
+
+                    {sections.map((section, index) =>
+                        <GameReportSection
+                            key={index}
+                            games={section.games}
+                            type={section.type}
+                            editorCode={editorCode}
+                            inputType={deferredInputType}
+                            isEditMode={deferredIsEditMode}
+                            matchId={matchId}
+                            matchState={matchState}
+                            messages={messages}
+                            onUpdate={onUpdate}
+                        />
+                    )}
+                    {games != null && <GameResportStatistics games={games} />}
+                </React.Fragment>
             }
 
         </React.Fragment>
