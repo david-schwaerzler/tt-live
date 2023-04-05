@@ -19,7 +19,7 @@ export interface GameSetResultButtonProps {
 const GameSetResultButton = ({ disabled, won, set, game, isHome, editorCode, onError, onUpdate }: GameSetResultButtonProps) => {
 
     const [show, setShow] = useState<boolean>(false);
-    useBackDialogHandler(show, setShow);
+    useBackDialogHandler(show, setShow, `edit${game.id}`);
 
     let buttonScore = isHome ? set.homeScore : set.guestScore;
     return (

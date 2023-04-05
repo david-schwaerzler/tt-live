@@ -1,5 +1,5 @@
 import { IconButton } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import { ChatMessage } from "../../../../rest/data/ChatMessage";
 import { Game } from "../../../../rest/data/Game";
@@ -18,7 +18,7 @@ const GameLiveEdit = ({ game, messages, editorCode, matchId, onUpdate }: GameLiv
 
     const [show, setShow] = useState<boolean>(false);
 
-    useBackDialogHandler(show, setShow);
+    useBackDialogHandler(show, setShow, `game${game.id}`);
 
     return (
         <React.Fragment>
@@ -39,9 +39,6 @@ const GameLiveEdit = ({ game, messages, editorCode, matchId, onUpdate }: GameLiv
 
         </React.Fragment>
     );
-
-
-
 }
 
 
