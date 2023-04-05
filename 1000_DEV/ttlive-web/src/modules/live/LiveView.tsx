@@ -65,7 +65,10 @@ const LiveView = () => {
                 setMatch(response.data);
                 setLoadingError("");
             } else {
-                setLoadingError(response.status === 404 ? "NOT_FOUND" : "GENERAL");
+                if (response.status === 404)
+                    setLoadingError("NOT_FOUND")
+                else if (match == null)
+                    setLoadingError("GENERAL");
             }
         }
         async function fetchChatLocal(id: number) {
@@ -234,7 +237,7 @@ const LiveView = () => {
                 <Typography variant="h6" sx={{ textAlign: "center", paddingBottom: spacingNormal }}>
                     {loadingError === "NOT_FOUND" ? t("LiveView.matchDeleted") : t("LiveView.errorNetwork")}
                 </Typography>
-                { loadingError === "NOT_FOUND" &&
+                {loadingError === "NOT_FOUND" &&
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
                         <Link to="/live_search" style={{ textDecoration: 'none' }}>
                             <Button variant="outlined" sx={{ alignSelf: "center" }}>
