@@ -39,6 +39,7 @@ const LiveView = () => {
 
     const editorCode = useEditorCode(match?.id ?? null)
 
+
     useTrackPage("Live", "/live", match?.id == null ? -1 : match?.id);
 
     useEffect(() => { visitedPages.current.add(activeTab) }, [activeTab]);
@@ -57,7 +58,7 @@ const LiveView = () => {
     }, [searchParams, context])
 
 
-
+    const matchLoaded = useMemo(() => match != null, [match]);
     useEffect(() => {
         async function fetchMatchLocal(id: number) {
             let response = await fetchMatch(id);
@@ -67,7 +68,7 @@ const LiveView = () => {
             } else {
                 if (response.status === 404)
                     setLoadingError("NOT_FOUND")
-                else if (match == null)
+                else if (matchLoaded !== true)
                     setLoadingError("GENERAL");
             }
         }
@@ -94,7 +95,7 @@ const LiveView = () => {
             if (intervalId != null)
                 clearInterval(intervalId);
         }
-    }, [context.matchId])
+    }, [context.matchId, matchLoaded])
 
     useEffect(() => {
         if (match?.homePlayers != null && match.guestPlayers != null && match.homeDoubles != null && match.guestDoubles != null) {

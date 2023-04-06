@@ -18,7 +18,7 @@ const GameLiveEdit = ({ game, messages, editorCode, matchId, onUpdate }: GameLiv
 
     const [show, setShow] = useState<boolean>(false);
 
-    useBackDialogHandler(show, setShow, `game${game.id}`);
+    useBackDialogHandler(show, setShow, `live${game.id}`);
 
     return (
         <React.Fragment>
