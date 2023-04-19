@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import LoadingButton from "../../common/components/buttons/LoadingButton";
-import { spacingNormal } from "../../common/utils/StyleVars";
 import { WhiteTextField } from "./MenuLoginForm";
 
 export interface MenuLoginFormMobileProps {
@@ -36,8 +35,7 @@ const MenuLoginFormMobile = ({ onLogin, username, password, onUsernameChange, on
                 anchorOrigin={{
                     vertical: "top",
                     horizontal: "right",
-                }}
-                keepMounted
+                }}                
                 transformOrigin={{
                     vertical: "top",
                     horizontal: "right",
@@ -64,8 +62,8 @@ const MenuLoginFormMobile = ({ onLogin, username, password, onUsernameChange, on
 
                     <Box>
                         <LoadingButton loading={loading} sx={{ display: "inline-grid" }} size="small" onClick={onLoginClicked}>{t("LoginForm.login")}</LoadingButton>
-                        <Link to="/register" style={{ textDecoration: "none" }}>
-                            <Button size="small" onClick={() => setLoginAnchor(null)}>{t("LoginForm.register")}</Button>
+                        <Link to="/register" style={{ textDecoration: "none" }} onClick={() => setLoginAnchor(null)}>
+                            <Button size="small">{t("LoginForm.register")}</Button>
                         </Link>
                     </Box>
                 </Stack>
@@ -75,9 +73,9 @@ const MenuLoginFormMobile = ({ onLogin, username, password, onUsernameChange, on
 
     async function onLoginClicked() {
         setLoading(true);
+        setLoginAnchor(null);
         await onLogin();
         setLoading(false)
-        setLoginAnchor(null);
     }
 }
 
