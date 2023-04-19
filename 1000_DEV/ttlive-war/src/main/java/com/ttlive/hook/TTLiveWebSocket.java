@@ -35,6 +35,9 @@ import lombok.extern.java.Log;
 @Singleton
 public class TTLiveWebSocket {
 
+	/** Timeout the session after one hour when no data has been send */
+	private static final int SESSION_IDLE_TIMEOUT = 1 * 60 * 60 * 1000; 
+
 	@EJB
 	private MatchEventObserver socketManager;
 
@@ -62,13 +65,15 @@ public class TTLiveWebSocket {
 	@OnOpen
 	public void onOpen(Session session, @PathParam("matchId") long matchId) {
 
+		session.setMaxIdleTimeout(SESSION_IDLE_TIMEOUT);
+
 		List<Session> sockets;
 
 		synchronized (sessions) {
 			sockets = sessions.get(matchId);
 			if (sockets == null) {
 				sockets = new LinkedList<>();
-				sessions.put(matchId, sockets);				
+				sessions.put(matchId, sockets);
 			}
 		}
 
@@ -186,20 +191,21 @@ public class TTLiveWebSocket {
 			return 0;
 		return users.size();
 	}
-	
-	@Schedule(hour = "*", minute = "0", second = "*")
-	private  void cleanupSockets() {
+
+	@Schedule(hour = "*", minute = "*", second = "0")
+	private void cleanupSockets() {
 		try {
-			for(List<Session> sockets : sessions.values()) {
+			for (List<Session> sockets : sessions.values()) {
 				synchronized (sockets) {
-					for(Iterator<Session> iter = sockets.iterator(); iter.hasNext();) {
+					for (Iterator<Session> iter = sockets.iterator(); iter.hasNext();) {
 						Session session = iter.next();
-						if(session.isOpen() == false)
+						if (session.isOpen() == false)
 							iter.remove();
 					}
-				}				
-			}			
-		}catch(Exception e) {
+				}
+			}
+			System.out.println(sessions.toString());
+		} catch (Exception e) {
 			log.severe("Error during socket cleanup. error='" + e.toString() + "'");
 		}
 	}
