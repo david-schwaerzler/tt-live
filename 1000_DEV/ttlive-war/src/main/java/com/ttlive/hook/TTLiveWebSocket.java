@@ -192,7 +192,7 @@ public class TTLiveWebSocket {
 		return users.size();
 	}
 
-	@Schedule(hour = "*", minute = "*", second = "0")
+	@Schedule(hour = "0", minute = "0", second = "0")
 	private void cleanupSockets() {
 		try {
 			for (List<Session> sockets : sessions.values()) {

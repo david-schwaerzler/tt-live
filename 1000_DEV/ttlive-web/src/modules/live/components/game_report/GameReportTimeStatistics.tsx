@@ -28,8 +28,8 @@ const GameReportTimeStatistic = ({ startDate, endDate, matchState }: GameReportT
         }
 
         return {
-            startDate: start == null ? "-" : start.format("DD.MM.YY hh:mm"),
-            endDate: end == null ? "-" : end.format("DD.MM.YY hh:mm"),
+            startDate: start == null ? "-" : start.format("DD.MM.YY HH:mm"),
+            endDate: end == null ? "-" : end.format("DD.MM.YY HH:mm"),
             duration: duration
         }
     }, [startDate, endDate])
