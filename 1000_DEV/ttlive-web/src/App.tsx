@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, HashRouter } from "react-router-dom";
 import React, { Suspense, useMemo, useState } from 'react';
 import MainView from './modules/containers/MainView';
 import { AppContext, AppContextProps } from './AppContext';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AuthProvider } from 'react-auth-kit';
 import PrivateRoute from './modules/common/components/utils/PrivateRoute';
@@ -77,7 +77,7 @@ function App() {
     return (
         <React.StrictMode>
             <div className="App">
-                <LocalizationProvider dateAdapter={AdapterMoment}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <AppContext.Provider value={valueProvider}>
                         <AuthProvider
                             authType={'cookie'}

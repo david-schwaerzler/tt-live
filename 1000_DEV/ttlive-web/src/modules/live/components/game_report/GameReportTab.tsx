@@ -1,4 +1,4 @@
-import { FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Skeleton, Switch } from "@mui/material";
+import { FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Skeleton, Stack, Switch } from "@mui/material";
 import React, { useContext, useDeferredValue, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AppContext } from "../../../../AppContext";
@@ -10,8 +10,11 @@ import { InputType } from "./edit/GameSetScore";
 import GameReportSection from "./GameReportSection";
 import GameResportStatistics from "./GameReportStatistics";
 import { GameScoreType, GameType } from "./GameScoreType";
+import GameReportTimeStatistic from "./GameReportTimeStatistics";
 
 export interface GameReportProps {
+    startDate: string | null;
+    endDate: string | null;
     games: Array<Game> | null;
     /** Indicates if the user is an editor. Display all the editable Components when provided */
     editorCode: string | null;
@@ -21,8 +24,6 @@ export interface GameReportProps {
     onUpdate: (game: Game) => void;
 }
 
-
-
 const GAME_INPUT_TYPE_SETTING = "gameInputType";
 const GAME_EDIT_SETTING = "gameEdit";
 
@@ -31,8 +32,7 @@ interface GameReportSectionType {
     games: Array<GameScoreType>;
 }
 
-// TODO fix Render performance Issues
-const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpdate }: GameReportProps) => {
+const GameReportTab = ({ games, editorCode, matchState, messages, matchId, startDate, endDate, onUpdate }: GameReportProps) => {
 
     const [t] = useTranslation();
     const context = useContext(AppContext);
@@ -114,7 +114,7 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
                     <Skeleton sx={{ height: { xs: "247px", sm: "247px" }, mb: 2 }} variant="rectangular" />
                     <Skeleton sx={{ height: { xs: "556px", sm: "556px" } }} variant="rectangular" />
                 </React.Fragment>
-                : <React.Fragment>
+                : <Stack gap={2}>
 
                     {sections.map((section, index) =>
                         <GameReportSection
@@ -130,8 +130,9 @@ const GameReportTab = ({ games, editorCode, matchState, messages, matchId, onUpd
                             onUpdate={onUpdate}
                         />
                     )}
-                    {games != null && <GameResportStatistics games={games} />}
-                </React.Fragment>
+                    {games != null && <GameResportStatistics games={games}  />}
+                    <GameReportTimeStatistic startDate={startDate} endDate={endDate} matchState={matchState} />
+                </Stack>
             }
 
         </React.Fragment>

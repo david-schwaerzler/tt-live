@@ -1,6 +1,7 @@
 package com.ttlive.dto.request;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import com.ttlive.utils.MatchVisibility;
 
@@ -17,5 +18,6 @@ public class RequestMatchDto {
 	private RequestTeamDto homeTeam;
 	private RequestTeamDto guestTeam;
 	private MatchVisibility visibility;
-	private ZonedDateTime startDate;
+	private ZonedDateTime startDate;	
+	private ZonedDateTime endDate;
 }

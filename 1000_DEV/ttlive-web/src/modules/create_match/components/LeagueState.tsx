@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -143,7 +143,6 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
                         label={t("LeagueState.startDate")}
                         value={matchStateObject.startDate}
                         onChange={onStartDateSelected}
-                        renderInput={(params) => <TextField {...params} error={errorMsgs[ERROR_START_DATE] != null && errorMsgs[ERROR_START_DATE] !== ""} />}
                     />
                     <FormHelperText error={errorMsgs[ERROR_START_DATE] != null && errorMsgs[ERROR_START_DATE] !== ""} >{errorMsgs[ERROR_START_DATE]}</FormHelperText>
                 </FormControl>

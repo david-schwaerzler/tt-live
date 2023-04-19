@@ -259,5 +259,11 @@
   "GameReport.closeSets": "Knappe Sätze",
   "GameReport.closeSetsTooltip": "Anzahl der Sätze, die mit 2 Punkten Unterschied ausgegangen sind.\nForm: <strong><i>Heim</i> : <i>Gast</i></strong>.",
   "GameReport.comebacks": "Comebacks",
-  "GameReport.comebackTooltips": "Anzahl der Spiele, die nach 0:2 oder 1:2 Rückstand noch gewonnen wurden.\nForm: <strong><i>Heim</i> : <i>Gast</i></strong>."
+  "GameReport.comebackTooltips": "Anzahl der Spiele, die nach 0:2 oder 1:2 Rückstand noch gewonnen wurden.\nForm: <strong><i>Heim</i> : <i>Gast</i></strong>.",
+  "GameReport.startDate": "Start",
+  "GameReport.endDate": "Ende",
+  "GameReport.duration": "Dauer",
+  "GameReport.timeStatistic": "Zeiten",
+  "MatchInfoEdit.endDate": "Spielende",
+  "MatchInfoEdit.errorEndDate": "Ungültiges Format für das Spielende"
 }

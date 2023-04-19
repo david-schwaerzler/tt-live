@@ -66,6 +66,7 @@ CREATE TABLE match (
 	state VARCHAR(32) NOT NULL DEFAULT 'NOT_STARTED',
 	visibility VARCHAR(256) NOT NULL,
 	start_date TIMESTAMP NOT NULL,
+	end_date TIMESTAMP,
 	
 	league_id BIGINT NOT NULL REFERENCES league(id),		
 	home_team_id BIGINT NOT NULL REFERENCES team(id),

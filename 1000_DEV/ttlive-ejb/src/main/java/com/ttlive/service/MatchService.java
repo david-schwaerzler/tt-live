@@ -1,5 +1,6 @@
 package com.ttlive.service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,14 +10,13 @@ import javax.ejb.Stateless;
 import javax.ws.rs.NotAuthorizedException;
 
 import com.ttlive.bo.GameSet.InvalidGameSetFormat;
-import com.ttlive.bo.Game;
 import com.ttlive.bo.Match;
 import com.ttlive.bo.request.RequestLineup;
 import com.ttlive.bo.request.RequestLineup.RequestDoubles;
 import com.ttlive.bo.request.RequestLineup.RequestPlayer;
+import com.ttlive.bo.request.RequestMatch;
 import com.ttlive.exceptions.BadRestRequestException;
 import com.ttlive.exceptions.NotFoundException;
-import com.ttlive.bo.request.RequestMatch;
 import com.ttlive.persistence.dao.AccountDao;
 import com.ttlive.persistence.dao.GameStyleDao;
 import com.ttlive.persistence.dao.LeagueDao;
@@ -261,6 +261,13 @@ public class MatchService {
 				}
 			}
 		}
+		// when the match changes to finished
+		if(matchEntity.getState() != MatchState.FINISHED && state == MatchState.FINISHED) {
+			// only when the endDate hasn't been set jet
+			if(matchEntity.getEndDate() == null) {
+				matchEntity.setEndDate(LocalDateTime.now());
+			}
+		}
 		matchEntity.setState(state);
 
 		Match match = getDefault(matchEntity);
@@ -290,6 +297,7 @@ public class MatchService {
 		matchEntity.setGuestTeam(updatedGuestTeam);
 
 		matchEntity.setStartDate(requestMatch.getStartDate());
+		matchEntity.setEndDate(requestMatch.getEndDate());
 		// can only updatethe visibility when the account is set (otherwise it mus be private)
 		if(matchEntity.getAccount() != null)
 			matchEntity.setVisibility(requestMatch.getVisibility());

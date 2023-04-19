@@ -70,6 +70,9 @@ public class MatchEntity {
 	
 	@Column(name="start_date")
 	private LocalDateTime startDate;
+	
+	@Column(name="end_date")
+	private LocalDateTime endDate;
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
 	@JoinColumn(name = "league_id", referencedColumnName = "id")

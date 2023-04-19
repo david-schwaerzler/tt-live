@@ -28,6 +28,7 @@ public class MatchDto {
 	private MatchVisibility visibility;
 	private MatchState state;
 	private LocalDateTime startDate;
+	private LocalDateTime endDate;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 
@@ -57,6 +58,7 @@ public class MatchDto {
 			this.code = bo.getCode();
 			this.state = bo.getState();
 			this.startDate = bo.getStartDate();
+			this.endDate = bo.getEndDate();
 			this.modifiedAt = bo.getModifiedAt();
 			this.visibility = bo.getVisibility();
 

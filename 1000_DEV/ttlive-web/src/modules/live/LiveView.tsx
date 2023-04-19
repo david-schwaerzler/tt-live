@@ -188,6 +188,8 @@ const LiveView = () => {
                 {(visitedPages.current.has(0) || activeTab === 0) && <Box display={activeTab === 0 ? "block" : "none"}><MatchSettingsTab match={match} editorCode={editorCode} onMatchChanged={onMatchUpdated} /></Box>}
                 {(visitedPages.current.has(1) || activeTab === 1) && <Box display={activeTab === 1 ? "block" : "none"}><LiveTab match={match} games={reversedGames} /></Box>}
                 {(visitedPages.current.has(2) || activeTab === 2) && <Box display={activeTab === 2 ? "block" : "none"}><GameReportTab
+                    startDate={match?.startDate ?? null}
+                    endDate={match?.endDate ?? null}
                     games={match != null ? match.games : null}
                     editorCode={editorCode}
                     matchState={match != null ? match.state : "NOT_STARTED"}

@@ -24,5 +24,5 @@ export function useBackDialogHandler(show: boolean, setShow: (show: boolean) => 
         return () => {
             window.removeEventListener("hashchange", changeListener);
         };
-    }, [show, setShow]);
+    }, [show, setShow, hash]);
 }

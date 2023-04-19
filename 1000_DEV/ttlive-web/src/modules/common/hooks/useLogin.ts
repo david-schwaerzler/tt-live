@@ -23,7 +23,6 @@ export function useLogin() {
     const signIn = useSignIn();
 
     const onLogin: (username: string, password: string) => Promise<LoginState> = useCallback(async (username: string, password: string) => {
-
         if (username === "")
             return { account: null, error: LoginErrors.USERNAME, errorMsg: t("LoginForm.errorUsernameEmpty") };
 

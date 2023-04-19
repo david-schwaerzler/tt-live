@@ -70,7 +70,6 @@ const AccountFilterSetCard = ({ filterSet, takenNames, onUpdated, onDeleted }: A
     function onFilterDeleted(filter: AccountFilter) {
         let tmp = { ...filterSet };
         tmp.filters = filterSet.filters.filter(f => f.id !== filter.id);
-        console.log(tmp.filters)
         onUpdated(tmp);
     }
 

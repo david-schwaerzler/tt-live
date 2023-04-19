@@ -32,6 +32,7 @@ public class Match {
 	private MatchVisibility visibility;
 	private MatchState state;
 	private LocalDateTime startDate;
+	private LocalDateTime endDate;
 
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
@@ -58,6 +59,7 @@ public class Match {
 			this.editorCode = entity.getEditorCode();
 			this.state = entity.getState();
 			this.startDate = entity.getStartDate();
+			this.endDate = entity.getEndDate();
 			this.createdAt = entity.getCreatedAt();
 			this.modifiedAt = entity.getModifiedAt();
 			this.visibility = entity.getVisibility();

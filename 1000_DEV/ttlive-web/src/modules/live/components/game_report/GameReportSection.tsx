@@ -28,7 +28,7 @@ const GameReportSection = ({ games, type,editorCode, isEditMode, inputType, matc
     const onError = useCallback((msg: string) => console.log("todo error"), []);
 
     return (
-        <Card sx={{ mb: 2 }}>
+        <Card>
             <CardContent>
                 <Typography pb={2} variant="h5" >{getSectionTitle(type)}</Typography>
                 <Stack gap={3}>

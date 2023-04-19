@@ -1,5 +1,7 @@
 INSERT INTO ttlive.account VALUES (1, 'David', '792aec94757261853bfd692201dfa6e0ea51fd52255e29bacfbbb09f6d0f9ed4', 'user', 'schwaerzler.da@gmail.com', false, '2023-01-13 23:55:30.630897', '2023-01-13 23:55:30.631022');
 
+SELECT pg_catalog.setval('ttlive.account_id_seq', 2, true);
+
 
 --
 -- Data for Name: game_style; Type: TABLE DATA; Schema: ttlive; Owner: ttlive
@@ -10,6 +12,7 @@ INSERT INTO ttlive.game_style VALUES (2, 'Sechser-Paarkreuz-System', '6er Mannsc
 INSERT INTO ttlive.game_style VALUES (3, 'Dietze-Paarkreuz-System', '4er Mannschaft mit 2 Doppel, 8 Einzel und 2 Schlussdoppel', 4, 2, 'D1-D2;D2-D1;1-2;2-1;3-4;4-3;1-1;2-2;3-3;4-4;D2-D2;D1-D1', 7, true);
 INSERT INTO ttlive.game_style VALUES (4, 'Betriebssport (Hamburg)', '6er Mannschaft mit 6 Doppel (2 Doppel Runden) und 12 Einzel', 6, 3, 'D1-D1;D2-D3;D3-D2;1-1;2-2;3-3;4-4;5-5;6-6;D1-D2;D2-D1;D3-D3;1-2;2-1;3-4;4-3;5-6;6-5', 18, false);
 
+SELECT pg_catalog.setval('ttlive.game_style_id_seq', 4, true);
 
 --
 -- Data for Name: region; Type: TABLE DATA; Schema: ttlive; Owner: ttlive
@@ -33,6 +36,7 @@ INSERT INTO ttlive.region VALUES (15, 'WTTV', 'NRW');
 INSERT INTO ttlive.region VALUES (16, 'TTBW', 'Baden-Württemberg');
 INSERT INTO ttlive.region VALUES (17, 'BSV HH', 'Betriebssport Hamburg');
 
+SELECT pg_catalog.setval('ttlive.region_id_seq', 17, true);
 
 --
 -- Data for Name: league; Type: TABLE DATA; Schema: ttlive; Owner: ttlive
@@ -80,6 +84,9 @@ INSERT INTO ttlive.league VALUES (41, 'Verbandsoberliga ', 'WOMEN', 1, '2022-12-
 INSERT INTO ttlive.league VALUES (1, 'Hamburg Liga', 'MEN', 6, '2022-11-18 15:15:14.870798', '2022-11-18 15:15:14.870798');
 INSERT INTO ttlive.league VALUES (42, 'Verbandsoberliga', 'WOMEN', 1, '2022-12-10 13:16:17.317416', '2022-12-10 13:16:17.317449');
 INSERT INTO ttlive.league VALUES (43, 'Oberliga', 'WOMEN', 1, '2023-01-14 13:56:48.380233', '2023-01-14 13:56:48.380717');
+
+SELECT pg_catalog.setval('ttlive.league_id_seq', 57, true);
+
 
 
 INSERT INTO ttlive.league(id, name, contest, region_id) VALUES (44, 'S-Klasse', 'MEN', 17);
@@ -143,26 +150,60 @@ INSERT INTO ttlive.team VALUES (42, 'Kaltenkirchener TS', 1, 40, '2023-02-11 12:
 INSERT INTO ttlive.team VALUES (43, 'SV Siek', 3, 39, '2023-02-12 09:27:46.859243', '2023-02-12 09:27:46.859473');
 INSERT INTO ttlive.team VALUES (44, 'Niendorfer TSV 2', 2, 41, '2023-02-12 13:49:27.769852', '2023-02-12 13:49:27.769893');
 
+SELECT pg_catalog.setval('ttlive.team_id_seq', 44, true);
+
 
 --
 -- Data for Name: match; Type: TABLE DATA; Schema: ttlive; Owner: ttlive
 --
 
-INSERT INTO ttlive.match VALUES (16, '', '', 7, 3, 'ip4kxw', 'vz5it4', 'FINISHED', 'PUBLIC', '2023-01-15 11:00:00', 43, 38, 37, 1, NULL, '2023-01-15 09:55:38.393398', '2023-01-15 14:07:19.961227');
-INSERT INTO ttlive.match VALUES (20, '', '', 10, 0, 'el0omh', 'gy1acu', 'FINISHED', 'PUBLIC', '2023-02-12 11:30:00', 39, 18, 43, 1, NULL, '2023-02-12 09:27:46.911238', '2023-02-13 22:01:51.745476');
-INSERT INTO ttlive.match VALUES (10, '', '', 6, 4, '2hg35a', 'q1mljc', 'FINISHED', 'PUBLIC', '2022-12-03 13:00:00', 40, 27, 26, 1, NULL, '2022-12-03 13:48:40.623711', '2022-12-03 16:32:28.4572');
-INSERT INTO ttlive.match VALUES (19, '', '', 5, 5, '43ag0c', 'd5pz7x', 'FINISHED', 'PUBLIC', '2023-02-11 15:00:00.123', 40, 42, 27, 1, NULL, '2023-02-11 12:38:07.108549', '2023-02-11 16:42:35.911832');
-INSERT INTO ttlive.match VALUES (13, '', '', 6, 4, 'fpczh4', 'cfbj1v', 'FINISHED', 'PUBLIC', '2022-12-10 11:00:00', 42, 32, 33, 1, NULL, '2022-12-10 09:03:57.979614', '2022-12-16 13:59:08.998281');
-INSERT INTO ttlive.match VALUES (11, '', '', 7, 3, 'dioltz', 'mfide9', 'FINISHED', 'PUBLIC', '2022-12-04 11:30:00', 39, 18, 28, 1, NULL, '2022-12-04 10:11:02.781065', '2022-12-17 14:32:03.799586');
-INSERT INTO ttlive.match VALUES (7, '', '', 0, 9, 'e7m8im', 'xyktba', 'FINISHED', 'PUBLIC', '2022-12-02 18:30:00', 3, 23, 22, 2, NULL, '2022-12-02 20:23:54.847053', '2022-12-02 22:08:07.127552');
-INSERT INTO ttlive.match VALUES (18, '', '', 3, 7, 'pt3n38', 'gtbh1s', 'FINISHED', 'PUBLIC', '2023-01-26 19:45:00', 31, 41, 40, 1, NULL, '2023-01-26 19:09:39.408441', '2023-01-26 22:01:46.797877');
-INSERT INTO ttlive.match VALUES (5, '', '', 8, 2, 'bah9yx', 'wrf1lb', 'FINISHED', 'PUBLIC', '2022-11-27 11:30:00', 39, 18, 19, 1, NULL, '2022-11-26 16:49:45.903389', '2022-11-27 13:52:05.778806');
-INSERT INTO ttlive.match VALUES (17, '', '', 3, 7, '2oi8a9', 'we4t8e', 'FINISHED', 'PUBLIC', '2023-01-14 14:00:00', 40, 27, 39, 1, NULL, '2023-01-15 10:46:17.814748', '2023-01-15 16:18:07.68735');
-INSERT INTO ttlive.match VALUES (15, '', '', 4, 6, '71py75', '6w2nly', 'FINISHED', 'PUBLIC', '2023-01-14 02:00:00', 43, 35, 37, 1, NULL, '2023-01-14 13:56:48.41678', '2023-01-14 16:27:40.871823');
-INSERT INTO ttlive.match VALUES (12, '', '', 8, 2, 'dfnq2r', 'qutcjs', 'FINISHED', 'PUBLIC', '2022-12-04 14:00:00', 41, 30, 29, 1, NULL, '2022-12-04 11:19:35.831403', '2022-12-04 16:26:57.314415');
-INSERT INTO ttlive.match VALUES (9, '', '', 7, 9, 'gvt7ve', 'nfq5w6', 'FINISHED', 'PUBLIC', '2022-12-02 18:30:00', 4, 21, 20, 2, NULL, '2022-12-03 12:57:23.425363', '2022-12-03 13:08:32.646119');
-INSERT INTO ttlive.match VALUES (4, '', '', 8, 2, '6f7fkm', 'v1e3fr', 'FINISHED', 'PUBLIC', '2022-11-20 11:30:00', 39, 18, 17, 1, NULL, '2022-11-20 00:00:48.048862', '2023-02-02 22:18:45.264482');
-INSERT INTO ttlive.match VALUES (21, '', '', 6, 4, 'zyy2iv', 'qnpz31', 'FINISHED', 'PUBLIC', '2023-02-12 15:00:00.841', 41, 44, 30, 1, NULL, '2023-02-12 13:49:27.774474', '2023-02-12 17:29:24.590357');
+INSERT INTO ttlive."match"
+(id, title, description, home_team_score, guest_team_score, editorcode, code, state, visibility, start_date, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, end_date)
+VALUES(16, '', '', 7, 3, 'ip4kxw', 'vz5it4', 'FINISHED', 'PUBLIC', '2023-01-15 11:00:00.000', 43, 38, 37, 1, NULL, '2023-01-15 09:55:38.393', '2023-01-15 14:07:19.961', NULL);
+INSERT INTO ttlive."match"
+(id, title, description, home_team_score, guest_team_score, editorcode, code, state, visibility, start_date, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, end_date)
+VALUES(20, '', '', 10, 0, 'el0omh', 'gy1acu', 'FINISHED', 'PUBLIC', '2023-02-12 11:30:00.000', 39, 18, 43, 1, NULL, '2023-02-12 09:27:46.911', '2023-02-13 22:01:51.745', NULL);
+INSERT INTO ttlive."match"
+(id, title, description, home_team_score, guest_team_score, editorcode, code, state, visibility, start_date, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, end_date)
+VALUES(10, '', '', 6, 4, '2hg35a', 'q1mljc', 'FINISHED', 'PUBLIC', '2022-12-03 13:00:00.000', 40, 27, 26, 1, NULL, '2022-12-03 13:48:40.623', '2022-12-03 16:32:28.457', NULL);
+INSERT INTO ttlive."match"
+(id, title, description, home_team_score, guest_team_score, editorcode, code, state, visibility, start_date, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, end_date)
+VALUES(19, '', '', 5, 5, '43ag0c', 'd5pz7x', 'FINISHED', 'PUBLIC', '2023-02-11 15:00:00.123', 40, 42, 27, 1, NULL, '2023-02-11 12:38:07.108', '2023-02-11 16:42:35.911', NULL);
+INSERT INTO ttlive."match"
+(id, title, description, home_team_score, guest_team_score, editorcode, code, state, visibility, start_date, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, end_date)
+VALUES(13, '', '', 6, 4, 'fpczh4', 'cfbj1v', 'FINISHED', 'PUBLIC', '2022-12-10 11:00:00.000', 42, 32, 33, 1, NULL, '2022-12-10 09:03:57.979', '2022-12-16 13:59:08.998', NULL);
+INSERT INTO ttlive."match"
+(id, title, description, home_team_score, guest_team_score, editorcode, code, state, visibility, start_date, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, end_date)
+VALUES(11, '', '', 7, 3, 'dioltz', 'mfide9', 'FINISHED', 'PUBLIC', '2022-12-04 11:30:00.000', 39, 18, 28, 1, NULL, '2022-12-04 10:11:02.781', '2022-12-17 14:32:03.799', NULL);
+INSERT INTO ttlive."match"
+(id, title, description, home_team_score, guest_team_score, editorcode, code, state, visibility, start_date, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, end_date)
+VALUES(7, '', '', 0, 9, 'e7m8im', 'xyktba', 'FINISHED', 'PUBLIC', '2022-12-02 18:30:00.000', 3, 23, 22, 2, NULL, '2022-12-02 20:23:54.847', '2022-12-02 22:08:07.127', NULL);
+INSERT INTO ttlive."match"
+(id, title, description, home_team_score, guest_team_score, editorcode, code, state, visibility, start_date, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, end_date)
+VALUES(18, '', '', 3, 7, 'pt3n38', 'gtbh1s', 'FINISHED', 'PUBLIC', '2023-01-26 19:45:00.000', 31, 41, 40, 1, NULL, '2023-01-26 19:09:39.408', '2023-01-26 22:01:46.797', NULL);
+INSERT INTO ttlive."match"
+(id, title, description, home_team_score, guest_team_score, editorcode, code, state, visibility, start_date, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, end_date)
+VALUES(5, '', '', 8, 2, 'bah9yx', 'wrf1lb', 'FINISHED', 'PUBLIC', '2022-11-27 11:30:00.000', 39, 18, 19, 1, NULL, '2022-11-26 16:49:45.903', '2022-11-27 13:52:05.778', NULL);
+INSERT INTO ttlive."match"
+(id, title, description, home_team_score, guest_team_score, editorcode, code, state, visibility, start_date, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, end_date)
+VALUES(17, '', '', 3, 7, '2oi8a9', 'we4t8e', 'FINISHED', 'PUBLIC', '2023-01-14 14:00:00.000', 40, 27, 39, 1, NULL, '2023-01-15 10:46:17.814', '2023-01-15 16:18:07.687', NULL);
+INSERT INTO ttlive."match"
+(id, title, description, home_team_score, guest_team_score, editorcode, code, state, visibility, start_date, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, end_date)
+VALUES(15, '', '', 4, 6, '71py75', '6w2nly', 'FINISHED', 'PUBLIC', '2023-01-14 02:00:00.000', 43, 35, 37, 1, NULL, '2023-01-14 13:56:48.416', '2023-01-14 16:27:40.871', NULL);
+INSERT INTO ttlive."match"
+(id, title, description, home_team_score, guest_team_score, editorcode, code, state, visibility, start_date, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, end_date)
+VALUES(12, '', '', 8, 2, 'dfnq2r', 'qutcjs', 'FINISHED', 'PUBLIC', '2022-12-04 14:00:00.000', 41, 30, 29, 1, NULL, '2022-12-04 11:19:35.831', '2022-12-04 16:26:57.314', NULL);
+INSERT INTO ttlive."match"
+(id, title, description, home_team_score, guest_team_score, editorcode, code, state, visibility, start_date, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, end_date)
+VALUES(9, '', '', 7, 9, 'gvt7ve', 'nfq5w6', 'FINISHED', 'PUBLIC', '2022-12-02 18:30:00.000', 4, 21, 20, 2, NULL, '2022-12-03 12:57:23.425', '2022-12-03 13:08:32.646', NULL);
+INSERT INTO ttlive."match"
+(id, title, description, home_team_score, guest_team_score, editorcode, code, state, visibility, start_date, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, end_date)
+VALUES(4, '', '', 8, 2, '6f7fkm', 'v1e3fr', 'FINISHED', 'PUBLIC', '2022-11-20 11:30:00.000', 39, 18, 17, 1, NULL, '2022-11-20 00:00:48.048', '2023-02-02 22:18:45.264', NULL);
+INSERT INTO ttlive."match"
+(id, title, description, home_team_score, guest_team_score, editorcode, code, state, visibility, start_date, league_id, home_team_id, guest_team_id, game_style_id, account_id, created_at, modified_at, end_date)
+VALUES(21, '', '', 6, 4, 'zyy2iv', 'qnpz31', 'FINISHED', 'PUBLIC', '2023-02-12 15:00:00.841', 41, 44, 30, 1, NULL, '2023-02-12 13:49:27.774', '2023-02-12 17:29:24.590', NULL);
+
+SELECT pg_catalog.setval('ttlive.match_id_seq', 21, true);
 
 
 --
@@ -206,6 +247,7 @@ INSERT INTO ttlive.chat_message(id,	text, username,	 account_id, match_id, creat
 Jetzt sind die probleme mit dem Rücken wieder da', 'David S.', NULL, 20, '2023-02-12 13:08:44.941157', true);
 INSERT INTO ttlive.chat_message(id,	text, username,	 account_id, match_id, created_at, is_editor) VALUES (52, 'Schade. Trotzdem ne starke Leistung', 'David', NULL, 21, '2023-02-12 17:59:08.176145', false);
 
+SELECT pg_catalog.setval('ttlive.chat_message_id_seq', 52, true);
 
 --
 -- Data for Name: contact; Type: TABLE DATA; Schema: ttlive; Owner: ttlive
@@ -282,6 +324,7 @@ INSERT INTO ttlive.doubles VALUES (82, 2, false, 'Svenja Steding', 'Ha My, Cao',
 INSERT INTO ttlive.doubles VALUES (79, 1, true, 'Dallmeier', 'Kabel', 19);
 INSERT INTO ttlive.doubles VALUES (81, 2, true, 'Molatta', '?', 19);
 
+SELECT pg_catalog.setval('ttlive.doubles_id_seq', 90, true);
 
 --
 -- Data for Name: player; Type: TABLE DATA; Schema: ttlive; Owner: ttlive
@@ -415,6 +458,8 @@ INSERT INTO ttlive.player VALUES (173, 'Schwarz', 1, true, '2023-02-12 13:49:27.
 INSERT INTO ttlive.player VALUES (174, 'Wendt', 2, true, '2023-02-12 13:49:27.78788', '2023-02-12 15:33:06.987514', 21);
 INSERT INTO ttlive.player VALUES (175, 'Decker', 3, true, '2023-02-12 13:49:27.788902', '2023-02-12 15:33:06.987785', 21);
 INSERT INTO ttlive.player VALUES (176, 'Decker', 4, true, '2023-02-12 13:49:27.790121', '2023-02-12 15:33:06.98799', 21);
+
+SELECT pg_catalog.setval('ttlive.player_id_seq', 180, true);
 
 
 --
@@ -584,92 +629,8 @@ INSERT INTO ttlive.game VALUES (230, 'FINISHED', 10, false, '-1:11', '-1:11', '-
 INSERT INTO ttlive.game VALUES (226, 'FINISHED', 6, false, '-1:11', '-1:11', '-1:11', NULL, NULL, 0, 3, 21, 176, 179, NULL, NULL, '2023-02-12 13:49:27.79051', '2023-02-12 17:29:21.631674');
 INSERT INTO ttlive.game VALUES (228, 'FINISHED', 8, false, '11:-1', '-1:11', '11:-1', '11:-1', NULL, 3, 1, 21, 174, 178, NULL, NULL, '2023-02-12 13:49:27.791516', '2023-02-12 17:29:24.58995');
 
-
---
--- Name: account_id_seq; Type: SEQUENCE SET; Schema: ttlive; Owner: ttlive
---
-
-SELECT pg_catalog.setval('ttlive.account_id_seq', 2, true);
-
-
---
--- Name: action_log_id_seq; Type: SEQUENCE SET; Schema: ttlive; Owner: ttlive
---
-
-SELECT pg_catalog.setval('ttlive.action_log_id_seq', 1, false);
-
-
---
--- Name: chat_message_id_seq; Type: SEQUENCE SET; Schema: ttlive; Owner: ttlive
---
-
-SELECT pg_catalog.setval('ttlive.chat_message_id_seq', 52, true);
-
-
---
--- Name: contact_id_seq; Type: SEQUENCE SET; Schema: ttlive; Owner: ttlive
---
-
-SELECT pg_catalog.setval('ttlive.contact_id_seq', 1, false);
-
-
---
--- Name: doubles_id_seq; Type: SEQUENCE SET; Schema: ttlive; Owner: ttlive
---
-
-SELECT pg_catalog.setval('ttlive.doubles_id_seq', 90, true);
-
-
---
--- Name: game_id_seq; Type: SEQUENCE SET; Schema: ttlive; Owner: ttlive
---
-
 SELECT pg_catalog.setval('ttlive.game_id_seq', 230, true);
 
 
---
--- Name: game_style_id_seq; Type: SEQUENCE SET; Schema: ttlive; Owner: ttlive
---
-
-SELECT pg_catalog.setval('ttlive.game_style_id_seq', 4, true);
-
-
---
--- Name: league_id_seq; Type: SEQUENCE SET; Schema: ttlive; Owner: ttlive
---
-
-SELECT pg_catalog.setval('ttlive.league_id_seq', 57, true);
-
-
---
--- Name: match_id_seq; Type: SEQUENCE SET; Schema: ttlive; Owner: ttlive
---
-
-SELECT pg_catalog.setval('ttlive.match_id_seq', 21, true);
-
-
---
--- Name: player_id_seq; Type: SEQUENCE SET; Schema: ttlive; Owner: ttlive
---
-
-SELECT pg_catalog.setval('ttlive.player_id_seq', 180, true);
-
-
---
--- Name: region_id_seq; Type: SEQUENCE SET; Schema: ttlive; Owner: ttlive
---
-
-SELECT pg_catalog.setval('ttlive.region_id_seq', 17, true);
-
-
---
--- Name: team_id_seq; Type: SEQUENCE SET; Schema: ttlive; Owner: ttlive
---
-
-SELECT pg_catalog.setval('ttlive.team_id_seq', 44, true);
-
-
---
--- PostgreSQL database dump complete
---
-
+SELECT pg_catalog.setval('ttlive.action_log_id_seq', 1, false);
+SELECT pg_catalog.setval('ttlive.contact_id_seq', 1, false);

@@ -21,6 +21,7 @@ export interface RequestMatch {
     homeTeam: RequestTeam;
     guestTeam: RequestTeam;
     startDate: string;
+    endDate: string | null;
     visibility: MatchVisibility;
 }
 
@@ -39,6 +40,7 @@ export interface Match {
     accountId : number | null,
 
     startDate: string;
+    endDate: string | null;
     createdAt: string;
 
     league: League;

@@ -30,6 +30,7 @@ enum Error {
     GUEST_CLUB,
     GUEST_NUMBER,
     START_DATE,
+    END_DATE,
     LEAGUE,
     REGION,
     VISIBILITY,
@@ -43,7 +44,8 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
     const [homeTeamNumber, setHomeTeamNumber] = useState<number>(match == null ? 0 : match.homeTeam.number);
     const [guestTeamClub, setGuestTeamName] = useState<string>(match == null ? "" : match.guestTeam.club);
     const [guestTeamNumber, setGuestTeamNumber] = useState<number>(match == null ? 0 : match.guestTeam.number);
-    const [startDate, setStartDate] = useState<Dayjs | null>(match == null ? dayjs() : dayjs(match.startDate));
+    const [startDate, setStartDate] = useState<Dayjs | null>(match == null ? null : dayjs(match.startDate));
+    const [endDate, setEndDate] = useState<Dayjs | null>(match == null ? null : dayjs(match.endDate));
     const [league, setLeague] = useState<string>(match == null ? "" : match.league.name);
     const [contest, setContest] = useState<"MEN" | "WOMEN">(match == null ? "MEN" : match.league.contest)
     const [region, setRegion] = useState<Region | null>(null);
@@ -64,11 +66,10 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
         setGuestTeamName(match.guestTeam.club);
         setGuestTeamNumber(match.guestTeam.number);
         setStartDate(dayjs(match.startDate));
+        setEndDate(match.endDate == null ? null : dayjs(match.endDate));
         setLeague(match.league.name);
         setRegion(null)
-
     }, [match, expanded]);
-
 
     const [errorMsgs, updateError, clearErrors] = useErrorArrays();
 
@@ -138,12 +139,17 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
                         label={t("LeagueState.startDate")}
                         value={startDate}
                         onChange={date => setStartDate(date)}
-                        renderInput={(params) =>
-                            <TextField {...params} error={errorMsgs[Error.START_DATE] != null && errorMsgs[Error.START_DATE] !== ""}
-                            />}
-
                     />
                     <FormHelperText>{errorMsgs[Error.START_DATE]}</FormHelperText>
+                </FormControl>
+                <FormControl sx={{ flexGrow: 1 }} error={errorMsgs[Error.END_DATE] != null && errorMsgs[Error.END_DATE] !== ""}>
+                    <DateTimePicker
+                        ampm={false}
+                        label={t("MatchInfoEdit.endDate")}
+                        value={endDate}
+                        onChange={date => setEndDate(date)}
+                    />
+                    <FormHelperText>{errorMsgs[Error.END_DATE]}</FormHelperText>
                 </FormControl>
                 {match.accountId != null &&
                     <FormControl>
@@ -229,6 +235,9 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
         } else if (startDate == null || startDate.isValid() === false) {
             updateError(Error.START_DATE, t("MatchInfoEdit.errorStartDate"));
             return;
+        } else if (endDate != null && startDate.isValid() === false) {
+            updateError(Error.END_DATE, t("MatchInfoEdit.errorEndDate"));
+            return;
         } else if (league === "") {
             updateError(Error.LEAGUE, t("MatchInfoEdit.errorLeague"));
             return;
@@ -269,6 +278,7 @@ const MatchInfoEdit = ({ match, editorCode }: MatchInfoEditProps) => {
             homeTeam: requestHomeTeam,
             league: requestLeague,
             startDate: startDate.toISOString(),
+            endDate: endDate != null ? endDate.toISOString() : null,
             visibility: visibility
         };
         setLoading(true);

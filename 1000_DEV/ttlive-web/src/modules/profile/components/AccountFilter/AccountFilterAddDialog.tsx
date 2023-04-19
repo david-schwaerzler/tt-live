@@ -1,5 +1,5 @@
 import { Box, Dialog, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { postAccountFilter } from "../../../../rest/api/AccountFilterApi";
 import { AccountFilter, AccountFilterType, isAccountFilterType, RequestAccountFilter } from "../../../../rest/data/AccountFilter";
@@ -50,7 +50,7 @@ const AccountFilterAddDialog = ({ show, filterSetId, onClose, onCreated }: Accou
         }
     }, [show, clearErrors]);
 
-    useShortcuts(onAdd, onClose, show );
+    useShortcuts(onAdd, onClose, show);
     useBackDialogHandler(show, confirm => onClose(), "addFilter");
 
     return (
@@ -59,7 +59,7 @@ const AccountFilterAddDialog = ({ show, filterSetId, onClose, onCreated }: Accou
             <DialogContent >
                 <ErrorMessage msg={errorMsgs[Errors.GENERAL]} sx={{ mb: 2 }} />
                 <Stack gap={2} mt={1}>
-                    <FormControl  error={errorMsgs[Errors.ERROR_TYPE] != null && errorMsgs[Errors.ERROR_TYPE] !== ""} >
+                    <FormControl error={errorMsgs[Errors.ERROR_TYPE] != null && errorMsgs[Errors.ERROR_TYPE] !== ""} >
                         <InputLabel id="select-type">{t('AccountFilter.type')}</InputLabel>
                         <Select
                             id="select-type"

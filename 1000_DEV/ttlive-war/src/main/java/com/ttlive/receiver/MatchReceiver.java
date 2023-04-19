@@ -222,6 +222,8 @@ public class MatchReceiver {
 				.visibility(requestMatchDto.getVisibility()) //
 				.startDate(requestMatchDto.getStartDate().withZoneSameInstant(ZoneId.of("Europe/Berlin"))
 						.toLocalDateTime())//
+				.endDate(requestMatchDto.getEndDate() == null ? null : requestMatchDto.getEndDate().withZoneSameInstant(ZoneId.of("Europe/Berlin"))
+						.toLocalDateTime())//
 				.build();
 		
 		Principal userPrincipal = context.getUserPrincipal();

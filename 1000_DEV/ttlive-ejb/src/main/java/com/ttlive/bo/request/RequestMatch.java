@@ -16,5 +16,6 @@ public class RequestMatch {
 	private RequestTeam guestTeam;
 	private MatchVisibility visibility;
 	private LocalDateTime startDate;
+	private LocalDateTime endDate;
 	private String accountUsername;
 }

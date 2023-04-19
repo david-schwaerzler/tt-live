@@ -71,7 +71,6 @@ const CreateMatchView = () => {
 
         } else {
             setMatchStateObject(matchStateObject => ({ ...matchStateObject, visibility: "PRIVATE" }));
-            console.log(currentStep)
             setCurrentStep(currentStep => {
                 if (currentStep === Steps.SUMMARY || currentStep === Steps.MATCH_SETTINGS)
                     return Steps.LOGIN;
@@ -287,6 +286,7 @@ const CreateMatchView = () => {
             homeTeam: requestHomeTeam,
             guestTeam: requestGuestTeam,
             startDate: matchStateObject.startDate.toISOString(),
+            endDate: null,
             visibility: matchStateObject.visibility == null ? "PRIVATE" : matchStateObject.visibility
         };
 

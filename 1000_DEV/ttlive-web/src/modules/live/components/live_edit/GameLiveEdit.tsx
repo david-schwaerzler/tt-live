@@ -1,5 +1,5 @@
 import { IconButton } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import { ChatMessage } from "../../../../rest/data/ChatMessage";
 import { Game } from "../../../../rest/data/Game";

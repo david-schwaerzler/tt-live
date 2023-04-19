@@ -1,6 +1,6 @@
+import React, { useState } from "react";
 import { Card, CardContent, Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
 import { Box, Stack } from "@mui/system";
-import React, { useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { Game } from "../../../../rest/data/Game";
 import { useMatchStatistics } from "../../../common/hooks/useMatchStatistics";
@@ -14,8 +14,8 @@ const GameResportStatistics = ({ games }: GameResportStatisticsProps) => {
 
 
     const statistics = useMatchStatistics(games);
-
     const [t] = useTranslation();
+
     return (
         <Card>
             <CardContent>
@@ -57,25 +57,27 @@ const GameResportStatistics = ({ games }: GameResportStatisticsProps) => {
     )
 }
 
-interface StatisticsCardProps {
+export interface StatisticsCardProps {
     title: string;
     value: string;
-    tooltip: string | React.ReactNode;
+    tooltip?: string | React.ReactNode | null;
 }
 
-const StatisticsCard = ({ title, value, tooltip }: StatisticsCardProps) => {
+export const StatisticsCard = ({ title, value, tooltip }: StatisticsCardProps) => {
 
     const [open, setOpen] = useState<boolean>(false);;
     useBackDialogHandler(open, show => setOpen(show));
 
     return <React.Fragment>
-        <Dialog open={open} onClose={() => setOpen(false)}>
-            <DialogTitle >{title}</DialogTitle>
-            <DialogContent sx={{ whiteSpace: "pre-wrap" }}>
-                {tooltip}
-            </DialogContent>
-        </Dialog>
-        <Box onClick={() => setOpen(true)} sx={{ cursor: "pointer" }}>
+        {tooltip != null &&
+            <Dialog open={open} onClose={() => setOpen(false)}>
+                <DialogTitle >{title}</DialogTitle>
+                <DialogContent sx={{ whiteSpace: "pre-wrap" }}>
+                    {tooltip}
+                </DialogContent>
+            </Dialog>
+        }
+        <Box onClick={() => setOpen(true)} sx={{ cursor: tooltip != null ? "pointer" : "default" }}>
             <Typography fontWeight="bold" textAlign="center">{title}</Typography>
             <Typography textAlign="center">{value}</Typography>
         </Box>
