@@ -48,6 +48,7 @@ const LeagueState = ({ matchStateObject, onUpdate, setValidate }: StateProps) =>
                 return;
             }
             let leagues: Array<League> = await response.json();
+            leagues = leagues.filter(l => l.active === true);
             setLeagues(leagues);
 
         } catch (error) {

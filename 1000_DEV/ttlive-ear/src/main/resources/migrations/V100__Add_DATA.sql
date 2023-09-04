@@ -1,4 +1,4 @@
-INSERT INTO ttlive.account VALUES (1, 'David', '792aec94757261853bfd692201dfa6e0ea51fd52255e29bacfbbb09f6d0f9ed4', 'user', 'schwaerzler.da@gmail.com', false, '2023-01-13 23:55:30.630897', '2023-01-13 23:55:30.631022');
+INSERT INTO ttlive.account VALUES (1, 'David', '65ea5b7b24ccb5fa8639c84a2612bae539da32ef2e9af6a01e895ad61e98a2b7', 'user', 'schwaerzler.da@gmail.com', false, '2023-01-13 23:55:30.630897', '2023-01-13 23:55:30.631022');
 
 SELECT pg_catalog.setval('ttlive.account_id_seq', 2, true);
 

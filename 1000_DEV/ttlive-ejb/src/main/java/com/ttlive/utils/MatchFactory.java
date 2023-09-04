@@ -32,6 +32,7 @@ public class MatchFactory {
 			leagueEntity.setName(requestMatch.getLeague().getName());
 			leagueEntity.setContest(requestMatch.getLeague().getContest());
 			leagueEntity.setRegion(regionEntity);
+			leagueEntity.setActive(true);
 		}
 
 		// create homeTeam if it doesn't exist

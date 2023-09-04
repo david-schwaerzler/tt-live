@@ -108,10 +108,13 @@ const MatchCard = ({ match, simpleMatch, variant }: MatchCardProps) => {
     }
 
     function renderHeader(simpleMatch: SimpleMatch) {
+        const leagueName = simpleMatch.league.active 
+            ? simpleMatch.league.name
+            : simpleMatch.league.name + " " + simpleMatch.league.season
         return (
             <Box sx={{ display: "flex", alignItems: "center" }} padding={spacingSmall}>
 
-                <Typography sx={{ flexGrow: 1, fontSize: "0.8rem", opacity: 0.5 }}>{simpleMatch.league.name}</Typography>
+                <Typography sx={{ flexGrow: 1, fontSize: "0.7rem", opacity: 0.5 }}>{leagueName}</Typography>
                 <Box sx={{ position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
                     <MatchStateLabel variant="border" state={simpleMatch.state} startDate={simpleMatch.startDate} />
                 </Box>

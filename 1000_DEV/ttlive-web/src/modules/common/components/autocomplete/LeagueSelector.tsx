@@ -24,6 +24,8 @@ const LeagueSelector = ({ onUpdate, updateError, leagues, matchStateObject, erro
             id: -1,
             contest: matchStateObject.contest!, // value can never be null here.
             region: matchStateObject.region!.name,
+            active: true,
+            season: "",
             name: name
         }), [matchStateObject]);
 

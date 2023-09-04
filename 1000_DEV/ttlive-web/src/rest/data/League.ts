@@ -3,6 +3,8 @@ export interface League {
     name: string,
     contest: "MEN" | "WOMEN"
     region : string;
+    active: boolean;
+    season: string;
 }
 
 export interface RequestLeague {

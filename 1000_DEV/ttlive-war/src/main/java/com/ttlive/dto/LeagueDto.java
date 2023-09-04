@@ -19,6 +19,8 @@ public class LeagueDto {
 	private long id;
 	private String name;
 	private String region;
+	private boolean isActive;
+	private String season;
 	private LeagueContest contest;
 	
 	public static class LeagueDtoBuilder {
@@ -27,6 +29,8 @@ public class LeagueDto {
 			this.name = league.getName();
 			this.contest= league.getContest();
 			this.region = league.getRegion().getName();
+			this.isActive = league.isActive();
+			this.season = league.getSeason();
 			return this;
 		}
 	}

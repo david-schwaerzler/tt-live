@@ -19,6 +19,8 @@ public class League {
 	private long id;
 	private String name;
 	private LeagueContest contest;	
+	private boolean isActive;
+	private String season;
 	private LocalDateTime createdAt;	
 	private LocalDateTime modifiedAt;
 	
@@ -32,6 +34,8 @@ public class League {
 			this.id = entity.getId();
 			this.name = entity.getName();
 			this.contest = entity.getContest();
+			this.isActive = entity.isActive();
+			this.season = entity.getSeason();
 
 			this.createdAt = entity.getCreatedAt();
 			this.modifiedAt = entity.getModifiedAt();
