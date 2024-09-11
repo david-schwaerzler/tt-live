@@ -44,12 +44,12 @@ public class LeagueEntity {
 	@Enumerated(EnumType.STRING)
 	private LeagueContest contest;
 
-	@Column(name="is_active")
+	@Column(name = "is_active")
 	private boolean isActive;
-	
+
 	@Column(name = "season")
 	private String season;
-	
+
 	@CreationTimestamp
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
@@ -61,7 +61,7 @@ public class LeagueEntity {
 	@ManyToOne
 	@JoinColumn(name = "region_id", referencedColumnName = "id")
 	private RegionEntity region;
-	
+
 	@ToString.Exclude
 	@OneToMany(mappedBy = "league")
 	private List<TeamEntity> teams = new LinkedList<TeamEntity>();
