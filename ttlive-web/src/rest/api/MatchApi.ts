@@ -96,7 +96,7 @@ export async function fetchMatch(id: number): Promise<MatchResponse> {
 
 }
 
-export async function fetchValidateErrorCode(id: number, editorCode: string): Promise<ApiResponse<boolean>> {
+export async function fetchValidateEditorCode(id: number, editorCode: string): Promise<ApiResponse<boolean>> {
     try {
         let response = await axios.get(`/match/${id}/validate?editorCode=${editorCode}`);
         if (response.status !== 200) {

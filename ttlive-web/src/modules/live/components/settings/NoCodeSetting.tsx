@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { AppContext } from "../../../../AppContext";
 
-import { fetchValidateErrorCode } from "../../../../rest/api/MatchApi";
+import { fetchValidateEditorCode } from "../../../../rest/api/MatchApi";
 import { Match } from "../../../../rest/data/Match";
 import LoadingButton from "../../../common/components/buttons/LoadingButton";
 import ErrorMessage from "../../../common/components/utils/ErrorMessage";
@@ -55,7 +55,7 @@ const NoCodeSetting = ({ match }: NoCodeSettingProps) => {
     async function checkCode(match: Match) {
         setLoading(true);
 
-        let response = await fetchValidateErrorCode(match.id, newEditorCode);
+        let response = await fetchValidateEditorCode(match.id, newEditorCode);
         if (response.data != null) {
             if (response.data === true) {
                 context.setEditorCode(match.id, newEditorCode, true);

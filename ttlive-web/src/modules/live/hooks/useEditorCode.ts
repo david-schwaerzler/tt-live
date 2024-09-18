@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../../AppContext";
-import { fetchValidateErrorCode } from "../../../rest/api/MatchApi";
+import { fetchValidateEditorCode } from "../../../rest/api/MatchApi";
 
 export function useEditorCode(matchId: number | null) {
     const context = useContext(AppContext);
@@ -12,7 +12,7 @@ export function useEditorCode(matchId: number | null) {
             if (editorCode == null)
                 return;
             
-            fetchValidateErrorCode(matchId, editorCode).then(response => {
+            fetchValidateEditorCode(matchId, editorCode).then(response => {
                 if(response.data != null)
                     if(response.data)
                         setEditorCode(editorCode);
