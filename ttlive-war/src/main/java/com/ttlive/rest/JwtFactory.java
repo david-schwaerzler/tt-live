@@ -40,7 +40,7 @@ public class JwtFactory {
 	public static final long REFRESH_TOKEN_VALIDITY = 8 * 60 * 60; // valid for 8 hours
 
 	private static final String KEY_ALIAS = "jwt-priv-key";
-	private static final char[] SECRET_KEYSTORE = "d3mRR4LJ89oUvVufAT5j".toCharArray();
+	private static final char[] SECRET_KEYSTORE = "3wa$ES5rd".toCharArray();
 	private static final String ISSUER = "ttlive";
 	private static final String AUDIENCE = "ttlive-web-app";
 	private static final Path keystorePath = Paths.get(System.getProperty("jboss.server.config.dir"), "jwt.jks");

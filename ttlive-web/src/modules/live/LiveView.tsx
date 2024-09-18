@@ -26,7 +26,7 @@ const GameReportTab = React.lazy(() => import("./components/game_report/GameRepo
 const LiveView = () => {
     const [match, setMatch] = useState<Match | null>(null);
     const [activeTab, setActiveTab] = useState<number>(1);
-    const [chatDrawerExpanded, setChatDrawerExpanded] = useState(false);
+    const [chatDrawerExpanded, setChatDrawerExpanded] = useState(true);
     const [messages, setMessages] = useState<Array<ChatMessage>>([])
     const [badgeCounter, setBadgeCounter] = useState<number>(0);
     const [isLineupComplete, setLineupComplete] = useState<boolean>(true);
